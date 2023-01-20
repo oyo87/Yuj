@@ -18,3 +18,12 @@
 ![](/images/review.PNG)
 
 ## Actor : Teacher
+
+## Case 1 : Login
+![](/images/teacher_login.PNG)
+
+## Case 2 : Add Course(Lecture)
+![](/images/add_course.PNG)
+
+## Case 3 : Start Lecture
+![](/images/start_lecture.PNG)
