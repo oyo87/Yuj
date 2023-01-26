@@ -13,3 +13,7 @@
 ![REST_API_명세서1](../../image/REST_API_명세서-0.png)
 ![REST_API_명세서2](../../image/REST_API_명세서-1.png)
 ![REST_API_명세서3](../../image/REST_API_명세서-2.png)
+
+>MySQL DB 생성 완료
+![MySQL ERD](../../image/mysql_ERD.PNG)
+
