@@ -8,7 +8,7 @@
     
     - 버전 번호 : 11.0.18+10 /  Azul Zulu: 11.62.17
         
-        ![Java version.PNG](%image/Java_version.png)
+        ![Java version.PNG](image/Java_version.png)
         
 - Spring boot ⇒ 2.7.8
     - 최소 버전 : 2.5.0 (gradle 지원)
