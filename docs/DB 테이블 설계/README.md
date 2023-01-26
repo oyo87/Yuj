@@ -8,3 +8,8 @@
 ![데이터베이스 테이블 설계5](../../image/Database_테이블_설계_page-0005.jpg)
 ![데이터베이스 테이블 설계6](../../image/Database_테이블_설계_page-0006.jpg)
 ![데이터베이스 테이블 설계6](../../image/다이어그램.drawio.png)
+
+>REST API 명세서 작성
+![REST_API_명세서1](../../image/REST_API_명세서-0.png)
+![REST_API_명세서2](../../image/REST_API_명세서-1.png)
+![REST_API_명세서3](../../image/REST_API_명세서-2.png)

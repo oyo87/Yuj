@@ -211,6 +211,9 @@
 
 ## 깃 브랜치 전략
 
+### Simple Git Flow
+![simple-git-flow.png](image/simple-git-flow.png)
+
 ### 브랜치 구성
 
 1. **feature**
