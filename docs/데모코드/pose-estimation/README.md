@@ -36,6 +36,9 @@ Promise.all([
 });
 ```
 
+## demo images
+!()['./데모 화면.PNG']
+
 ## Reference
 [posenet-similarity](https://github.com/freshsomebody/posenet-similarity)
 
