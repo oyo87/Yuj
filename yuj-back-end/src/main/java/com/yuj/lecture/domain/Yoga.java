@@ -1,4 +1,4 @@
-package com.yuj.lecture;
+package com.yuj.lecture.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

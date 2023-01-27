@@ -1,4 +1,4 @@
-package com.yuj.lecture;
+package com.yuj.lecture.domain;
 
 import com.yuj.user.Users;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
