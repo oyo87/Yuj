@@ -1,7 +1,9 @@
 import './App.css';
 import { white, black } from 'tailwindcss/colors';
-import MypageSidebar from './components/mypage/MypageSidebar';
-import MyInfo from './pages/mypage/MyInfo';
+import MypageSidebar from './components/MypageSidebar';
+import { BrowserRouter } from 'react-router-dom/dist';
+import MyPage from './pages/MyPage';
+import StudioPage from './pages/StudioPage';
 
 
 
@@ -10,11 +12,13 @@ function App() {
   return (
     // start div
     <div className="App" style={ {background : white}}> 
-      <MypageSidebar />
-      <MyInfo />
-     {/* <MyInfo /> */}
+      <BrowserRouter>
+        <MyPage>
+          
+        </MyPage>
+        
     
-
+      </BrowserRouter>
       {/* end div */}
     </div>
   );
