@@ -1,11 +1,16 @@
 @import url(//fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
+/* .side-box{
+    width : 3000px;
+    height : 100vx
+} */
+
 .mypage-sidebar{
     align-items: center;
     color : black;
     line-height : 5;
     width: 300px;
-    height : auto;
+    height : 100%;
     font-size : 18px;
     font-family: 'nanumgothic';
     display: flex;    
