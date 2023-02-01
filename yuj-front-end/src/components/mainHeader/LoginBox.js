@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import styles from './mainHeader.module.css'
+import styles from './MainHeader.module.css'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const LoginBox = () => {
