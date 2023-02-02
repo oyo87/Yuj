@@ -18,7 +18,7 @@ class MypageWeeklyStudyChart extends React.Component {
                         hollow: {
                             margin: 15,
                             size: '70%',
-                            image: '../assets/mypage-header.png',
+                            image: '/assets/mypage-header.png',
                             imageWidth: 64,
                             imageHeight: 64,
                             imageClipped: false
@@ -40,7 +40,7 @@ class MypageWeeklyStudyChart extends React.Component {
                 fill: {
                     type: 'image',
                     image: {
-                        src: ['../assets/logo512.png'],
+                        src: ['/assets/logo512.png'],
                     }
                 },
                 stroke: {

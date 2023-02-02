@@ -1,6 +1,6 @@
 import React from 'react';
 import './Component.css';
-import yujLogo from '../assets/mypage-sidebar-yuj-logo.png';
+
 import { Link, Route } from 'react-router-dom';
 
 function MypageSidebar() {
@@ -36,7 +36,7 @@ function MypageSidebar() {
                 </li>
               );
             })}
-            <img className='mypage-sidebar-yuj-logo' src={yujLogo} alt='yuj sidebar logo' />
+            <img className='mypage-sidebar-yuj-logo' src='/assets/mypage-sidebar-yuj-logo.png' alt='yuj sidebar logo' />
 
           </ul>
         </div>

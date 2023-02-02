@@ -9,7 +9,7 @@ input::-webkit-inner-spin-button {
 }
 
 .info-background-image{
-    background-image: url('../assets/infoBackground.png');
+    background-image: '/assets/infoBackground.png';
     width: 1396px;
     height: 945px;
     opacity: 0.9;

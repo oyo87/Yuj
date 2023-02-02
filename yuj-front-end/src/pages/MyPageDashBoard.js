@@ -1,6 +1,5 @@
 import React from "react";
 import MypageSidebar from "../components/MypageSidebar";
-import MypageHeader from '../assets/mypage-header.png';
 import './pages.css';
 import MainHeader from './../components/mainHeader/MainHeader';
 import MainFooter from "../components/mainFooter/MainFooter";
@@ -14,7 +13,7 @@ const MyPageDashBoard = () => {
             <container className="flex ml-100">
                 <MypageSidebar />
                 <main>
-                    <img className="w-full max-h-52 " src='../assets/mypage-header.png' />
+                    <img className="w-full max-h-52 " src='/assets/mypage-header.png' />
                     <div className="mx-28 mt-16">
                         <div className="w-full flex">
                             <div className="dashboard-box">
