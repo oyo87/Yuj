@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import SignIn from './Signin';
+import StudioSamplePage from './StudioSamplePage';
 
 const Test = () => {
   return (
@@ -16,6 +17,7 @@ const Test = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/studio" element={<StudioSamplePage />} />
         </Routes>
       </div>
       <MainFooter />
