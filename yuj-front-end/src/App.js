@@ -24,7 +24,7 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Test />}></Route>
+          <Route path='*' element={<Test />}></Route>
           <Route path="/studio" element={<StudioPage />}></Route>
           <Route path="/mypage/dashboard" element={<MyPageDashBoard />}></Route>
           <Route path="/mypage/info" element={<MyPageInfo />}></Route>
