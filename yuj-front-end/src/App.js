@@ -8,6 +8,7 @@ import { Route } from 'react-router-dom';
 import MyPageInfo from './pages/MyPageInfo';
 import MyPageLecture from './pages/MyPageLecture';
 import MyPageDashBoard from './pages/MyPageDashBoard';
+import mainHeader from './components/mainHeader/MainHeader';
 
 
 
@@ -15,7 +16,6 @@ function App() {
   return (
     // start div
     <div className="App" style={{background : white}}> 
-      
       
       <BrowserRouter>
       

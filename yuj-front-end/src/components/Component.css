@@ -10,10 +10,11 @@
     color : black;
     line-height : 5;
     width: 300px;
-    height : 100%;
+    min-height: 788px;
+    height: 100%;
     font-size : 18px;
     font-family: 'nanumgothic';
-    display: flex;    
+    display: flex;
 }
 
 .mypage-sidebar-yuj-logo{

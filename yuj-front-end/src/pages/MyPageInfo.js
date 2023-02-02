@@ -1,7 +1,8 @@
 import React from "react";
 import MypageSidebar from './../components/MypageSidebar';
 import profilePicture from '../assets/tempProfilePicture.jpg'
-
+import MainFooter from './../components/mainFooter/MainFooter';
+import MainHeader from './../components/mainHeader/MainHeader';
 function maxLengthCheck(e) {
     const target = e.target;
 
@@ -16,7 +17,7 @@ const MyPageInfo = () => {
 
     return (
         <>
-            <div>헤더</div>
+            <MainHeader />
             <div style={{ display: "flex" }}>
                 <MypageSidebar />
                 <div className="info-background-image" >
@@ -38,7 +39,7 @@ const MyPageInfo = () => {
                                     <input type="file" className="file-input file-input-bordered file-input-accent w-full profile-input mypage-input" />
                                 </div>
                             </div>
-                            
+
                             <div className="form-control w-full max-w-xs">
                                 <label className="label">
                                     <span className="label-text">닉네임</span>
@@ -107,7 +108,7 @@ const MyPageInfo = () => {
                     </div>
                 </div>
             </div>
-            <div>푸터</div>
+            <MainFooter />
 
         </>
     );

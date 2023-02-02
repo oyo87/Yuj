@@ -5,6 +5,7 @@ import { Link, Route } from 'react-router-dom';
 
 function MypageSidebar() {
 
+  // 사이드바 메뉴 추가하려면 아래 입력
   const sidebarMenu = [
     {
       name: "대시보드",
@@ -24,8 +25,8 @@ function MypageSidebar() {
 
         <div className="drawer-side">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-          <ul className="menu p-10 w-80 bg-base-100 text-base-content mypage-sidebar" >
-            {/* <!-- 사이드바 세부 컨텐츠--> */}
+          <ul className="menu p-10  bg-primary bg-base-100 text-base-content mypage-sidebar" >
+            {/* 사이드바 내용물 map이용 출력 */}
             {sidebarMenu.map((menu) => {
               return (
                 <li>
