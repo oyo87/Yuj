@@ -44,3 +44,14 @@ input::-webkit-inner-spin-button {
     height: 32px;
 
 }
+
+.dashboard-box{
+    width: 30%;
+    min-width: 357px;
+    height: 415px;
+    border-width: 2px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: #EBE8DF;
+    margin: 50px;
+}

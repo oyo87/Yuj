@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LoginBox from './LoginBox';
 import './MainHeader.css'
 
-const mainHeader = () => {
+const MainHeader = () => {
   return (
     <div className="navbar bg-secondary" style={{ height: '100px' }}>
       <div className="flex-1">
@@ -30,5 +30,5 @@ const mainHeader = () => {
   )
 }
 
-export default mainHeader;
+export default MainHeader;
 
