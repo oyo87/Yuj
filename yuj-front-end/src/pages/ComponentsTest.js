@@ -8,6 +8,8 @@ import Login from './Login';
 import SignIn from './Signin';
 import StudioPage from './StudioPage';
 import StudioSamplePage from './StudioSamplePage';
+import TestLectureCard from './TestLectureCard';
+import TestLectureDetail from './TestLectureDetail';
 
 const Test = () => {
   return (
@@ -20,6 +22,8 @@ const Test = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/studio" element={<StudioPage />} />
           <Route path="/studiosample" element={<StudioSamplePage />} />
+          <Route path="/testLecturecard" element={<TestLectureCard />} />
+          <Route path="/testLectureDetail" element={<TestLectureDetail />} />
         </Routes>
       </div>
       <MainFooter />
