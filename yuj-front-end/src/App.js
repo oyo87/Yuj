@@ -13,6 +13,7 @@ import { ApexChart } from 'apexcharts';
 import WeeklyStudyChart from './components/MypageWeeklyStudyChart';
 import TestLectureCard from './pages/TestLectureCard';
 import TestLectureDetail from './pages/TestLectureDetail';
+import Test from './pages/ComponentsTest';
 
 
 
@@ -23,6 +24,7 @@ function App() {
 
       <BrowserRouter>
         <Routes>
+          <Route path='/' element={<Test />}></Route>
           <Route path="/studio" element={<StudioPage />}></Route>
           <Route path="/mypage/dashboard" element={<MyPageDashBoard />}></Route>
           <Route path="/mypage/info" element={<MyPageInfo />}></Route>
