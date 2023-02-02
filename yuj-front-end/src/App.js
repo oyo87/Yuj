@@ -9,6 +9,7 @@ import MyPageInfo from './pages/MyPageInfo';
 import MyPageLecture from './pages/MyPageLecture';
 import MyPageDashBoard from './pages/MyPageDashBoard';
 import mainHeader from './components/mainHeader/MainHeader';
+import Test from './pages/ComponentsTest';
 
 
 
@@ -20,6 +21,7 @@ function App() {
       <BrowserRouter>
       
         <Routes>
+          <Route path='/' element={<Test />}></Route>
           <Route path="/studio" element={<StudioPage />}></Route>
           <Route path="/mypage/dashboard" element={<MyPageDashBoard />}></Route>
           <Route path="/mypage/info" element={<MyPageInfo />}></Route>
