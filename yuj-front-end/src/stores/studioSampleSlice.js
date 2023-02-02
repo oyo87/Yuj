@@ -48,8 +48,8 @@ const createStudio = createAsyncThunk("CREATE_STUDIO", async(studio) => {
 /**
  * 3. 사용할 State를 정의하는 Slice 만들기
  */
-const studioSlice = createSlice({
-	name:'studioSlice',
+const studioSampleSlice = createSlice({
+	name:'studioSampleSlice',
 
 	// initialState => State의 초기값
 	initialState:{
@@ -96,10 +96,10 @@ const studioSlice = createSlice({
  */
 
 // Slice는 default로 export 하기
-export default studioSlice;
+export default studioSampleSlice;
 
 // 일반 action export 하기
-export const { changeStudioName, changeStudioDesc, addStudioToList } = studioSlice.actions;
+export const { changeStudioName, changeStudioDesc, addStudioToList } = studioSampleSlice.actions;
 
 // Axios 비동기 action export 하기
 export { getStudio, createStudio };

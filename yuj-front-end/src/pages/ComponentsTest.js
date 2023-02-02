@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import SignIn from './Signin';
+import StudioPage from './StudioPage';
 import StudioSamplePage from './StudioSamplePage';
 
 const Test = () => {
@@ -17,7 +18,8 @@ const Test = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/studio" element={<StudioSamplePage />} />
+          <Route path="/studio" element={<StudioPage />} />
+          <Route path="/studiosample" element={<StudioSamplePage />} />
         </Routes>
       </div>
       <MainFooter />
