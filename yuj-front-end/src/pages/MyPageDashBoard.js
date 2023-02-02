@@ -18,7 +18,7 @@ const MyPageDashBoard = () => {
                         <div className="w-full flex">
                             <div className="dashboard-box">
                                 <div className="flex m-5 justify-between" >
-                                    <div >
+                                    <div className="box-font">
                                         <div>현재</div>
                                         <div>수강중인</div>
                                         <div>강의</div>
@@ -36,7 +36,7 @@ const MyPageDashBoard = () => {
                             </div>
                             <div className="dashboard-box">
                                 <div className="flex m-5 justify-between" >
-                                    <div >
+                                    <div className="box-font">
                                         <div>수강</div>
                                         <div>완료한</div>
                                         <div>강의</div>
@@ -53,12 +53,12 @@ const MyPageDashBoard = () => {
                                 url링크 걸어서 강의 스튜디오로이동해야함
                             </div>
                             <div className="dashboard-box">
-                                <div className="m-5">주간 학습 달성률 컴포넌트</div>
+                                <div className="m-5 box-font">주간 학습 달성률 컴포넌트</div>
                                 <div>
-                                    
+
                                     대망의 자바스크립트 차트
                                     <MypageWeeklyStudyChart />
-                                    
+
                                 </div>
                                 <div>주간 학습 : 이번주 참석 횟수 계산 / 이번주 모든 횟수 계산</div>
                             </div>
@@ -66,7 +66,7 @@ const MyPageDashBoard = () => {
                         <div className="m-14">
                             <div>학습 일정</div>
                             <div>
-                                <MypageCalendar/>
+                                <MypageCalendar />
                             </div>
                         </div>
                     </div>

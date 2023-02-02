@@ -1,3 +1,5 @@
+@import url(//fonts.googleapis.com/earlyaccess/nanummyeongjo.css);
+
 input::-webkit-outer-spin-button,
 
 input::-webkit-inner-spin-button {
@@ -8,12 +10,19 @@ input::-webkit-inner-spin-button {
 
 }
 
+.box-font{
+    font-family: 'Nanum Myeongjo';
+    font-size: 27px;
+    font-weight: 900;
+}
+
 .info-background-image{
-    background-image: '/assets/infoBackground.png';
+    background-image: url('../../public/assets/infoBackground.png');
     width: 1396px;
     height: 945px;
     opacity: 0.9;
     margin-left: 120px;
+    background-color: bisque;
 }
 
 .info-container{
