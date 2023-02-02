@@ -3,12 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import './StudioSidebar.css';
 import yujLogo from '../assets/mypage-sidebar-yuj-logo.png';
 import { Link, Route } from 'react-router-dom';
+import { CommonModal, CommonModalBtn } from '../components/CommonModal';
+import { useNavigate } from 'react-router-dom';
 
 const StudioSidebar = (props) => {
 
   const studioDetail = useSelector(state => state.studio.studioDetail);
+  const navigate = useNavigate();
 
-  const user_id = 0;
+  const user_id = 1;
 
 
   const startLiveClicked = () => {
@@ -37,7 +40,22 @@ const StudioSidebar = (props) => {
   ];
 
   return (
-
+    <>
+        <CommonModal 
+          // title={'실시간 강의에 참여하시겠습니까?'} 
+          content={'실시간 강의에 참여하시겠습니까?'} 
+          buttons={[
+            {
+              text: "참여하기",
+              className: "btn-accent text-white",
+              onClickEvent: () => {navigate('/login')}
+            },
+            {
+              text: "취소하기",
+              className: "btn-primary text-black"
+            }
+          ]}
+        />
         <div className="drawer-side">
           <div className='flex flex-col bg-primary items-center pt-32 w-80'>
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
@@ -53,7 +71,8 @@ const StudioSidebar = (props) => {
             </div>
             {
               studioDetail.user_id != user_id ?
-              <button className='live-btn mt-16' onClick={() => goLiveClicked()}>Go Live</button>
+              // <button className='live-btn mt-16' onClick={() => goLiveClicked()}>Go Live</button>
+              <CommonModalBtn text={'Go Live'} className={'border-none live-btn mt-16'}/>
               :
               <button className='live-btn mt-16' onClick={() => startLiveClicked()}>Start Live</button>
             }
@@ -72,8 +91,7 @@ const StudioSidebar = (props) => {
             <img className='mypage-sidebar-yuj-logo mt-60 mb-10' src={yujLogo} alt='yuj sidebar logo' />
           </div>
         </div>
-
-
+    </>
   );
 }
 
