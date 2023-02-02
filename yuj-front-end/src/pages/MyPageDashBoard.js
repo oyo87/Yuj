@@ -4,8 +4,8 @@ import MypageHeader from '../assets/mypage-header.png';
 import './pages.css';
 import MainHeader from './../components/mainHeader/MainHeader';
 import MainFooter from "../components/mainFooter/MainFooter";
-import WeeklyStudyChart from './../components/WeeklyStudyChart';
-import MyCalendar from "../components/MyCalendar";
+import MypageWeeklyStudyChart from '../components/MypageWeeklyStudyChart';
+import MypageCalendar from "../components/MypageCalendar";
 
 const MyPageDashBoard = () => {
     return (
@@ -14,7 +14,7 @@ const MyPageDashBoard = () => {
             <container className="flex ml-100">
                 <MypageSidebar />
                 <main>
-                    <img className="w-full max-h-52 " src={MypageHeader} />
+                    <img className="w-full max-h-52 " src='../assets/mypage-header.png' />
                     <div className="mx-28 mt-16">
                         <div className="w-full flex">
                             <div className="dashboard-box">
@@ -58,7 +58,7 @@ const MyPageDashBoard = () => {
                                 <div>
                                     
                                     대망의 자바스크립트 차트
-                                    <WeeklyStudyChart />
+                                    <MypageWeeklyStudyChart />
                                     
                                 </div>
                                 <div>주간 학습 : 이번주 참석 횟수 계산 / 이번주 모든 횟수 계산</div>
@@ -67,7 +67,7 @@ const MyPageDashBoard = () => {
                         <div className="m-14">
                             <div>학습 일정</div>
                             <div>
-                                <MyCalendar/>
+                                <MypageCalendar/>
                             </div>
                         </div>
                     </div>

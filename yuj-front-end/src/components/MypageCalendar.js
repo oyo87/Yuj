@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 
-class MyCalendar extends Component {
+class MypageCalendar extends Component {
     render() {
         return (
             <div className="App">
@@ -20,4 +20,4 @@ class MyCalendar extends Component {
     }
 }
 
-export default MyCalendar;
+export default MypageCalendar;

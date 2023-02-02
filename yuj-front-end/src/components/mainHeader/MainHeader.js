@@ -10,7 +10,7 @@ const MainHeader = () => {
     <div className="navbar bg-secondary" style={{ height: '90px', minHeight: '90px' }}>
       <div className="flex-1">
         <Link to="/" className="normal-case text-xl">
-          <img className='yuj-logo' alt='No Image' src='assets/YujMainLogo.svg' style={{ height: '75px', marginLeft: '40px' }}></img>
+          <img className='yuj-logo' alt='No Image' src='/assets/YujMainLogo.svg' style={{ height: '75px', marginLeft: '40px' }}></img>
         </Link>
       </div>
       <div className="flex-none" >
