@@ -1,25 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import { BrowserRouter as BrRouter, Route, Navigate, Routes, Outlet } from 'react-router-dom'
-import Vidu from './Vidu'
+import { white, black } from 'tailwindcss/colors';
+import MypageSidebar from './components/MypageSidebar';
+import { BrowserRouter, Routes } from 'react-router-dom/dist';
+import MyPage from './pages/MyPageDashBoard';
+import StudioPage from './pages/StudioPage';
+import { Route } from 'react-router-dom';
+import MyPageInfo from './pages/MyPageInfo';
+import MyPageLecture from './pages/MyPageLecture';
+import MyPageDashBoard from './pages/MyPageDashBoard';
+import mainHeader from './components/mainHeader/MainHeader';
+
+
 
 function App() {
   return (
-    <div className="App">
-      <AccountBoxIcon />
-
-      <BrRouter>
+    // start div
+    <div className="App" style={{background : white}}> 
+      
+      <BrowserRouter>
+      
         <Routes>
-            <Route path='/' element={<Vidu/>}>
-            </Route>
-            <Route path='/chat/*' element={<Outlet/> }>
-                <Route path='stage' element={<Vidu/>}></Route>
-            </Route>
-            <Route path='/*' element={ <Navigate to='/'/>} />
+          <Route path="/studio" element={<StudioPage />}></Route>
+          <Route path="/mypage/dashboard" element={<MyPageDashBoard />}></Route>
+          <Route path="/mypage/info" element={<MyPageInfo />}></Route>
+          <Route path="/mypage/lecture" element={<MyPageLecture />}></Route>
         </Routes>
-      </BrRouter>
-
+        
+      </BrowserRouter>
+      
+      {/* end div */}
     </div>
   );
 }

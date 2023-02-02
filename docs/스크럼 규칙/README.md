@@ -1015,3 +1015,11 @@ pose estimation 3초 정도면 적당한 것 같으니 대신 정확도 높이�
         - [5]openvidu 샘플 코드 학습
             - [3]화면 정보 가져오기
             - [2]음성 정보 가져오기
+
+### 02.01 Daily Scrum
+<img src="./Daily Scrum Images/20230201.PNG"/>
+### 🐞***버그 수정 과정중 공유사항***
+
+- ***useEffect가 두 번 실행되는 오류***
+
+***결론 : src/index.js의 <React.StrictMode> 태그로 인하여 useEffect가 두 번 실행 되므로 state 값을 바꾸는 로직이 있다면 EventListener로 붙였다가 removeEventListener를 로직 끝에 실행 시키는 등의 방법을 사용해야 합니다…***
