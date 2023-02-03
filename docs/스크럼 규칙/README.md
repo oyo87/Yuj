@@ -1034,3 +1034,12 @@ pose estimation 3초 정도면 적당한 것 같으니 대신 정확도 높이�
         - 🐞[JavaScript] for vs forEach?
 
 <img src="./Daily Scrum Images/20230202.PNG"/>
+
+### 02.03 Daily Scrum
+
+- 오늘의 이슈
+    - 공유 사항
+        
+        [[react] useEffect 안에서 비동기 작업](https://www.notion.so/react-useEffect-a61c14ef88d74f23a44ba1f751687462)
+<img src="./Daily Scrum Images/20230203.PNG"/> 
+<img src="./Daily Scrum Images/20230203-2.PNG"/>  
