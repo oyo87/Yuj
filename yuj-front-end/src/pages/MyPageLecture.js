@@ -2,6 +2,8 @@ import React from "react";
 import MypageSidebar from './../components/MypageSidebar';
 import MainHeader from './../components/mainHeader/MainHeader';
 import MainFooter from "../components/mainFooter/MainFooter";
+import StudioSamplePage from './StudioSamplePage';
+import TestLectureCard from './TestLectureCard';
 
 
 const MyPageLecture = () => {

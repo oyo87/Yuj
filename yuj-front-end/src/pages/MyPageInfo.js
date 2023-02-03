@@ -18,11 +18,11 @@ const MyPageInfo = () => {
     return (
         <>
             <MainHeader />
-            <div style={{ display: "flex" }}>
+            <div className="flex">
                 <MypageSidebar />
-                <div className="info-background-image" >
+                <div className="flex info-background-image" >
 
-                    <div className="w-full flex flex-col gap-2 ">
+                    <div className="w-full flex flex-col">
 
                         <form className="p-10 card bg-base-200 info-container " method="POST">
 

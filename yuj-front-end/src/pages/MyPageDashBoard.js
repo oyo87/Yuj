@@ -13,8 +13,8 @@ const MyPageDashBoard = () => {
             <container className="flex ml-100">
                 <MypageSidebar />
                 <main>
-                    <img className="w-full max-h-52 " src='/assets/mypage-header.png' />
                     <div className="mx-28 mt-16">
+                    <div className="text-3xl font-bold">마이 페이지 - 대시보드</div>
                         <div className="w-full flex">
                             <div className="dashboard-box">
                                 <div className="flex m-5 justify-between" >
