@@ -95,6 +95,7 @@ class Vidu extends Component {
     }
 
     handleMainVideoStream(stream) {
+        console.log('클릭했음', stream);
         if (this.state.mainStreamManager !== stream) {
             this.setState({
                 mainStreamManager: stream
@@ -223,7 +224,7 @@ class Vidu extends Component {
                                 publishAudio: true, // 최초 입장 시 오디오 설정 여부
                                 publishVideo: true, // 최초 입장 시 비디오 설정 여부
                                 resolution: '640x480', // 영상 해상도 "320x240", "640x480", "1280x720"
-                                frameRate: 60, // 초당 프레임 수
+                                frameRate: 25, // 초당 프레임 수
                                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                                 mirror: false, // 미러 버전
                             });
@@ -398,8 +399,11 @@ class Vidu extends Component {
             background: white;
             display: flex !important;
             flex-wrap: wrap !important;
+            justify-content: center;
+            top:0px;
             width: 100vw;
-            height: 95vh;
+            height: 92vh;
+            overflow-y: scroll;
         `;
 
         const ButtonContainer = styled.div`
@@ -409,6 +413,7 @@ class Vidu extends Component {
             bottom: 0px;
 
             display: flex !important;
+            clear: both;
             justify-content: space-evenly !important;
         `;
 
@@ -437,16 +442,19 @@ class Vidu extends Component {
                         </div>
                         <VideoContainer>
                             {this.state.mainStreamManager !== undefined ? (
-                                <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                                <div style={{width:'34%'}}>
+                                    <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                                </div>
                             ) : null}
                             {this.state.subscribers.map((sub, i) => (
-                                <div key={i} onClick={() => this.handleMainVideoStream(sub)}>
-                                    <UserVideoComponent streamManager={sub} />
+                                <div key={i} style={{width:'33%'}} onClick={() => this.handleMainVideoStream(sub)}>
+                                    <UserVideoComponent streamManager={sub} onClick={() => { console.log('클릭',sub);} } />
                                 </div>
                             ))}
                         </VideoContainer>
                         {this.state.mainStreamManager !== undefined ? (
                             <ButtonContainer>
+                                <img className='yuj-logo' alt='No Image' src='/assets/YujMainLogo.svg' style={{ marginBottom: '10px' }}></img>
                                 <button class="clickControl" onClick={this.videoControl}><h3>{this.state.publisher.properties.publishVideo === true ?
                                     <span class="material-symbols-outlined">videocam</span> : <span class="material-symbols-outlined">videocam_off</span>}  {this.state.videoMessage}</h3>
                                 </button>
@@ -468,8 +476,6 @@ class Vidu extends Component {
         );
     }
 
-
-    
     async getToken() {
         const sessionId = await this.createSession(this.state.mySessionId);
         return await this.createToken(sessionId);

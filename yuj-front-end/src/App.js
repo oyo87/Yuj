@@ -9,38 +9,33 @@ import MyPageInfo from './pages/MyPageInfo';
 import MyPageLecture from './pages/MyPageLecture';
 import MyPageDashBoard from './pages/MyPageDashBoard';
 import mainHeader from './components/mainHeader/MainHeader';
-import ComponentsTest from './pages/ComponentsTest';
+import { ApexChart } from 'apexcharts';
+import WeeklyStudyChart from './components/MypageWeeklyStudyChart';
+import TestLectureCard from './pages/TestLectureCard';
+import TestLectureDetail from './pages/TestLectureDetail';
+import Test from './pages/ComponentsTest';
+
 
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="App">
+    // start div
+    <div className="App" style={{background : white}}> 
 
-        <ComponentsTest />
-
-      </div>
-    </BrowserRouter>
-  );
-
-  // return (
-  //   // start div
-  //   <div className="App" style={{background : white}}> 
-      
-  //     <BrowserRouter>
-      
-  //       <Routes>
-  //         <Route path="/studio" element={<StudioPage />}></Route>
-  //         <Route path="/mypage/dashboard" element={<MyPageDashBoard />}></Route>
-  //         <Route path="/mypage/info" element={<MyPageInfo />}></Route>
-  //         <Route path="/mypage/lecture" element={<MyPageLecture />}></Route>
-  //       </Routes>
+      <BrowserRouter>
+        <Routes>
+          <Route path='*' element={<Test />}></Route>
+          <Route path="/studio" element={<StudioPage />}></Route>
+          <Route path="/mypage/dashboard" element={<MyPageDashBoard />}></Route>
+          <Route path="/mypage/info" element={<MyPageInfo />}></Route>
+          <Route path="/mypage/lecture" element={<MyPageLecture />}></Route>
+        </Routes>
         
-  //     </BrowserRouter>
+      </BrowserRouter>
       
-  //     {/* end div */}
-  //   </div>
-  // );
+      {/* end div */}
+    </div>
+  );
 }
 
 export default App;
