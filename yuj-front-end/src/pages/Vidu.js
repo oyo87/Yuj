@@ -412,7 +412,7 @@ class Vidu extends Component {
             justify-content: space-evenly !important;
         `;
 
-        console.log('현재 Subscribers 정보 : ', this.state.subscribers);
+        console.log('현재 Subscribers 정보 :', this.state.subscribers);
         return (
             <div>
                 {this.state.session !== undefined ? (

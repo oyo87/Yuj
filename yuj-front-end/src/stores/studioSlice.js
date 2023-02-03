@@ -1,73 +1,42 @@
-/**
- * 1. 필요한 메서드 import 하기
- */
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
+// import axios from 'axios';
 
 
-
-/**
- * 2. Axios 함수 만들기(API를 호출하는 함수)
- */
-const getStudio = createAsyncThunk("GET_STUDIO", async(studioId) => {
-	const response = await axios.get(`https://jsonplaceholder.typicode.com/posts/${studioId}`);
-	return response.data;
-})
-const createStudio = createAsyncThunk("CREATE_STUDIO", async(studio) => {
-	const studioForm = {
-		'userId': studio.teacherId,
-		'title': studio.studioName,
-		'body': studio.studioDesc
-	}
-
-	console.log(studioForm);
-
-	const response = await axios.post(`https://jsonplaceholder.typicode.com/posts`,JSON.stringify(studioForm),{
-		headers: {
-			'Content-type': 'application/json; charset=UTF-8',
-		}
-	});
-	return response.data;
-})
-
-
-
-
-/**
- * 3. 사용할 State를 정의하는 Slice 만들기
- */
 const studioSlice = createSlice({
 	name:'studioSlice',
 
-	// initialState => State의 초기값
 	initialState:{
-		teacherId: 0,
-		studioName: "초기값",
-		studioDesc: "초기값",
+		studioDetail: {
+			studio_id: 0,
+			user_id: 0,
+			banner_image: './assets/infoBackground.png',
+			description: 
+			`※ 구독자분들과 함께 요가수련하는 요가 안내자입니다.
+			※ 비즈니스 문의 | yogaboyofficial@gmail.com
+			※ 하루10분, 요가로 찾은 내 몸의 선 | 클래스101 | https://101creator.page.link/eW3k
+			※ 건강한 다이어트, 하루 30분 요가 챌린지 | 클래스유 | https://me2.do/GRAbFITs`,
+			nickname: '요가소년',
+			email: 'yogachild@gmail.com',
+		},
+		studioList: [],
 	},
 
-	// reducers => State를 바꿀 수 있는 모든 함수(= action) 정의
 	reducers: {
 		changeStudioName:(state, action) => {
-			state.studioName = action.payload;
+			const newStudioName = action.payload;
+			state.studioName = newStudioName;
 		},
 		changeStudioDesc:(state, action) => {
-			state.studioDesc = action.payload;
+			const newStudioDesc = action.payload;
+			state.studioDesc = newStudioDesc;
 		},
+		addStudioToList:(state, action) => {
+			const newStudio = action.payload;
+			state.studioList = [...state.studioList, newStudio];
+		}
 	},
 
-	// extraReducers => Axios 함수의 상태(Success, Failed, Pending)에 따른 동작 정의
-	extraReducers: {
-		[getStudio.fulfilled]: (state, {payload}) => {
-			console.log("get Studio", payload);
-			state.studioName = payload.title;
-			state.studioDesc = payload.body;
-		},
-		[createStudio.fulfilled]: (state, {payload}) => {
-			console.log("create Studio", payload);
-			alert("Studio created!");
-		}
-	}
+	extraReducers: {}
 });
 
 
@@ -80,7 +49,4 @@ const studioSlice = createSlice({
 export default studioSlice;
 
 // 일반 action export 하기
-export const { changeStudioName, changeStudioDesc } = studioSlice.actions;
-
-// Axios 비동기 action export 하기
-export { getStudio, createStudio };
+export const { changeStudioName, changeStudioDesc, addStudioToList } = studioSlice.actions;

@@ -7,6 +7,10 @@ import Home from './Home';
 import Login from './Login';
 import SignIn from './Signin';
 import Vidu from '../utils/FunctionalizedVidu'
+import StudioPage from './StudioPage';
+import StudioSamplePage from './StudioSamplePage';
+import TestLectureCard from './TestLectureCard';
+import TestLectureDetail from './TestLectureDetail';
 
 const Test = () => {
   const location = useLocation();
@@ -24,6 +28,10 @@ const Test = () => {
             <Route path="/login" element={<Login />} />
             <Route path='/vidu' element={<Vidu />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/studio" element={<StudioPage />} />
+          <Route path="/studiosample" element={<StudioSamplePage />} />
+          <Route path="/testLecturecard" element={<TestLectureCard />} />
+          <Route path="/testLectureDetail" element={<TestLectureDetail />} />
         </Routes>
       </div> 
       {location.pathname !== '/vidu' ? <MainFooter /> : null}
