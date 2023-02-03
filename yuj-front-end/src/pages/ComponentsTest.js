@@ -10,6 +10,7 @@ import StudioPage from './StudioPage';
 import StudioSamplePage from './StudioSamplePage';
 import TestLectureCard from './TestLectureCard';
 import TestLectureDetail from './TestLectureDetail';
+import UserLivePage from './UserLivePage';
 
 const Test = () => {
   return (
@@ -24,6 +25,7 @@ const Test = () => {
           <Route path="/studiosample" element={<StudioSamplePage />} />
           <Route path="/testLecturecard" element={<TestLectureCard />} />
           <Route path="/testLectureDetail" element={<TestLectureDetail />} />
+          <Route path='/userLive' element={<UserLivePage></UserLivePage>}></Route>
         </Routes>
       </div>
       <MainFooter />
