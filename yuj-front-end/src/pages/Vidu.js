@@ -9,8 +9,8 @@ import Messages from '../components/openVidu/Messages'
 import { Base64 } from 'js-base64';
 import { SignalCellularNull } from "@mui/icons-material";
 
-const APPLICATION_SERVER_URL = "http://localhost:5000/";
-const OPENVIDU_SERVER_URL = 'http://localhost:4443';
+const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io/";
+const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io/openvidu';
 const OPENVIDU_SERVER_SECRET = '123123';
 
 class Vidu extends Component {
