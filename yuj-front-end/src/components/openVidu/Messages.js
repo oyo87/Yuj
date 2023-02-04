@@ -47,6 +47,8 @@ const MessageLabel = styled.label`
     input {
         border: none;
         border-radius: 20px;
+        padding-left: 20px;
+        padding-right: 40px;
     }
     button {
         position: absolute;
