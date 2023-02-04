@@ -22,7 +22,7 @@ const StudioPage = () => {
                     <div className={'px-40'}>
                         <StudioMainDescription/>
                         <ListTitle titleText={'강의 목록'} onClickEvent={() => console.log('강의 목록 clicked!')}/>
-                        <div className={'mt-28 flex justify-evenly'}>
+                        <div className={'mt-20 my-48 flex justify-evenly'}>
                             <LectureItemCard />
                             <LectureItemCard />
                             <LectureItemCard />

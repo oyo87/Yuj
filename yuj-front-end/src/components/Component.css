@@ -5,8 +5,8 @@
     align-items: center;
     color : black;
     line-height : 5;
-    width: 300px;
-    min-height: 788px;
+    width: 260px;
+    /* min-height: 788px; */
     height: 100%;
     font-size : 18px;
     font-family: 'nanumgothic';
@@ -14,9 +14,12 @@
 
 .mypage-sidebar-yuj-logo{
     position : relative;
-    top: 40%;
+    width: 100px;
+    /* top: 40%; */
 }
 
 .sidebar-menu{
     padding: 0px 70px 0px 70px;
+    font-size: 14px;
+    font-weight: 200;
 }

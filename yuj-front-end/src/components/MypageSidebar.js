@@ -25,19 +25,21 @@ function MypageSidebar() {
 
         <div className="drawer-side">
           <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-          <ul className="flex menu p-5  bg-primary text-base-content mypage-sidebar" >
-            {/* 사이드바 내용물 map이용 출력 */}
-            {sidebarMenu.map((menu) => {
-              return (
-                <li>
-                  <Link to={menu.path} className="sidebar-menu">
-                    {menu.name}
-                  </Link>
-                </li>
-              );
-            })}
-            <img className='mypage-sidebar-yuj-logo' src='/assets/mypage-sidebar-yuj-logo.png' alt='yuj sidebar logo' />
+          <ul className="flex justify-between menu p-5  bg-primary text-base-content mypage-sidebar" >
+            <div>
+              {/* 사이드바 내용물 map이용 출력 */}
+              {sidebarMenu.map((menu) => {
+                return (
+                  <li>
+                    <Link to={menu.path} className="sidebar-menu">
+                      {menu.name}
+                    </Link>
+                  </li>
+                );
+              })}
+            </div>
 
+            <img className='mypage-sidebar-yuj-logo mb-10' src='/assets/mypage-sidebar-yuj-logo.png' alt='yuj sidebar logo' />
           </ul>
         </div>
 
