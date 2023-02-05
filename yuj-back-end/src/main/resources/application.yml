@@ -24,6 +24,11 @@ spring:
       open-in-view: false
   profiles:
     include: jwt
+  servlet:
+    multipart:
+      location: C:\Users\SSAFY\Downloads
+      max-file-size: 10MB
+      max-request-size: 50MB
 
 # logging.level.web=DEBUG
 # logging.level.org.hibernate.SQL=DEBUG
