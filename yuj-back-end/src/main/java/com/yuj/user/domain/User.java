@@ -76,7 +76,8 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return String.valueOf(this.userId);
+//        return String.valueOf(this.userId);
+        return this.id;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

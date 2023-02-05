@@ -26,7 +26,7 @@ public class JwtProvider {
     @Value("spring.jwt.secret")
     private String secretKey;
     private String ROLES = "roles";
-    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1 * 60 * 1000L;    //  access token 만료 시간 (1분)
+    private final long ACCESS_TOKEN_VALID_MILLISECOND = 1 * 90 * 1000L;    //  access token 만료 시간 (1분 30초)
     private final long REFRESH_TOKEN_VALID_MILLISECOND = 24 * 60 * 60 * 1000L;  //  refresh token 만료 시간 (하루)
 
     private final CustomUserDetailService userDetailService;
@@ -37,7 +37,10 @@ public class JwtProvider {
     }
 
     //  Jwt 생성
-    public TokenResponseDTO createTokenResponseDto(Long userPk, List<String> roles) {
+    public TokenResponseDTO createTokenResponseDto(String userPk, List<String> roles) {
+        System.out.println("In createTokenResponseDto");
+        System.out.println("userPk = " + userPk);
+
         //  User 구분을 위해 Claims에 User pk 및 authorities 목록 삽입
         Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
         claims.put("roles", roles);
@@ -76,6 +79,10 @@ public class JwtProvider {
         if (claims.get(ROLES) == null) {
             throw new CAuthenticationEntryPointException();
         }
+
+        System.out.println("in getAuthentication()");
+        System.out.println("claims.getSubject() = " + claims.getSubject());
+        System.out.println("claims.getId() = " + claims.getId());
 
         UserDetails userDetails = userDetailService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());

@@ -50,7 +50,7 @@ public class LoginService {
         System.out.println("222222222222222222222222222222222222222222222222222222222222222");
 
         //  AccessToken, RefreshToken 발급
-        TokenResponseDTO tokenResponseDTO = jwtProvider.createTokenResponseDto(user.getUserId(), user.getRoles());
+        TokenResponseDTO tokenResponseDTO = jwtProvider.createTokenResponseDto(user.getId(), user.getRoles());
 
         //  RefreshToken을 DB에 저장
         Token refreshToken = Token.builder()
@@ -64,6 +64,7 @@ public class LoginService {
 
     @Transactional
     public TokenResponseDTO reissue(TokenRequestDTO tokenRequestDTO) {
+        System.out.println("reissue service");
         //  Refresh Token이 만료되었을 경우
         if(!jwtProvider.validationToken(tokenRequestDTO.getRefreshToken()))
             throw new CRefreshTokenException();
@@ -71,9 +72,10 @@ public class LoginService {
         //  Access Token에서 username PK 가져오기
         String accessToken = tokenRequestDTO.getAccessToken();
         Authentication authentication = jwtProvider.getAuthentication(accessToken);
+        System.out.println("authentication.getName() = " + authentication.getName());
 
         //  user pk로 유저 검색 / repo에 저장된 Refresh Token이 없음
-        User user = userRepository.findById(Long.parseLong(authentication.getName()))
+        User user = userRepository.findById(authentication.getName())
                 .orElseThrow(CUserNotFoundException::new);
 
         Token token = tokenRepository.findByUserId(user.getUserId())
@@ -84,7 +86,7 @@ public class LoginService {
             throw new CRefreshTokenException();
 
         //  Access Token, Refresh Token 재발급, Refresh Token 저장
-        TokenResponseDTO newCreatedToken = jwtProvider.createTokenResponseDto(user.getUserId(), user.getRoles());
+        TokenResponseDTO newCreatedToken = jwtProvider.createTokenResponseDto(user.getId(), user.getRoles());
         Token updatedToken = token.updateRefreshToken(newCreatedToken.getRefreshToken());
         tokenRepository.save(updatedToken);
 

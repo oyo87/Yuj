@@ -32,11 +32,18 @@ public class LoginController {
         return responseService.getSingleResultSuccess(tokenResponseDTO);
     }
 
+    @ApiOperation(
+            value = "액세스, 리프레시 토큰 재발급",
+            notes = "액세스 토큰 만료시 회원 검증 후 리프레쉬 토큰을 검증해서 액세스 토큰과 리프레시 토큰을 재발급합니다."
+    )
     @PostMapping("/reissue")
     public SingleResult<TokenResponseDTO> reissue(
             @ApiParam(value = "토큰 재발급 요청 DTO", required = true)
             @RequestBody TokenRequestDTO tokenRequestDTO
             ) {
+        System.out.println("tokenRequestDTO.getAccessToken() = " + tokenRequestDTO.getAccessToken());
+        System.out.println("tokenRequestDTO.getRefreshToken() = " + tokenRequestDTO.getRefreshToken());
+        
         return responseService.getSingleResultSuccess(loginService.reissue(tokenRequestDTO));
     }
 }

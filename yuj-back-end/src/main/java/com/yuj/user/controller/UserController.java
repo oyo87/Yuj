@@ -6,12 +6,13 @@ import com.yuj.user.dto.request.UserSignupRequestDTO;
 import com.yuj.user.dto.request.UserUpdateRequestDTO;
 import com.yuj.user.dto.response.UserResponseDTO;
 import com.yuj.user.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Api(tags = {"User"})
 @RequiredArgsConstructor
@@ -39,15 +40,34 @@ public class UserController {
         }
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header"
+            ),
+    })
     @ApiOperation(value = "회원 정보 조회", notes = "id로 회원정보를 가져옵니다.")
     @GetMapping("/{id}")
     public SingleResult<UserResponseDTO> searchById(
             @ApiParam(value = "회원 id", required = true)
-            @PathVariable("id")String id) {
+            @PathVariable("id")String id
+            ) {
+//        System.out.println("In searchById");
+//        String accessToken = request.getParameter("X-AUTH-TOKEN");
+//        System.out.println("accessToken = " + accessToken);
+        
         UserResponseDTO userResponseDTO = userService.searchById(id);
         return responseService.getSingleResultSuccess(userResponseDTO);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header"
+            )
+    })
     @ApiOperation(value = "회원 정보 수정", notes = "id에 해당하는 회원정보를 수정합니다.")
     @PutMapping("/{id}")
     public SingleResult<HttpStatus> updateUser(
