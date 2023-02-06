@@ -6,12 +6,15 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import SignIn from './Signin';
-import Vidu from '../utils/FunctionalizedVidu'
+import ViduTeacher from '../utils/FunctionalizedViduTeacher'
+import ViduStudent from '../utils/FunctionalizedViduStudent'
 import StudioPage from './StudioPage';
 import StudioSamplePage from './StudioSamplePage';
-import TestLectureCard from './TestLectureCard';
-import TestLectureDetail from './TestLectureDetail';
+import TestLectureCard from './TestLectureCard(삭제예정)';
+import TestLectureDetail from './TestLectureDetail(삭제예정)';
 import FileInput from '../components/FileInput';
+import StudioLectureList from './StudioLectureList';
+import StudioLectureDetail from './StudioLectureDetail';
 
 const Test = () => {
   const location = useLocation();
@@ -22,21 +25,26 @@ const Test = () => {
   return (
     // <div className={Styles.wrapper}>
     <div>
-      {location.pathname !== '/vidu' ? <MainHeader /> : null}
+      {location.pathname !== '/viduTeacher' ? location.pathname !== '/viduStudent' ? <MainHeader /> : null : null}
+      
       <div className={Styles.contentWrapper}>
         <Routes>
           <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path='/vidu' element={<Vidu />} />
+          <Route path='/viduTeacher' element={<ViduTeacher />} />
+          <Route path='/viduStudent' element={<ViduStudent />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/studio" element={<StudioPage />} />
           <Route path="/studiosample" element={<StudioSamplePage />} />
-          <Route path="/testLecturecard" element={<TestLectureCard />} />
-          <Route path="/testLectureDetail" element={<TestLectureDetail />} />
+          <Route path="/studioLectureList" element={<StudioLectureList />} />
+          <Route path="/studioLectureDetail" element={<StudioLectureDetail />} />
+          {/* <Route path="/testLecturecard" element={<TestLectureCard />} />
+          <Route path="/testLectureDetail" element={<TestLectureDetail />} /> */}
           <Route path="/fileInput" element={<FileInput />} />
         </Routes>
       </div> 
-      {location.pathname !== '/vidu' ? <MainFooter /> : null}
+      {location.pathname !== '/viduTeacher' ? location.pathname !== '/viduStudent' ? <MainFooter /> : null : null}
+      
     </div>
   )
 }

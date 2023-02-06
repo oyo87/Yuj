@@ -11,8 +11,6 @@ import MyPageDashBoard from './pages/MyPageDashBoard';
 import mainHeader from './components/mainHeader/MainHeader';
 import { ApexChart } from 'apexcharts';
 import WeeklyStudyChart from './components/MypageWeeklyStudyChart';
-import TestLectureCard from './pages/TestLectureCard';
-import TestLectureDetail from './pages/TestLectureDetail';
 import Test from './pages/ComponentsTest';
 
 
@@ -30,7 +28,6 @@ function App() {
           <Route path="/mypage/info" element={<MyPageInfo />}></Route>
           <Route path="/mypage/lecture" element={<MyPageLecture />}></Route>
         </Routes>
-        
       </BrowserRouter>
       
       {/* end div */}
