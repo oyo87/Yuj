@@ -9,10 +9,9 @@ const UserCamera = (props) => {
     return(
         <>
             <div className="video-div">
+                <canvas id={canvasTagName} width={width} height={height}></canvas>
                 <img id={imgTagName} src={imgSrc} width={width} height={height}></img>
-                <canvas id={canvasTagName}></canvas>
             </div>
-        
         </>
     )
 

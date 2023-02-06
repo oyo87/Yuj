@@ -13,9 +13,24 @@ const UserLivePage = () => {
 
     const [detector, setDetector]  = useState("");
     const imageShape = [192, 192, 3];
+
+    // if user turn on camera, set true
+    let USER_VIDEO_STATE = true;
+    let TEACHER_VIDEO_STATE = true;
+    
+    // infos about ai feedback
+    let AI_FEEDBACK_AVAILABLE = true;
+    let SKELETON_AVAILABLE = true;
+    
+    //camera & image size by user window
     const CLIENT_WIDTH = window.innerWidth;
     const CLIENT_HEIGHT = window.innerHeight;
-    const THRESHHOLD = 0.3;
+    
+    //threshhold for print result
+    const SIMILARITY_THRESHHOLD = 0.5;
+    const SCORE_THRESHHOLD = 0.3;
+    
+    //const value for draw skeleton
     const LINE_WIDTH = 2;
     const RADIUS = 4;
 
@@ -41,9 +56,6 @@ const UserLivePage = () => {
         console.log("Current inference Devices : ", tf.getBackend());
     }
 
-    /* 
-    
-    */
     async function loadModel(modelConfig){
         let model = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, modelConfig);
         setDetector(model);
@@ -53,7 +65,6 @@ const UserLivePage = () => {
     }
 
     async function estimate(imageElement){
-
         var infStartTime = Date.now();
         const pose = await detector.estimatePoses(imageElement, {flipHorizontal: false});
         console.log('inf time : ', Math.floor((Date.now() - infStartTime)/1000), tf.getBackend());
@@ -61,16 +72,13 @@ const UserLivePage = () => {
 
         if(!pose.length)
             throw new Error("Cannot find poses. try again or check your state");
-
-        // return this.convert2CalculateFormat(await pose[0]);
         return pose[0];
     }
 
-    async function convert2CalculateFormat(pose){
+    async function convertToCalculateFormat(pose){
         console.log('formatting to similarity');
         const formatObjectList = [];
         for(const [key, value] of pose.keypoints.entries()){
-            // console.log('before format', value);
             let formatObject = {
                 score : value.score,
                 part : value.name,
@@ -79,10 +87,9 @@ const UserLivePage = () => {
                     y : value.y
                 }
             }
-            // console.log('after format ', formatObject);
-
             formatObjectList.push(formatObject);
         }
+
         //deep copy
         pose.keypoints = [...formatObjectList];
         return pose;
@@ -108,7 +115,7 @@ const UserLivePage = () => {
         const posePromises = [pose1Image, pose2Image].map(async (item) => {
                 let result = await estimate(item);
                 console.log('wow', result);
-                result = await convert2CalculateFormat(result);
+                result = await convertToCalculateFormat(result);
                 poseResults.push(result);
             });
             
@@ -116,17 +123,59 @@ const UserLivePage = () => {
         
         const weightDistance = await calSimilarity({strategy : 'weightedDistance'}, ...poseResults);
         alert(serializeObject(weightDistance));
+        
+        const userColor = weightDistance >= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
 
-        await Promise.all([
-            drawPoints('canvas1', 'test1', poseResults[0].keypoints, 'Green'),
-            drawPoints('canvas2', 'test2', poseResults[1].keypoints, 'Red'),
-            drawSkeleton('canvas1', 'test1', poseResults[0].keypoints, 'Green'),
-            drawSkeleton('canvas2', 'test2', poseResults[1].keypoints, 'Red')
-        ]);
+        drawPoints('canvas1', 'test1', poseResults[0].keypoints, userColor);
+        drawPoints('canvas2', 'test2', poseResults[1].keypoints, 'Red');
+        drawSkeleton('canvas1', 'test1', poseResults[0].keypoints, userColor);
+        drawSkeleton('canvas2', 'test2', poseResults[1].keypoints, 'Red');
+    }
 
+    function test(){
+        console.log(makeExecuteFunctionList(USER_VIDEO_STATE, AI_FEEDBACK_AVAILABLE));
+    }
+
+    async function makeExecuteFunctionList(videoFlag, feedbackFlag){
+        let saveList = [];
+        if(videoFlag && feedbackFlag){
+            saveList.push(await estimate);
+            saveList.push(await convertToCalculateFormat);
+        }
+
+        return saveList;
     }
 
     async function inferenceAndDrawPoints(){
+
+        const userVideo = document.getElementById('userVideo');
+        const teacherVideo = document.getElementById('teacherVideo');
+
+        let estimateImageList = []
+        let userExecuteFunctionList = null
+        let teacherExecuteFunctionList = null
+
+        if (USER_VIDEO_STATE && AI_FEEDBACK_AVAILABLE) { userExecuteFunctionList = [] }
+        if (TEACHER_VIDEO_STATE && AI_FEEDBACK_AVAILABLE) { teacherExecuteFunctionList = [] }
+
+        let poseResults = []
+
+        const posePromises = estimateImageList.map(async (image)=>{
+            let result = await estimate(image);
+            result = await convertToCalculateFormat(result);
+            poseResults.push(result);
+        });
+
+        await Promise.all(posePromises);
+
+        const weightDistance = USER_VIDEO_STATE && TEACHER_VIDEO_STATE ? 
+                await calSimilarity({strategy : 'weightedDistance'}, ...poseResults) : 0;
+
+        const userDrawSkeletonColor = weightDistance >= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
+
+        if(USER_VIDEO_STATE && AI_FEEDBACK_AVAILABLE && SKELETON_AVAILABLE){
+            drawPoints('userVideo', 'userCanvas', '' ,userDrawSkeletonColor)
+        }
         
     }
 
@@ -171,7 +220,7 @@ const UserLivePage = () => {
                 // score is null, show keypoint only
                 const score1 = keypoint1.score != null ? keypoint1.score : 1;
                 const score2 = keypoint2.score != null ? keypoint2.score : 1;
-                const scoreThreshHold = THRESHHOLD || 0;
+                const scoreThreshHold = SCORE_THRESHHOLD || 0;
 
                 if(score1 >= scoreThreshHold && score2 >= scoreThreshHold){
                     context.beginPath();
@@ -187,23 +236,6 @@ const UserLivePage = () => {
 
     }
 
-    async function drawTest(){
-        const image1 = document.getElementById('canvas1');
-        const image = document.getElementById('test1');
-        let context = image1.getContext('2d');
-
-        context.beginPath();
-        context.drawImage(image, 0, 0, image.width, image.height);
-        context.moveTo(75,50);
-        context.lineTo(100, 75);
-        context.lineTo(100,75);
-        context.stroke();
-
-        console.log(poseDetection.util.getAdjacentPairs("MoveNet"));
-
-
-    }
-
     function serializeObject(object){
         return JSON.stringify(object);
     }
@@ -212,18 +244,17 @@ const UserLivePage = () => {
         <>
             <h2>pose estimation demo(moveNet)</h2>
             <div className="video-div" style={{display: 'inline-flex'}}>
-                <div className='imageObject'>
-                    <img id='test1' src="./assets/Sample2.jpg" width={1000} height={1000} alt=""></img>
-                    <canvas id='canvas1' width={1000} height={1000}></canvas>
-                </div>
-                <div className='imageObject'>
-                    <img id='test2' src="./assets/Sample.jpg" width={1000} height={1000} alt=""></img>
-                    <canvas id='canvas2' width={1000} height={1000}></canvas>
-                </div>
+                <UserCamera imgTagName='userVideo' canvasTagName='userCanvas' imgSrc="./assets/Sample2.jpg" 
+                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
+                <UserCamera imgTagName='teacherVideo' canvasTagName='teacherCanvas' imgSrc="./assets/Sample.jpg" 
+                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
             </div>
-            <UserCamera imgTagName="test3" canvasTagName="test3" imgSrc="./assets/Sample3.jpg" width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}></UserCamera>
+                <div className='videoTest'>
+                    <canvas id='videoCanvas'></canvas>
+                    <video id='videoTag' width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}></video>
+                </div>
             <button onClick={calPose}>get pose</button>
-            <button onClick={drawTest}>Draw</button>
+            <button onClick={test}>test</button>
         </>
     );
 }
