@@ -12,15 +12,14 @@ import UserCamera from '../components/UserCamera';
 const UserLivePage = () => {
 
     const [detector, setDetector]  = useState("");
+    // infos about ai feedback
+    const [inferenceToggle, setInferenceToggle] = useState(false);
+    const [skeletonToggle, setSkeletonToggle] = useState(false);
     const imageShape = [192, 192, 3];
 
     // if user turn on camera, set true
     let USER_VIDEO_STATE = true;
     let TEACHER_VIDEO_STATE = true;
-    
-    // infos about ai feedback
-    let AI_FEEDBACK_AVAILABLE = true;
-    let SKELETON_AVAILABLE = true;
     
     //camera & image size by user window
     const CLIENT_WIDTH = window.innerWidth;
@@ -34,6 +33,9 @@ const UserLivePage = () => {
     const LINE_WIDTH = 2;
     const RADIUS = 4;
 
+    // for interval
+    let timer;
+
     useEffect( ()=>{
         //init device
         setModelBackend();
@@ -41,6 +43,18 @@ const UserLivePage = () => {
         const modelConfig = {modelType : poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING};
         loadModel(modelConfig);
     }, []);
+
+    useEffect(()=>{
+
+        if(inferenceToggle){ 
+            timer = setInterval(inferenceAndDrawPoints, 100);
+            console.log('wowwow');
+        }
+
+        clearInterval(timer);
+        console.log('exit interval');
+
+    }, [inferenceToggle]);
 
     //이 페이지를 벗어나는 경우 모델 지우기 구현해야함
     //lifecycle 찾아볼 것
@@ -107,6 +121,12 @@ const UserLivePage = () => {
     }
 
     async function calPose(){
+
+        if(!inferenceToggle) { 
+            alert('ai 사용을 켜주세요')
+            return;
+        }
+
         const pose1Image = document.getElementById('test1');
         const pose2Image = document.getElementById('test2');
         
@@ -133,48 +153,40 @@ const UserLivePage = () => {
     }
 
     function test(){
-        console.log(makeExecuteFunctionList(USER_VIDEO_STATE, AI_FEEDBACK_AVAILABLE));
+
     }
 
-    async function makeExecuteFunctionList(videoFlag, feedbackFlag){
-        let saveList = [];
-        if(videoFlag && feedbackFlag){
-            saveList.push(await estimate);
-            saveList.push(await convertToCalculateFormat);
-        }
-
-        return saveList;
-    }
 
     async function inferenceAndDrawPoints(){
+
+        if(!inferenceToggle){
+            alert('you must toggle inference true');
+            return;
+        }
 
         const userVideo = document.getElementById('userVideo');
         const teacherVideo = document.getElementById('teacherVideo');
 
-        let estimateImageList = []
-        let userExecuteFunctionList = null
-        let teacherExecuteFunctionList = null
+        let userInferenceResult = '';
+        let teacherInferenceResult = '';
 
-        if (USER_VIDEO_STATE && AI_FEEDBACK_AVAILABLE) { userExecuteFunctionList = [] }
-        if (TEACHER_VIDEO_STATE && AI_FEEDBACK_AVAILABLE) { teacherExecuteFunctionList = [] }
-
-        let poseResults = []
-
-        const posePromises = estimateImageList.map(async (image)=>{
-            let result = await estimate(image);
-            result = await convertToCalculateFormat(result);
-            poseResults.push(result);
-        });
-
-        await Promise.all(posePromises);
+        if (USER_VIDEO_STATE && inferenceToggle) { 
+            let result = await estimate(userVideo);
+            userInferenceResult = await convertToCalculateFormat(result);
+        }
+        if (TEACHER_VIDEO_STATE && inferenceToggle) { 
+            let result = await estimate(teacherVideo);
+            teacherInferenceResult = await convertToCalculateFormat(result);
+        }
 
         const weightDistance = USER_VIDEO_STATE && TEACHER_VIDEO_STATE ? 
-                await calSimilarity({strategy : 'weightedDistance'}, ...poseResults) : 0;
+                await calSimilarity({strategy : 'weightedDistance'}, userInferenceResult, teacherInferenceResult) : 0;
 
-        const userDrawSkeletonColor = weightDistance >= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
+        const drawColor = weightDistance >= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
 
-        if(USER_VIDEO_STATE && AI_FEEDBACK_AVAILABLE && SKELETON_AVAILABLE){
-            drawPoints('userVideo', 'userCanvas', '' ,userDrawSkeletonColor)
+        if(USER_VIDEO_STATE && inferenceToggle && skeletonToggle){
+            drawPoints('userVideo', 'userCanvas', userInferenceResult.keypoints ,drawColor);
+            drawSkeleton('userVideo', 'userCanvas', userInferenceResult.keypoints, drawColor);
         }
         
     }
@@ -240,21 +252,37 @@ const UserLivePage = () => {
         return JSON.stringify(object);
     }
 
+    function toggleAIEnable(target){
+        // console.log(target);
+        setInferenceToggle(!inferenceToggle);
+    }
+
     return(
         <>
             <h2>pose estimation demo(moveNet)</h2>
             <div className="video-div" style={{display: 'inline-flex'}}>
-                <UserCamera imgTagName='userVideo' canvasTagName='userCanvas' imgSrc="./assets/Sample2.jpg" 
+                {/* <UserCamera imgTagName='userVideo' canvasTagName='userCanvas' imgSrc="./assets/Sample2.jpg" 
                             width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
                 <UserCamera imgTagName='teacherVideo' canvasTagName='teacherCanvas' imgSrc="./assets/Sample.jpg" 
+                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/> */}
+                    <UserCamera imgTagName='test1' canvasTagName='canvas1' imgSrc='./assets/Sample2.jpg'
+                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
+                    <UserCamera imgTagName='test2' canvasTagName='canvas2' imgSrc='./assets/Sample.jpg'
                             width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
             </div>
                 <div className='videoTest'>
                     <canvas id='videoCanvas'></canvas>
                     <video id='videoTag' width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}></video>
                 </div>
-            <button onClick={calPose}>get pose</button>
-            <button onClick={test}>test</button>
+                <div className='button-controller' style={{display: 'inline-flex'}}>
+                    <button onClick={calPose}>get pose</button>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" readOnly checked={inferenceToggle} onClick={ (e) => toggleAIEnable(e) } class="sr-only peer"/>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">AI Enable</span>
+                    </label>
+                    <button onClick={test}>test</button>
+                </div>
         </>
     );
 }
