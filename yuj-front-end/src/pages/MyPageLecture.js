@@ -16,7 +16,7 @@ const MyPageLecture = () => {
                 <div>
                     <div>수강목록</div>
                     <div>영상 클릭시 스튜디오 이동하게 작업해야함</div>
-                    <TestLectureCard/>
+                    {/* <TestLectureCard/> */}
                 </div>
             </div>
             <MainFooter />
