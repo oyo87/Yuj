@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactApexChart from "react-apexcharts";
 
-class MypageWeeklyStudyChart extends React.Component {
+class MyPageWeeklyStudyChart extends React.Component {
     constructor(props) {
         super(props);
 
@@ -69,4 +69,4 @@ class MypageWeeklyStudyChart extends React.Component {
 }
 
 
-export default MypageWeeklyStudyChart;
+export default MyPageWeeklyStudyChart;

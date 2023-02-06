@@ -1,8 +1,8 @@
 import React from "react";
-import MypageSidebar from './../components/MypageSidebar';
+import MyPageSidebar from './../components/MyPageSidebar';
 import MainFooter from './../components/mainFooter/MainFooter';
 import MainHeader from './../components/mainHeader/MainHeader';
-import './pages.css';
+import Styles from './MyPages.module.css';
 import { useState } from "react";
 
 
@@ -18,7 +18,7 @@ function phoneLengthLimit(e) {
 }
 
 // 내 정보의 input상자 클래스를 한번에 관리하기 위한 inputClassName
-const inputClassName = "rounded-[5px] pl-2 h-6 input-bordered w-full mypage-input text-base";
+const inputClassName = "rounded-[5px] pl-2 h-6 input-bordered w-full text-base " + Styles[`mypage-input`];
 
 const MyPageInfo = () => {
 
@@ -26,9 +26,9 @@ const MyPageInfo = () => {
         <>
             <MainHeader />
             <div className="flex">
-                <MypageSidebar />
+                <MyPageSidebar />
                 <div className="px-40 w-full">
-                    <div className="info-background-image flex" >
+                    <div className={"flex " + Styles[`info-background-image`]} >
 
                         <form className="p-10 card bg-base-200 info-container " method="POST">
 
@@ -111,7 +111,7 @@ const MyPageInfo = () => {
                                 </label>
                             </div>
                             <div class='flex justify-end'>
-                                <button className="btn btn-accent mypage-save-button">저장하기</button>
+                                <button className={"btn btn-accent " + Styles[`mypage-save-button`]}>저장하기</button>
                             </div>
                         </form>
                     </div>

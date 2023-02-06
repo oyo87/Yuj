@@ -1,5 +1,4 @@
-
-//핸드폰 번호 입력창 숫자 spin버튼 없애기
+/* 핸드폰 번호 입력창 숫자 spin버튼 없애기 */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
