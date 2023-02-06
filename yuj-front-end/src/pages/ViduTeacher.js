@@ -8,10 +8,11 @@ import ListMembers from "../components/openVidu/ListMembers";
 import Messages from '../components/openVidu/Messages'
 import { Base64 } from 'js-base64';
 import { SignalCellularNull } from "@mui/icons-material";
+import { Navigate } from 'react-router-dom';
 
-const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io/";
-const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io/openvidu';
-// const APPLICATION_SERVER_URL = "http://localhost:5000/";
+// const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io/";
+const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io:4443';
+const APPLICATION_SERVER_URL = "http://localhost:5000/";
 // const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
 
@@ -287,6 +288,7 @@ class Vidu extends Component {
             mainStreamManager: undefined,
             publisher: undefined
         });
+        
     }
 
     async switchCamera() {
@@ -436,8 +438,8 @@ class Vidu extends Component {
         console.log('현재 Subscribers 정보 :', this.state.subscribers);
         return (
             <div>
-                {this.state.session === undefined ? (
-                    <div>세션 나갔음 이동 처리</div>
+                {this.state.session === undefined && this.state.isVisited === true ? (
+                    <Navigate to='/studio'></Navigate>
                 ) : null}
                 {this.state.session !== undefined ? (
                     <div>

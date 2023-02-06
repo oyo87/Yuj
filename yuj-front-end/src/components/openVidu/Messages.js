@@ -89,6 +89,16 @@ const Messages = ({ session , userName='need to set userName' }) => {
         }
     }, []);
 
+    useEffect(() => {
+        session.on("subscribeToSpeechToText", event => {
+            if (event.reason === "recognizing") {
+                console.log("User " + event.connection.connectionId + " is speaking: " + event.text);
+            } else if (event.reason === "recognized") {
+                console.log("User " + event.connection.connectionId + " spoke: " + event.text);
+            }
+        })
+    }, []);
+
     const messageRef = createRef(null);
     const scrollToBottom = () => { 
         console.log(messageRef.current);

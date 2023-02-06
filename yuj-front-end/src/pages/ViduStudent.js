@@ -9,11 +9,15 @@ import Messages from '../components/openVidu/Messages'
 import { Base64 } from 'js-base64';
 import { SignalCellularNull } from "@mui/icons-material";
 
+import { Navigate } from 'react-router-dom';
+
 // const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io/";
-// const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io/openvidu';
+const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io:4443';
 const APPLICATION_SERVER_URL = "http://localhost:5000/";
-const OPENVIDU_SERVER_URL = 'http://localhost:4443';
+// const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
+
+const OPENVIDU_PRO_SPEECH_TO_TEXT = 'vosk';
 
 class Vidu extends Component {
     constructor(props) {
@@ -262,6 +266,7 @@ class Vidu extends Component {
     //채팅창 열고 닫기
     chattoggle() { 
         this.setState({ chaton: !this.state.chaton });
+        
         if (this.state.chaton === false) {
             this.setState({ chatMessage: '채팅창 끄기' });
         } else { 
@@ -272,6 +277,7 @@ class Vidu extends Component {
     leaveSession() {
         // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
         const mySession = this.state.session;
+        // const navigate = useNavigate();
 
         if (mySession) {
             mySession.disconnect();
@@ -287,7 +293,6 @@ class Vidu extends Component {
             mainStreamManager: undefined,
             publisher: undefined
         });
-        console.log('잘 놀다갑니다', this.state.session);
     }
 
     async switchCamera() {
@@ -435,8 +440,8 @@ class Vidu extends Component {
         `;
         return (
             <div>
-                {this.state.session === undefined ? (
-                    <div>세션 나갔음 이동 처리</div>
+                {this.state.session === undefined && this.state.isVisited === true ? (
+                    <Navigate to='/studio'></Navigate>
                 ) : null}
                 {this.state.session !== undefined ? (
                     <div>
