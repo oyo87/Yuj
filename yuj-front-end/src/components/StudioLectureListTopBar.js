@@ -1,5 +1,6 @@
 import React from "react";
 import StudioLectureListCategorySelectBox from "./StudioLectureListCategorySelectBox";
+import { useNavigate } from 'react-router-dom';
 import {
   StudioLectureOpeningModal,
   StudioLectureOpeningModalBtn,
@@ -7,7 +8,8 @@ import {
 
 const StudioLectureListTopBar = (props) => {
   const userAuth = props.userAuth;
-  const yogaCategory = props.yogaCategory;
+
+  const navigate = useNavigate();
 
   let lectureOpeningButton;
   if (userAuth === "teacher") {
@@ -28,6 +30,9 @@ const StudioLectureListTopBar = (props) => {
             {
                 text: "개설하기",
                 className: "btn-accent text-white",
+                onClickEvent: () => {
+                  navigate("/studioLectureCreatePage")
+                }
               },
               {
                 text: "취소하기",
@@ -38,7 +43,7 @@ const StudioLectureListTopBar = (props) => {
       <div className="flex justify-between items-center">
         <span className="text-success">총 1개의 강의</span>
         <div className="flex items-center">
-          <StudioLectureListCategorySelectBox yogaCategory={yogaCategory} />
+          <StudioLectureListCategorySelectBox />
           {lectureOpeningButton}
         </div>
       </div>

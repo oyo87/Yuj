@@ -6,6 +6,11 @@
 } */
 
 .studio-sidebar{
+    position : sticky;
+    position : -webkit-sticky;
+    top: 0;
+    height:100vh;
+
     background-color: #F1EFE9;
     width: 260px;
 }
@@ -76,6 +81,7 @@
 
 .mypage-sidebar-yuj-logo{
     position : relative;
+    width: 100px;
     /* top : 40%; */
 }
 

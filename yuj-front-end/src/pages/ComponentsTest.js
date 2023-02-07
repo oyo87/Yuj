@@ -13,8 +13,10 @@ import StudioSamplePage from './StudioSamplePage';
 import TestLectureCard from './TestLectureCard(삭제예정)';
 import TestLectureDetail from './TestLectureDetail(삭제예정)';
 import FileInput from '../components/FileInput';
-import StudioLectureList from './StudioLectureList';
-import StudioLectureDetail from './StudioLectureDetail';
+import StudioLectureListPage from './StudioLectureListPage';
+import StudioLectureDetailPage from './StudioLectureDetailPage';
+import StudioLectureCreatePage from './StudioLectureCreatePage';
+import StudioLectureUpdatePage from './StudioLectureUpdatePage';
 
 const Test = () => {
   const location = useLocation();
@@ -36,8 +38,10 @@ const Test = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/studio" element={<StudioPage />} />
           <Route path="/studiosample" element={<StudioSamplePage />} />
-          <Route path="/studioLectureList" element={<StudioLectureList />} />
-          <Route path="/studioLectureDetail" element={<StudioLectureDetail />} />
+          <Route path="/studioLectureListPage" element={<StudioLectureListPage />} />
+          <Route path="/studioLectureDetailPage" element={<StudioLectureDetailPage />} />
+          <Route path="/studioLectureCreatePage" element={<StudioLectureCreatePage />} />
+          <Route path="/studioLectureUpdatePage" element={<StudioLectureUpdatePage />} />
           {/* <Route path="/testLecturecard" element={<TestLectureCard />} />
           <Route path="/testLectureDetail" element={<TestLectureDetail />} /> */}
           <Route path="/fileInput" element={<FileInput />} />
