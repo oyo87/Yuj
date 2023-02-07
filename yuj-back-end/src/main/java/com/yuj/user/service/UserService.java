@@ -49,7 +49,7 @@ public class UserService {
     public boolean updateUser(String id, UserUpdateRequestDTO updateRequestDTO) {
         User modifiedUser = userRepository.findById(id).orElseThrow(CUserNotFoundException::new);
 
-        modifiedUser.setPassword(updateRequestDTO.getPassword());
+        modifiedUser.setPassword(passwordEncoder.encode(updateRequestDTO.getPassword()));
         modifiedUser.setName(updateRequestDTO.getName());
         modifiedUser.setNickname(updateRequestDTO.getNickname());
         modifiedUser.setPhone(updateRequestDTO.getPhone());
