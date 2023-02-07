@@ -14,7 +14,7 @@ const MyPageDashBoard = () => {
                 <MyPageSidebar />
                 <main>
                     <div className="mx-28 mt-16">
-                    <div className="text-3xl font-bold">마이 페이지 - 대시보드</div>
+                        <div className="text-3xl font-bold">마이 페이지 - 대시보드</div>
                         <div className="w-full flex">
                             <div className={Styles[`dashboard-box`]}>
                                 <div className="flex m-5 justify-between" >
@@ -53,14 +53,13 @@ const MyPageDashBoard = () => {
                                 url링크 걸어서 강의 스튜디오로이동해야함
                             </div>
                             <div className={Styles[`dashboard-box`]}>
-                                <div className={"m-5 " + Styles[`box-font`]}>주간 학습 달성률 컴포넌트</div>
+                                <div className={"pl-5 pt-5 " + Styles[`box-font`]}>주간 학습 달성률</div>
                                 <div>
-
-                                    대망의 자바스크립트 차트
                                     <MyPageWeeklyStudyChart />
-
                                 </div>
-                                <div>주간 학습 : 이번주 참석 횟수 계산 / 이번주 모든 횟수 계산</div>
+                                <div className="pl-5">
+                                    주간 학습 : 5 / 9회 참여하였습니다.
+                                </div>
                             </div>
                         </div>
                         <div className="m-14">
