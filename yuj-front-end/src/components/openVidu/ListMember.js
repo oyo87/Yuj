@@ -13,14 +13,18 @@ const Member = styled.p`
 const ListMember = ({ listMember }) => {
     return (
         <Member>
-            <>{listMember[0]}</>
+            <p style={{width:'80px'}}>{listMember[0]}</p>
             {
-                listMember[1] === true ?
+                listMember[2] === true ?
                 <span class="material-symbols-outlined">videocam</span> : <span class="material-symbols-outlined">  videocam_off</span>
             }
             {
-                listMember[2] === true ?
+                listMember[3] === true ?
                 <span class="material-symbols-outlined">  mic</span> : <span class="material-symbols-outlined">  mic_off</span>
+            }
+            {
+                listMember[1] === '강사' ?
+                <span class="material-symbols-outlined">  how_to_reg</span> : <span class="material-symbols-outlined">  person</span>
             }
         </Member>
     )

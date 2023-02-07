@@ -6,19 +6,28 @@ import './OpenVidu.css';
 
 const ChatContainer = styled.div`
 `;
-const ChatBox = styled.div`
+const Wrapper = styled.div`
     position: absolute;
     background-color: rgba(0, 0, 0, 0.33);
     border-radius: 20px;
-    width: 500px;
-    height: 400px;
+    margin: 10px;
+    bottom: 10%;
+    right:0;
+    z-index: 99;
+`
 
+const ChatBox = styled.div`
+    width: 320px;
+    height: 320px;
+    z-index: 99;
     overflow-y: scroll;
     word-break: break-all;
     line-break: normal;
-    position: absolute;
-    bottom: 67%;
-    right:0;
+    scrollbar-width: none;
+    
+    ::-webkit-scrollbar{
+        display:none;
+    }
     p{
         position: static !important;
     }
@@ -28,16 +37,36 @@ const ChatInputContainer = styled.div`
     top: 1000px;
     width: 100%;
     opacity: 0.33;
+
+    display: flex;
+    flex-direction: row;
     #chat_message{
         margin-left: 10px;
+        margin-bottom: 10px;
         margin-right: 10px;
-        width: 80%;
+        width: 100%;
         height: 40px;
     }
 `;
 
-const Messages = ({ session , userName='need to set userName' }) => {
-    const [messages, setMessages] = useState([]);
+const MessageLabel = styled.label`
+    position: relative;
+    width: 90%;
+    input {
+        border: none;
+        border-radius: 20px;
+        padding-left: 20px;
+        padding-right: 40px;
+    }
+    button {
+        position: absolute;
+        top: 15%;
+        right: 5px;
+    }
+`;
+
+const Messages = ({ session, messages, setMessages, userName='need to set userName' }) => {
+    // const [messages, setMessages] = useState([]);
     const inputRef = useRef(null);
 
     //채팅 받는 부분
@@ -46,25 +75,37 @@ const Messages = ({ session , userName='need to set userName' }) => {
             let chatdata = event.data.split(',');
 
             if (chatdata[0] !== userName) {
-                setMessages(current => {
-                    return [...current, {
-                        userName: chatdata[0],
-                        text: chatdata[1],
-                        chatClass: 'messages__item--visitor',
-                    }]
+                // setMessages(current => {
+                //     return [...current, {
+                //         userName: chatdata[0],
+                //         text: chatdata[1],
+                //         chatClass: 'messages__item--visitor',
+                //     }]
+                // })
+                setMessages({
+                    userName: chatdata[0],
+                    text: chatdata[1],
+                    chatClass: 'messages__item--visitor',
                 })
             }
-            
         })
-        
         return () => {
             session.off('signal:chat')
         }
     }, []);
 
+    useEffect(() => {
+        session.on("subscribeToSpeechToText", event => {
+            if (event.reason === "recognizing") {
+                console.log("User " + event.connection.connectionId + " is speaking: " + event.text);
+            } else if (event.reason === "recognized") {
+                console.log("User " + event.connection.connectionId + " spoke: " + event.text);
+            }
+        })
+    }, []);
+
     const messageRef = createRef(null);
     const scrollToBottom = () => { 
-        console.log(messageRef.current);
         if (messageRef.current) { 
             messageRef.current.scrollTop = messageRef.current.scrollHeight;
         }
@@ -77,15 +118,20 @@ const Messages = ({ session , userName='need to set userName' }) => {
     //채팅 보내는 부분
     function sendmessageByClick() {
         const currentText = inputRef.current.value;
-        setMessages(current => {
-            return [
-                ...current,
-                {
-                    userName,
-                    text: currentText,
-                    chatClass: 'messages__item--operator',
-                },
-            ]
+        // setMessages(current => {
+        //     return [
+        //         ...current,
+        //         {
+        //             userName,
+        //             text: currentText,
+        //             chatClass: 'messages__item--operator',
+        //         },
+        //     ]
+        // })
+        setMessages({
+            userName,
+            text: currentText,
+            chatClass: 'messages__item--operator',
         })
         const mySession = session;
         mySession.signal({
@@ -94,9 +140,10 @@ const Messages = ({ session , userName='need to set userName' }) => {
             type: 'chat',
         });
         inputRef.current.value = null;
+        
     }
     return (
-        <>
+        <Wrapper>
             <ChatBox className="where" ref={messageRef}>
                 {
                     messages?.map((message, i) => (
@@ -105,21 +152,23 @@ const Messages = ({ session , userName='need to set userName' }) => {
                         </ChatContainer>
                     ))
                 }
-                <ChatInputContainer>
+            </ChatBox>
+            <ChatInputContainer>
                     {
-                        <div>
+                        <MessageLabel>
                             <input
                                 ref={inputRef}
                                 id="chat_message"
                                 type="text"
                                 placeholder="내용을 입력하세요"
                             />
-                            <p className="chatbox__send--footer" onClick={sendmessageByClick}>전송</p>
-                        </div>
+                            <button onClick={sendmessageByClick}>
+                                <span class="material-symbols-outlined">send</span>
+                            </button>
+                        </MessageLabel>
                     }
                 </ChatInputContainer>
-            </ChatBox>
-        </>
+        </Wrapper>
     )
 }
 
