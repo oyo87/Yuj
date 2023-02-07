@@ -42,6 +42,7 @@ public class Controller {
 	 * @param params The Session properties
 	 * @return The Session ID
 	 */
+//	i8a504.p.ssafy.io/api/sessions => localhost:5000/sessions
 	@PostMapping("/api/sessions")
 	public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
 			throws OpenViduJavaClientException, OpenViduHttpException {
