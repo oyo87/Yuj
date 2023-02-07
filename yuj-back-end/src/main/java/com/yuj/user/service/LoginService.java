@@ -52,13 +52,27 @@ public class LoginService {
         //  AccessToken, RefreshToken 발급
         TokenResponseDTO tokenResponseDTO = jwtProvider.createTokenResponseDto(user.getId(), user.getRoles());
 
-        //  RefreshToken을 DB에 저장
-        Token refreshToken = Token.builder()
-                .refreshToken(tokenResponseDTO.getRefreshToken())
-                .userId(user.getUserId())
-                .build();
+//        //  이전 토큰을 DB에서 제거
+//        tokenRepository.deleteByUserId(user.getUserId());
+//
+//        //  RefreshToken을 DB에 저장
+//        Token refreshToken = Token.builder()
+//                .refreshToken(tokenResponseDTO.getRefreshToken())
+//                .userId(user.getUserId())
+//                .build();
+//
+//        tokenRepository.save(refreshToken);
+        try {
+            Token updatedToken = tokenRepository.findByUserId(user.getUserId()).orElseThrow(CUserNotFoundException::new);
+            updatedToken.setRefreshToken(tokenResponseDTO.getRefreshToken());
+        } catch(CUserNotFoundException e) {
+            Token refreshToken = Token.builder()
+                    .refreshToken(tokenResponseDTO.getRefreshToken())
+                    .userId(user.getUserId())
+                    .build();
+            tokenRepository.save(refreshToken);
+        }
 
-        tokenRepository.save(refreshToken);
         return tokenResponseDTO;
     }
 
@@ -78,17 +92,32 @@ public class LoginService {
         User user = userRepository.findById(authentication.getName())
                 .orElseThrow(CUserNotFoundException::new);
 
+        System.out.println("******************** 1 ********************");
+
+        System.out.println("&&&&&&&&&&&&&&&& user.getUserId() = " + user.getUserId() + "&&&&&&&&&&&&&&&&");
         Token token = tokenRepository.findByUserId(user.getUserId())
                 .orElseThrow(CRefreshTokenException::new);
+
+        System.out.println("******************** 2 ********************");
 
         //  Refresh Token이 불일치할 경우
         if(!token.getRefreshToken().equals(tokenRequestDTO.getRefreshToken()))
             throw new CRefreshTokenException();
 
+        System.out.println("******************** 3 ********************");
+
         //  Access Token, Refresh Token 재발급, Refresh Token 저장
         TokenResponseDTO newCreatedToken = jwtProvider.createTokenResponseDto(user.getId(), user.getRoles());
+
+        System.out.println("******************** 4 ********************");
+
         Token updatedToken = token.updateRefreshToken(newCreatedToken.getRefreshToken());
+
+        System.out.println("******************** 5 ********************");
+
         tokenRepository.save(updatedToken);
+
+        System.out.println("******************** 6 ********************");
 
         return newCreatedToken;
     }
