@@ -35,8 +35,6 @@ const UserLivePage = () => {
     const LINE_WIDTH = 2;
     const RADIUS = 4;
 
-    let timer = null;
-
     useEffect( ()=>{
         //init device
         setModelBackend();
