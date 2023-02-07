@@ -3,7 +3,6 @@ package com.yuj.user.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yuj.studio.domain.Studio;
 import lombok.*;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,7 +51,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String gender;
 
-    private String profileImage;
+    private String profileImagePath;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

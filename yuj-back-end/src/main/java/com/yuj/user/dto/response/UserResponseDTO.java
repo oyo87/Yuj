@@ -29,7 +29,7 @@ public class UserResponseDTO {
         this.email = user.getEmail();
         this.birthDate = user.getBirthDate();
         this.gender = user.getGender();
-        this.profileImage = user.getProfileImage();
+        this.profileImage = user.getProfileImagePath();
         this.role = user.getRoles().get(0);
     }
 }

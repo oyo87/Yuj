@@ -27,7 +27,7 @@ public class UserSignupRequestDTO {
     private String email;
     private LocalDate birthDate;
     private String gender;
-    private String profileImage;
+    private String profileImagePath;
     private String role;
 
     public User toEntity(PasswordEncoder passwordEncoder) {
@@ -40,8 +40,12 @@ public class UserSignupRequestDTO {
                 .email(email)
                 .birthDate(birthDate)
                 .gender(gender)
-                .profileImage(profileImage)
+                .profileImagePath(profileImagePath)
                 .roles(Collections.singletonList(role))
                 .build();
+    }
+
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 }

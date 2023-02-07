@@ -11,7 +11,7 @@ cork2586
   "nickname": "줴릴",
   "password": "1234",
   "phone": "010-5209-5605",
-  "profileImage": "허재성_사진.png",
+  "profileImagePath": null,
   "role": "ROLE_USER"
 }
 
@@ -26,7 +26,7 @@ koreii
   "nickname": "허줴릴",
   "password": "1234",
   "phone": "010-1234-5678",
-  "profileImage": "코레이_사진.png",
+  "profileImagePath": null,
   "role": "ROLE_TEACHER"
 }
 
@@ -38,5 +38,5 @@ koreii
   "nickname": "허줴릴",
   "password": "1234",
   "phone": "010-5209-1234",
-  "profileImage": "허줴릴_사진"
+  "profileImagePath": null
 }
