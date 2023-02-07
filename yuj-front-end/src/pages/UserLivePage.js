@@ -5,16 +5,18 @@ import * as tf from '@tensorflow/tfjs-core';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 
 import { useState, useEffect } from "react";
+// import useInterval from '../utils/Util';
 import { poseSimilarity } from "posenet-similarity";
 
 import UserCamera from '../components/UserCamera';
+import ToggleCheckbox from '../components/ToggleCheckbox';
 
 const UserLivePage = () => {
 
     const [detector, setDetector]  = useState("");
     // infos about ai feedback
     const [inferenceToggle, setInferenceToggle] = useState(false);
-    const [skeletonToggle, setSkeletonToggle] = useState(false);
+    const [skeletonToggle, setSkeletonToggle] = useState(true);
     const imageShape = [192, 192, 3];
 
     // if user turn on camera, set true
@@ -33,7 +35,6 @@ const UserLivePage = () => {
     const LINE_WIDTH = 2;
     const RADIUS = 4;
 
-    // for interval
     let timer;
 
     useEffect( ()=>{
@@ -44,15 +45,19 @@ const UserLivePage = () => {
         loadModel(modelConfig);
     }, []);
 
+
     useEffect(()=>{
 
-        if(inferenceToggle){ 
-            timer = setInterval(inferenceAndDrawPoints, 100);
-            console.log('wowwow');
-        }
-
-        clearInterval(timer);
-        console.log('exit interval');
+        timer = setInterval(()=>{
+            if (inferenceToggle)
+                inferenceAndDrawPoints()
+            else
+                clearInterval(timer)
+        } , 100);
+        console.log('wowwow');
+        
+        // clearInterval(timer);
+        // console.log('exit interval');
 
     }, [inferenceToggle]);
 
@@ -144,18 +149,13 @@ const UserLivePage = () => {
         const weightDistance = await calSimilarity({strategy : 'weightedDistance'}, ...poseResults);
         alert(serializeObject(weightDistance));
         
-        const userColor = weightDistance >= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
+        const userColor = await weightDistance.result <= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
 
         drawPoints('canvas1', 'test1', poseResults[0].keypoints, userColor);
         drawPoints('canvas2', 'test2', poseResults[1].keypoints, 'Red');
         drawSkeleton('canvas1', 'test1', poseResults[0].keypoints, userColor);
         drawSkeleton('canvas2', 'test2', poseResults[1].keypoints, 'Red');
     }
-
-    function test(){
-
-    }
-
 
     async function inferenceAndDrawPoints(){
 
@@ -180,13 +180,19 @@ const UserLivePage = () => {
         }
 
         const weightDistance = USER_VIDEO_STATE && TEACHER_VIDEO_STATE ? 
-                await calSimilarity({strategy : 'weightedDistance'}, userInferenceResult, teacherInferenceResult) : 0;
+                await calSimilarity({strategy : 'weightedDistance'}, teacherInferenceResult, userInferenceResult) : 0;
 
-        const drawColor = weightDistance >= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
+        const drawColor = weightDistance.result <= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
 
         if(USER_VIDEO_STATE && inferenceToggle && skeletonToggle){
-            drawPoints('userVideo', 'userCanvas', userInferenceResult.keypoints ,drawColor);
-            drawSkeleton('userVideo', 'userCanvas', userInferenceResult.keypoints, drawColor);
+            drawPoints('userCanvas', 'userVideo', userInferenceResult.keypoints ,drawColor);
+            drawSkeleton('userCanvas', 'userVideo',userInferenceResult.keypoints, drawColor);
+        }
+
+        
+        if(TEACHER_VIDEO_STATE && inferenceToggle && skeletonToggle){
+            drawPoints('teacherCanvas', 'teacherVideo', teacherInferenceResult.keypoints ,drawColor);
+            drawSkeleton('teacherCanvas', 'teacherVideo', teacherInferenceResult.keypoints, drawColor);
         }
         
     }
@@ -261,27 +267,24 @@ const UserLivePage = () => {
         <>
             <h2>pose estimation demo(moveNet)</h2>
             <div className="video-div" style={{display: 'inline-flex'}}>
-                {/* <UserCamera imgTagName='userVideo' canvasTagName='userCanvas' imgSrc="./assets/Sample2.jpg" 
+                <UserCamera imgTagName='userVideo' canvasTagName='userCanvas' imgSrc="./assets/Sample2.jpg" 
                             width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
-                <UserCamera imgTagName='teacherVideo' canvasTagName='teacherCanvas' imgSrc="./assets/Sample.jpg" 
-                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/> */}
-                    <UserCamera imgTagName='test1' canvasTagName='canvas1' imgSrc='./assets/Sample2.jpg'
+                <UserCamera imgTagName='teacherVideo' canvasTagName='teacherCanvas' imgSrc="./assets/Sample3.jpg" 
+                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
+                    {/* <UserCamera imgTagName='test1' canvasTagName='canvas1' imgSrc='./assets/Sample2.jpg'
                             width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
                     <UserCamera imgTagName='test2' canvasTagName='canvas2' imgSrc='./assets/Sample.jpg'
-                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
+                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/> */}
             </div>
                 <div className='videoTest'>
                     <canvas id='videoCanvas'></canvas>
                     <video id='videoTag' width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}></video>
                 </div>
-                <div className='button-controller' style={{display: 'inline-flex'}}>
+                <div className='button-controller'>
                     <button onClick={calPose}>get pose</button>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" readOnly checked={inferenceToggle} onClick={ (e) => toggleAIEnable(e) } class="sr-only peer"/>
-                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">AI Enable</span>
-                    </label>
                     <button onClick={test}>test</button>
+                    <ToggleCheckbox boolean={inferenceToggle} text={"AI Enable"} event={toggleAIEnable} color={"accent"}/>
+                    {/* <ToggleCheckbox boolean={skeletonToggle} text={"Skeleton Enable"} event={setSkeletonToggle(!skeletonToggle)} color={"accent"} /> */}
                 </div>
         </>
     );
