@@ -7,7 +7,7 @@ import StudioLectureDetailSchedule from "../components/StudioLectureDetailSchedu
 import { StudioLectureDetailLectureRegistModal, StudioLectureDetailLectureRegistModalBtn } from "../components/StudioLectureDetailLectureRegistModal";
 import { StudioLectureDetailLectureClosingModal, StudioLectureDetailLectureClosingModalBtn } from "../components/StudioLectureDetailLectureClosingModal";
 
-const StudioLectureDetail = () => {
+const StudioLectureDetailPage = () => {
   const [userAuth, setUserAuth] = useState("teacher");
 
   //수강생 -> 수강 신청(수강 취소), 목록으로
@@ -69,7 +69,7 @@ const StudioLectureDetail = () => {
           {/* 강사 및 수강생 별로 버튼 다르게 해야함*/}
           <div className="flex justify-end gap-2 pb-8">
             {lectureDetailButtons}
-            <button className="btn btn-primary px-12"><Link to="/studioLectureList">목록으로</Link></button>
+            <Link to="/studioLectureListPage"><button className="btn btn-primary px-12">목록으로</button></Link>
           </div>
         </div>
       </div>
@@ -77,4 +77,4 @@ const StudioLectureDetail = () => {
   );
 };
 
-export default StudioLectureDetail;
+export default StudioLectureDetailPage;

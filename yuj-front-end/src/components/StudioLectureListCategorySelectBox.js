@@ -1,8 +1,9 @@
 import React from "react";
+import { useSelector } from 'react-redux';
 
-const StudioLectureListCategorySelectBox = (props) => {
+const StudioLectureListCategorySelectBox = () => {
 
-  const yogaCategory = props.yogaCategory;
+  const yogaCategory = useSelector(state => state.common.yogaCategory)
 
   return (
     <>
@@ -13,7 +14,7 @@ const StudioLectureListCategorySelectBox = (props) => {
         <option value="0">Select Category</option>
         {yogaCategory.map((menu) => {
           return (
-            <option>{menu}</option>
+            <option key={menu}>{menu}</option>
           )
         })}
       </select>
