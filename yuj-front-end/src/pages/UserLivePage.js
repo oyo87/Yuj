@@ -5,7 +5,7 @@ import * as tf from '@tensorflow/tfjs-core';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 
 import { useState, useEffect } from "react";
-// import useInterval from '../utils/Util';
+import { useInterval } from '../utils/Util';
 import { poseSimilarity } from "posenet-similarity";
 
 import UserCamera from '../components/UserCamera';
@@ -16,7 +16,7 @@ const UserLivePage = () => {
     const [detector, setDetector]  = useState("");
     // infos about ai feedback
     const [inferenceToggle, setInferenceToggle] = useState(false);
-    const [skeletonToggle, setSkeletonToggle] = useState(true);
+    const [skeletonToggle, setSkeletonToggle] = useState(false);
     const imageShape = [192, 192, 3];
 
     // if user turn on camera, set true
@@ -29,13 +29,13 @@ const UserLivePage = () => {
     
     //threshhold for print result
     const SIMILARITY_THRESHHOLD = 0.5;
-    const SCORE_THRESHHOLD = 0.3;
+    const SCORE_THRESHHOLD = 0.2;
     
     //const value for draw skeleton
     const LINE_WIDTH = 2;
     const RADIUS = 4;
 
-    let timer;
+    let timer = null;
 
     useEffect( ()=>{
         //init device
@@ -46,20 +46,9 @@ const UserLivePage = () => {
     }, []);
 
 
-    useEffect(()=>{
-
-        timer = setInterval(()=>{
-            if (inferenceToggle)
-                inferenceAndDrawPoints()
-            else
-                clearInterval(timer)
-        } , 100);
-        console.log('wowwow');
-        
-        // clearInterval(timer);
-        // console.log('exit interval');
-
-    }, [inferenceToggle]);
+    useInterval(()=>{
+        inferenceAndDrawPoints();
+    }, inferenceToggle && skeletonToggle ? 100 : null);
 
     //이 페이지를 벗어나는 경우 모델 지우기 구현해야함
     //lifecycle 찾아볼 것
@@ -77,10 +66,10 @@ const UserLivePage = () => {
 
     async function loadModel(modelConfig){
         let model = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, modelConfig);
+        await model.estimatePoses(tf.zeros(imageShape));
         setDetector(model);
         //warm up
         console.log(detector);
-        await detector.estimatePoses(tf.zeros(imageShape));
     }
 
     async function estimate(imageElement){
@@ -125,38 +114,6 @@ const UserLivePage = () => {
         return {strategy : strategy, result : similarity, time : Math.floor((calEndTime - calStartTime)/1000)};
     }
 
-    async function calPose(){
-
-        if(!inferenceToggle) { 
-            alert('ai 사용을 켜주세요')
-            return;
-        }
-
-        const pose1Image = document.getElementById('test1');
-        const pose2Image = document.getElementById('test2');
-        
-        const poseResults = [];
-        
-        const posePromises = [pose1Image, pose2Image].map(async (item) => {
-                let result = await estimate(item);
-                console.log('wow', result);
-                result = await convertToCalculateFormat(result);
-                poseResults.push(result);
-            });
-            
-        await Promise.all(posePromises);
-        
-        const weightDistance = await calSimilarity({strategy : 'weightedDistance'}, ...poseResults);
-        alert(serializeObject(weightDistance));
-        
-        const userColor = await weightDistance.result <= SIMILARITY_THRESHHOLD ? 'Green' : 'White';
-
-        drawPoints('canvas1', 'test1', poseResults[0].keypoints, userColor);
-        drawPoints('canvas2', 'test2', poseResults[1].keypoints, 'Red');
-        drawSkeleton('canvas1', 'test1', poseResults[0].keypoints, userColor);
-        drawSkeleton('canvas2', 'test2', poseResults[1].keypoints, 'Red');
-    }
-
     async function inferenceAndDrawPoints(){
 
         if(!inferenceToggle){
@@ -189,7 +146,10 @@ const UserLivePage = () => {
             drawSkeleton('userCanvas', 'userVideo',userInferenceResult.keypoints, drawColor);
         }
 
-        
+        /**
+         * debugging method for teacher similarity
+         * 
+         */
         if(TEACHER_VIDEO_STATE && inferenceToggle && skeletonToggle){
             drawPoints('teacherCanvas', 'teacherVideo', teacherInferenceResult.keypoints ,drawColor);
             drawSkeleton('teacherCanvas', 'teacherVideo', teacherInferenceResult.keypoints, drawColor);
@@ -254,13 +214,12 @@ const UserLivePage = () => {
 
     }
 
-    function serializeObject(object){
-        return JSON.stringify(object);
+    function toggleAIEnable(target){
+        setInferenceToggle(!inferenceToggle);
     }
 
-    function toggleAIEnable(target){
-        // console.log(target);
-        setInferenceToggle(!inferenceToggle);
+    function toggleSkeletonEnable(target){
+        setSkeletonToggle(!skeletonToggle);
     }
 
     return(
@@ -269,22 +228,17 @@ const UserLivePage = () => {
             <div className="video-div" style={{display: 'inline-flex'}}>
                 <UserCamera imgTagName='userVideo' canvasTagName='userCanvas' imgSrc="./assets/Sample2.jpg" 
                             width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
-                <UserCamera imgTagName='teacherVideo' canvasTagName='teacherCanvas' imgSrc="./assets/Sample3.jpg" 
+                <UserCamera imgTagName='teacherVideo' canvasTagName='teacherCanvas' imgSrc="./assets/Sample.jpg" 
                             width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
-                    {/* <UserCamera imgTagName='test1' canvasTagName='canvas1' imgSrc='./assets/Sample2.jpg'
-                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/>
-                    <UserCamera imgTagName='test2' canvasTagName='canvas2' imgSrc='./assets/Sample.jpg'
-                            width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}/> */}
+
             </div>
                 <div className='videoTest'>
                     <canvas id='videoCanvas'></canvas>
                     <video id='videoTag' width={CLIENT_WIDTH/2} height={CLIENT_HEIGHT/2}></video>
                 </div>
                 <div className='button-controller'>
-                    <button onClick={calPose}>get pose</button>
-                    <button onClick={test}>test</button>
                     <ToggleCheckbox boolean={inferenceToggle} text={"AI Enable"} event={toggleAIEnable} color={"accent"}/>
-                    {/* <ToggleCheckbox boolean={skeletonToggle} text={"Skeleton Enable"} event={setSkeletonToggle(!skeletonToggle)} color={"accent"} /> */}
+                    <ToggleCheckbox boolean={skeletonToggle} text={"Skeleton Enable"} event={toggleSkeletonEnable} color={"accent"} />
                 </div>
         </>
     );

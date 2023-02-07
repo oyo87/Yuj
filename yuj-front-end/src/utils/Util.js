@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 /*
 ref : https://iborymagic.tistory.com/96
 */
-function useInterval(callback, delay, flag){
+function useInterval(callback, delay){
     const savedCallback = useRef();
 
     useEffect(()=>{
@@ -14,17 +14,20 @@ function useInterval(callback, delay, flag){
         
         const tick = ()=> { savedCallback.current(); }
 
-        if(delay != null && flag){
+        if(delay !== null){
             let id = setInterval(tick, delay);
             return ()=> clearInterval(id);
         }
-        }, [delay, flag]);
+        }, [delay]);
 }
-
 
 function snakeToCamel(str){
     console.log(str);
     return str.replace(/[^a-zA-z0-9]+(.)/g, (m, chr)=> chr.toUpperCase());
+}
+
+function serializeObject(object){
+    return JSON.stringify(object);
 }
 
 function isCanvasUseable(canvasID){
@@ -34,4 +37,4 @@ function isCanvasUseable(canvasID){
     if(!canvas.getContext){ console.log('this browser not supported canvas. please change your browser or update.')}
 }
 
-export default {useInterval, snakeToCamel, isCanvasUseable};
+export {useInterval, snakeToCamel, isCanvasUseable, serializeObject};

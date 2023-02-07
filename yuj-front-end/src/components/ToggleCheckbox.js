@@ -9,7 +9,7 @@ const ToggleCheckbox = (props) =>{
         <>
             <label className="cursor-pointer label">
                 <span className="label-text">{labelText}</span> 
-                <input type="checkbox" className={`toggle ${toggleColor}`} checked={booleanField} onClick={(e) => toggleEvent(e)}/>
+                <input type="checkbox" className={`toggle ${toggleColor}`} checked={booleanField} onClick={(e) => toggleEvent(e)} readOnly/>
             </label>
         </>
     )
