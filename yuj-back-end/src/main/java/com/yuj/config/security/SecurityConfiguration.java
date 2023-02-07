@@ -38,6 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/login").permitAll()             //   로그인은 토큰 없이 가능
                 .antMatchers(HttpMethod.POST, "/users").permitAll()             //   회원가입은 토큰 없이 가능
                 .antMatchers(HttpMethod.POST, "/reissue").permitAll()           //  토큰 재발행은 토큰 없이 가능
+                .antMatchers("https://i8a504.p.ssafy.io:4443/**").permitAll()
 //                .antMatchers(HttpMethod.GET, "/users/{id}").permitAll()                  //  회원 정보 조회는 토큰 있어야 가능    
 //                .antMatchers(HttpMethod.PUT, "/users/{id}").permitAll()                  //  회원 정보 수정은 토큰 있어야 가능
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
