@@ -1,28 +1,35 @@
 import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-const FileInput = ({labelText, className}) => {
-    return (
-        <>  
-            <AppStyle>
-                <div className={"btnStart w-full"}>
-                    <label htmlFor="ex_file" >
-                        <div className={"flex rounded-xl justify-between items-center px-5 border h-10"}>
-                            <p className={"text-xs"}>확장자: png, jp,g jpeg / 용량 100MB 이하</p>
-                            <UploadFileIcon className={"text-default"} />
-                        </div>
-                    </label>
-                </div>
-                <input
-                    type="file"
-                    id="ex_file"
-                    accept="image/jpg, image/png, image/jpeg"
-                    onChange={(e) => console.log(e.target.files[0])}
-                />
-            </AppStyle>
-        </>
-    )   
+const FileInput = ({initialLabelText, onChangeEvent}) => {
+
+  const [lebelText, setLabelText] = useState(initialLabelText);
+
+  return (
+    <>  
+      <AppStyle>
+        <div className={"btnStart w-full"}>
+          <label htmlFor="ex_file" >
+            <div className={"flex rounded-xl justify-between items-center px-3 border h-10"}>
+                <p className={"text-xs mr-3"}>{lebelText}</p>
+                <UploadFileIcon className={"text-default"} />
+            </div>
+          </label>
+        </div>
+        <input
+          type="file"
+          id="ex_file"
+          accept="image/jpg, image/png, image/jpeg"
+          onChange={(e) => {
+            setLabelText(e.target.files[0].name);
+            onChangeEvent(e.target.files[0]);
+          }}
+        />
+      </AppStyle>
+    </>
+  )   
 }
 
 
