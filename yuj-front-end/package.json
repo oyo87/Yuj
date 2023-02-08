@@ -61,5 +61,6 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.2.4"
-  }
+  },
+  "proxy": "https://i8a504.p.ssafy.io" 
 }
