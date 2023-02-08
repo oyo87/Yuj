@@ -6,6 +6,7 @@ import MainFooter from "../components/mainFooter/MainFooter";
 import MyPageWeeklyStudyChart from '../components/MyPageWeeklyStudyChart';
 import MyPageCalendar from "../components/MyPageCalendar";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 
 //현재 수강중인 강의 썸네일+ 제목, 다음수업 일정 더미
 
@@ -59,7 +60,7 @@ const MyPageDashBoard = () => {
                 <main>
                     <div className="mx-28 mt-16 w-full">
                         <div className="text-3xl font-bold">마이 페이지 - 대시보드</div>
-                        <div className="w-full flex">
+                        <div className="w-full flex ">
                             <div className={Styles[`dashboard-box`]}>
                                 <div className="flex m-5 justify-between" >
                                     <div className={Styles[`box-font`]}>
@@ -67,7 +68,7 @@ const MyPageDashBoard = () => {
                                         <div>수강중인</div>
                                         <div>강의</div>
                                     </div>
-                                    <div>전체보기 &gt;</div>
+                                    <Link to="/mypage/lecture">전체보기 &gt;</Link>
                                 </div>
                                 {/* 만약 1개도 존재하지 않으면 수강중인 강의가 없습니다.
                                 get으로 강의리스트 가져오고 최신3개까지만 썸네일 가져와서
@@ -75,14 +76,15 @@ const MyPageDashBoard = () => {
                                 url링크 걸어서 강의 스튜디오로이동해야함 */}
                                 {currentLectures.slice(0, 3).map(post => (
                                     <>
-                                        <div className="h-20 my-2 flex">
+                                        {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
+                                        <Link to="/studio" className="h-20 my-2 flex">
                                             <div className="h-full w-32 mx-5">
                                                 <img src="/assets/Sample.jpg"></img>
                                             </div>
                                             <div className="leading-loose">{post.id}
                                                 <div>수업 예정 : {post.id}</div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </>
                                 ))}
 
@@ -95,19 +97,23 @@ const MyPageDashBoard = () => {
                                         <div>완료한</div>
                                         <div>강의</div>
                                     </div>
-                                    <div>전체보기 &gt;</div>
+                                    <Link to="/mypage/lecture">전체보기 &gt;</Link>
                                 </div>
                                 <div>
-                                    {currentLectures.slice(0, 3).map(post => (
+                                    {CompletedLectures.slice(0, 3).map(post => (
                                         <>
-                                            <div className="h-20 my-2 flex">
+                                        {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
+                                            <Link to="/studio" className="h-20 my-2 flex">
                                                 <div className="h-full w-32 mx-5">
+                                                    {/* src를 가져온 강의의 thumbnail_image로 */}
                                                     <img src="/assets/Sample2.jpg"></img>
                                                 </div>
+                                                    {/* 강의 name */}
                                                 <div className="leading-loose">{post.id}
+                                                {/* 강의 end_date */}
                                                     <div>완료 수강일 : {post.id}</div>
                                                 </div>
-                                            </div>
+                                            </Link>
                                         </>
                                     ))}
                                 </div>
