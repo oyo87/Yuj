@@ -21,6 +21,9 @@ public class LectureResponseDTO {
     private int limitStudents;
     private int fee;
     private int totalCount;
-    private User user;
+    private String username;
+    private String nickname;
+    private String email;
+    private String profileImagePath;
     private Yoga yoga;
 }

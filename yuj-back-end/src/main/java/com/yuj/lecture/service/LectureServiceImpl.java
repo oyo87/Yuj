@@ -3,6 +3,7 @@ package com.yuj.lecture.service;
 import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.dto.response.LectureResponseDTO;
 import com.yuj.lecture.repository.LectureRepository;
+import com.yuj.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class LectureServiceImpl implements LectureService {
     }
 
     private LectureResponseDTO entityToResponseDTO(Lecture lecture) {
+        User user = lecture.getUser();
         return LectureResponseDTO.builder()
                 .fee(lecture.getFee())
                 .lectureId(lecture.getLectureId())
@@ -46,8 +48,11 @@ public class LectureServiceImpl implements LectureService {
                 .startDate(lecture.getStartDate())
                 .thumbnailImage(lecture.getThumbnailImage())
                 .totalCount(lecture.getTotalCount())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .profileImagePath(user.getProfileImagePath())
                 .yoga(lecture.getYoga())
-                .user(lecture.getUser())
                 .build();
     }
 }
