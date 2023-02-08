@@ -25,7 +25,7 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     public StudioResponseDTO getStudioByUserId(Long userId) throws Exception {
-        Studio studio =  studioRepository.findByUserId(userId).orElseThrow(() -> new Exception("스튜디오가 존재하지 않습니다."));
+        Studio studio =  studioRepository.findByUser_UserId(userId).orElseThrow(() -> new Exception("스튜디오가 존재하지 않습니다."));
 
         return entityToResponseDTO(studio);
     }
