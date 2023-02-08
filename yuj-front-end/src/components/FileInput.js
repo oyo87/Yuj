@@ -11,7 +11,7 @@ const FileInput = ({initialLabelText, onChangeEvent}) => {
     <>  
       <AppStyle>
         <div className={"btnStart w-full"}>
-          <label htmlFor="ex_file" >
+          <label htmlFor="ex_file" className={"w-full"}>
             <div className={"flex rounded-xl justify-between items-center px-3 border h-10"}>
                 <p className={"text-xs mr-3"}>{lebelText}</p>
                 <UploadFileIcon className={"text-default"} />
@@ -35,9 +35,6 @@ const FileInput = ({initialLabelText, onChangeEvent}) => {
 
 const AppStyle = styled.div`
   margin: 0 8px 0 8px;
-  img {
-    max-width: 325px;
-  }
   label {
     display: inline-block;
     font-size: inherit;
