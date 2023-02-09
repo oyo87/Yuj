@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useInterval } from "../utils/Util";
 
-const videoCanvas = (props) => {
+const VideoCanvas = (props) => {
 
-    const videoRef = props.ref;
+    const videoRef = props.videoRef;
     const videoTagName = props.videoTagName;
 
     const canvasTagName = props.canvasTagName;
@@ -11,8 +11,8 @@ const videoCanvas = (props) => {
     const width = props.isActive ? 'auto' : '100%';
     const height = props.isActive ? '90vh' : '100%';
 
-    const canvasObj = null;
-    const videoObj = null;
+    let canvasObj = null;
+    let videoObj = null;
     let context = null;
 
     useEffect(()=>{
@@ -24,20 +24,30 @@ const videoCanvas = (props) => {
     });
 
     useInterval(()=>{
-        if(context)
+
+        //video img check
+
+        console.log(videoObj.onloadeddata)
+
+        if(context){
+            console.log('true');
+            context.beginPath();
+            context.translate(width, 0);
+            context.scale(-1, 1);
             context.drawImage(videoObj, 0, 0, width, height);
-    }, ref? 100:null);
+            // console.log('test', videoObj);
+        }
+    }, videoRef? 100:null);
 
     return(
         <>
-            <div className="video-div">
-                <canvas id={canvasTagName} width={width} height={height}/>
-                <video id={videoTagName} ref={videoRef} width={0} height={0} 
-                        autoPlay={true} />
-            </div>
+            <canvas id={canvasTagName} width={width} height={height}/>
+            <video id={videoTagName} ref={videoRef} width={0} height={0} 
+                    autoPlay={true} style={{visibility:'hidden'}}/>
+            <p>어쩔티비</p>
         </>
     )
 
 }
 
-export default videoCanvas;
+export default VideoCanvas;

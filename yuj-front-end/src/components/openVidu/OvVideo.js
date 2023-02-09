@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import VideoCanvas from '../VideoCanvas';
 
 export default class OpenViduVideoComponent extends Component {
 
@@ -19,8 +20,17 @@ export default class OpenViduVideoComponent extends Component {
         }
     }
 
-    render() {
-        return (this.props.isActive === true ? (< video style={{width:'auto', height:'90vh'}} autoPlay = { true} ref = { this.videoRef } />) : (< video autoPlay = { true} ref = { this.videoRef } />))
+    // render() {
+    //     return (this.props.isActive === true 
+    //         ? (< video style={{width:'auto', height:'90vh'}} autoPlay = { true} ref = { this.videoRef } />) 
+    //         : (< video autoPlay = { true} ref = { this.videoRef } />))
+    // }
+
+    render(){
+        return(
+            <VideoCanvas isActive={this.props.isActive} videoRef={this.videoRef} 
+            canvasTagName={"userCanvas"} videoTagName={"userVideo"}/>
+        )
     }
 
 }
