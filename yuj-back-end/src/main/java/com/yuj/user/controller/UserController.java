@@ -1,22 +1,32 @@
 package com.yuj.user.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.yuj.response.ListResult;
 import com.yuj.response.ResponseService;
 import com.yuj.response.SingleResult;
 import com.yuj.user.dto.request.UserSignupRequestDTO;
 import com.yuj.user.dto.request.UserUpdateRequestDTO;
 import com.yuj.user.dto.response.UserResponseDTO;
 import com.yuj.user.service.UserService;
-import com.yuj.util.MD5Generator;
-import io.swagger.annotations.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.Map;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*")
 @Api(tags = {"User"})
@@ -31,6 +41,18 @@ public class UserController {
 //    @Value("${spring.servlet.multipart.location}")
 //    private String savePath;
 
+    
+    @GetMapping
+    public ListResult<UserResponseDTO> searchTeacherByName(@RequestParam("search") String name){
+    	List<UserResponseDTO> resultList = userService.searchTeacherByName(name);
+    	
+    	System.out.println("결과값 출력 : ");
+    	for (UserResponseDTO u : resultList) {
+			System.out.println(u.getId());
+		}
+    	return responseService.getListResult(resultList);
+    }
+    
     @ApiOperation(value = "회원가입", notes = "회원가입을 합니다.")
     @PostMapping
     public SingleResult<HttpStatus> signup(
