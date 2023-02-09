@@ -3,6 +3,8 @@ package com.yuj.user.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yuj.studio.domain.Studio;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 @Setter
 @Builder
 @ToString
+@DynamicInsert
 public class User implements UserDetails {
     @SequenceGenerator(
             name="USER_SEQ_GEN",
@@ -59,16 +62,26 @@ public class User implements UserDetails {
 
     private String profileImagePath;
 
+    @Builder.Default
+    @ColumnDefault("0")
+    private boolean isTeacher = false;
+
+    @Builder.Default
+    @ColumnDefault("0")
+    private boolean isAdmin = false;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
 
 //    @OneToOne
 //    @JoinColumn(name = "token_id")
 //    private Token token;
 
-    @OneToOne(mappedBy = "user")
-    private Studio studio;
+//    @OneToOne(mappedBy = "user")
+//    private Studio studio;
+
 
 
     @Override

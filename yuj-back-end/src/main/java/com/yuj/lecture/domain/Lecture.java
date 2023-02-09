@@ -1,10 +1,9 @@
 package com.yuj.lecture.domain;
 
 import com.yuj.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,6 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@DynamicInsert
 public class Lecture {
     @Id
     @Column(name = "lecture_id")
@@ -31,6 +32,9 @@ public class Lecture {
     private int limitStudents;
     private int fee;
     private int totalCount;
+    @Builder.Default
+    @ColumnDefault("0")
+    private boolean isActive = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -34,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()); //  CORS 해결을 위해 추가
 
         http.httpBasic().disable()
                 .csrf().disable()
@@ -47,7 +47,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/reissue").permitAll()            //   회원가입은 토큰 없이 가능
                 .antMatchers(HttpMethod.POST, "/openvidu/**").permitAll()          //  토큰 재발행은 토큰 없이 가능
                 .antMatchers(HttpMethod.GET, "/studio/**").permitAll()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // 추가
+                .antMatchers("/lectures/**").permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()                     // CORS 해결을 위해 추가
 //                .antMatchers("https://i8a504.p.ssafy.io/**").permitAll()
 //                .antMatchers(OPENVIDU_URL + "**").permitAll()
 //                .antMatchers(HttpMethod.GET, "/users/{id}").permitAll()                  //  회원 정보 조회는 토큰 있어야 가능    
