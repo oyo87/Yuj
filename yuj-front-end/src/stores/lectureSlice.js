@@ -11,6 +11,7 @@ const lectureSlice = createSlice({
     name: 'lectureSlice',
 
     initialState: {
+        thumnail: './assets/Sample.jpg',
         lectures: [],
     },
 
