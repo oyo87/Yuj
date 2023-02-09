@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yuj.config.jwt.JwtProvider;
+import com.yuj.exception.CSignUpFailedCException;
 import com.yuj.exception.CUserNotFoundException;
 import com.yuj.user.domain.User;
 import com.yuj.user.dto.request.UserSignupRequestDTO;
@@ -35,12 +36,11 @@ public class UserService {
     }
 
     @Transactional
-    public boolean signUp(UserSignupRequestDTO userSignupRequestDTO) {
+    public String signUp(UserSignupRequestDTO userSignupRequestDTO) {
         //  이미 존재하는 아이디인 경우
         if(isExist(userSignupRequestDTO.getId()))
-            return false;
-        userRepository.save(userSignupRequestDTO.toEntity(passwordEncoder)).getUserId();
-        return true;
+            throw new CSignUpFailedCException("이미 존재하는 아이디입니다.");
+        return userRepository.save(userSignupRequestDTO.toEntity(passwordEncoder)).getId();
     }
 
     @Transactional(readOnly = true)
