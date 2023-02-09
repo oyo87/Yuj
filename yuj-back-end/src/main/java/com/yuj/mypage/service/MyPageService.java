@@ -15,8 +15,10 @@ public class MyPageService {
     @Autowired
     private MyPageUserLectureRepository myPageUserLectureRepository;
 
+
     public List<UserLecture> getUserLecturesById(String id){
         return myPageUserLectureRepository.findByUser_Id(id);
+
     }
 //    private final MyPageRepository myPageRepository;
 //
