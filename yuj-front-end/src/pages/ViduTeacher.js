@@ -11,9 +11,9 @@ import { SignalCellularNull } from "@mui/icons-material";
 import { Navigate } from 'react-router-dom';
 
 const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io";
-const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
+// const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
 // const APPLICATION_SERVER_URL = "http://localhost:5000/";
-// const OPENVIDU_SERVER_URL = 'http://localhost:4443';
+const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
 
 class Vidu extends Component {
@@ -272,7 +272,7 @@ class Vidu extends Component {
         }
     }
 
-    leaveSession() {
+    async leaveSession() {
         // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
         this.getSessions();
         const mySession = this.state.session;
@@ -291,13 +291,22 @@ class Vidu extends Component {
             mainStreamManager: undefined,
             publisher: undefined
         });
-        OpenVidu.deleteSession(this.state.mySessionId)
-            .then(() => { 
-                console.log("Session deleted");
-            })
-            .catch(error => { 
-                console.log(error);
-            })
+        // OpenVidu.deleteSession(this.state.mySessionId)
+        //     .then(() => { 
+        //         console.log("Session deleted");
+        //     })
+        //     .catch(error => { 
+        //         console.log(error);
+        //     })
+        let Tanos = await axios.delete(
+            '/openvidu/api/sessions/' + this.state.mySessionId,
+            {
+                headers: {
+                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+                },
+            }
+        );
+        console.log(Tanos);
     }
 
     async switchCamera() {
