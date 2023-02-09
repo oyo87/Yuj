@@ -1,5 +1,7 @@
 package com.yuj.mypage.controller;
 
+import com.yuj.lecture.domain.Lecture;
+import com.yuj.lecture.domain.LectureSchedule;
 import com.yuj.lecture.domain.UserLecture;
 import com.yuj.mypage.dto.request.MyPageRequestDTO;
 import com.yuj.mypage.dto.response.MyPageResponseDTO;
@@ -19,16 +21,39 @@ public class MyPageController {
 
     private final MyPageService myPageService;
 
-    @GetMapping("/dashboard/{id}")
-    public ResponseEntity<?> getUserLecture(@PathVariable String id) {
-        System.out.println(id);
-        System.out.println(1);
-        List<UserLecture> userLecturesById = myPageService.getUserLecturesById(id);
-        //오늘날짜이후로 가장 가까운 start시간 3개로해야함 일단은 전체 lecture라도 반환해보기
-        System.out.println(userLecturesById);
+    @GetMapping("/dashboard/{userId}")
+    public ResponseEntity<?> getUserLecture(@PathVariable long userId) {
+        List<UserLecture> userLecturesById = myPageService.getUserLecturesById(userId);
 
-        return ResponseEntity.ok().body(userLecturesById);
+        if(userLecturesById != null){
+            return ResponseEntity.ok().body(userLecturesById);
+        }
+        else if (userLecturesById == null){
+            return ResponseEntity.ok().body("수강중인 강의가 없습니다.");
+        }
+        //오늘날짜이후로 가장 가까운 start시간 3개로해야함 일단은 전체 lecture라도 반환해보기
+
+        return ResponseEntity.badRequest().body("오류가 발생하였습니다.");
+
+
 //        return new ResponseEntity(userLecturesById, HttpStatus.OK);
+    }
+
+    @GetMapping("/dashboard/lectureSchedule/{lectureId}")
+    public ResponseEntity<?> getLectureSchedule(@PathVariable long lectureId){
+        List<LectureSchedule> lectureScheduleByLectureId = myPageService.getLectureScheduleByLectureId(lectureId);
+
+        System.out.println("lectureScheduleByLectureId = " + lectureScheduleByLectureId);
+
+        if(lectureScheduleByLectureId != null){
+            return ResponseEntity.ok().body(lectureScheduleByLectureId);
+        }
+        else if(lectureScheduleByLectureId == null){
+            return ResponseEntity.ok().body("강의 정보가 없습니다.");
+        }
+
+        return ResponseEntity.badRequest().body("오류가 발생하였습니다.");
+
     }
 
 

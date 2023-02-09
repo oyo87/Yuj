@@ -11,6 +11,6 @@ import java.util.List;
 public interface MyPageUserLectureRepository extends JpaRepository<UserLecture, Long> {
 
     //유저 Id로 강의가져오기
-    List<UserLecture> findByUser_Id(String id);
+    List<UserLecture> findAllByUser_UserId(long userId);
 
 }

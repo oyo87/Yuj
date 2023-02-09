@@ -47,6 +47,7 @@ input::-webkit-inner-spin-button {
 
 .dashboard-box{
     width: 30%;
+    max-width: 21rem;
     min-width: 10rem;
     height: 27rem;
     min-height:10rem;
