@@ -53,16 +53,24 @@ public class User implements UserDetails {
 
     private String profileImagePath;
 
+    @Builder.Default
+    private boolean isTeacher = false;
+
+    @Builder.Default
+    private boolean isAdmin = false;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
 
 //    @OneToOne
 //    @JoinColumn(name = "token_id")
 //    private Token token;
 
-    @OneToOne(mappedBy = "user")
-    private Studio studio;
+//    @OneToOne(mappedBy = "user")
+//    private Studio studio;
+
 
 
     @Override
