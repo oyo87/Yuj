@@ -3,10 +3,6 @@ package com.yuj.user.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yuj.studio.domain.Studio;
 import lombok.*;
-<<<<<<< HEAD
-
-=======
->>>>>>> 0c6fff5b1e72c5566423d4f0c957cb6b4cde5dfa
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@DynamicInsert
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -67,21 +62,12 @@ public class User implements UserDetails {
 
     private String profileImagePath;
 
-<<<<<<< HEAD
-    @Column
-    @ColumnDefault("true")
-    private boolean isTeacher = false;
-
-    @Column
-    @ColumnDefault("false")
-=======
     @Builder.Default
     @ColumnDefault("0")
     private boolean isTeacher = false;
 
     @Builder.Default
     @ColumnDefault("0")
->>>>>>> 0c6fff5b1e72c5566423d4f0c957cb6b4cde5dfa
     private boolean isAdmin = false;
 
     @ElementCollection(fetch = FetchType.EAGER)

@@ -3,6 +3,7 @@ package com.yuj.user.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,14 +44,10 @@ public class UserController {
 
     
     @GetMapping
-    public ListResult<UserResponseDTO> searchTeacherByName(@RequestParam("search") String name){
+    public ResponseEntity<?> searchTeacherByName(@RequestParam("search") String name){
     	List<UserResponseDTO> resultList = userService.searchTeacherByName(name);
     	
-    	System.out.println("결과값 출력 : ");
-    	for (UserResponseDTO u : resultList) {
-			System.out.println(u.getId());
-		}
-    	return responseService.getListResult(resultList);
+    	return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
     
     @ApiOperation(value = "회원가입", notes = "회원가입을 합니다.")
