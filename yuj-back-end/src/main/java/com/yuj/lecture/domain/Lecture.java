@@ -17,6 +17,7 @@ import java.time.LocalDate;
 public class Lecture {
     @Id
     @Column(name = "lecture_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long lectureId;
 
     @Column(nullable = false, unique = true)

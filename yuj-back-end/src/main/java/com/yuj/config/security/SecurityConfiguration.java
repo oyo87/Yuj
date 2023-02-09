@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
 
 @RequiredArgsConstructor
 @Configuration
@@ -32,6 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+
         http.httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement()
@@ -43,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/reissue").permitAll()            //   회원가입은 토큰 없이 가능
                 .antMatchers(HttpMethod.POST, "/openvidu/**").permitAll()          //  토큰 재발행은 토큰 없이 가능
                 .antMatchers(HttpMethod.GET, "/studio/**").permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // 추가
 //                .antMatchers("https://i8a504.p.ssafy.io/**").permitAll()
 //                .antMatchers(OPENVIDU_URL + "**").permitAll()
 //                .antMatchers(HttpMethod.GET, "/users/{id}").permitAll()                  //  회원 정보 조회는 토큰 있어야 가능    
