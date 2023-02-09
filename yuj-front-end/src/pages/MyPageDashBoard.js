@@ -79,9 +79,12 @@ const MyPageDashBoard = () => {
                                         {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
                                         <Link to="/studio" className="h-20 my-2 flex">
                                             <div className="h-full w-32 mx-5">
+                                                {/* 강의 thumbnail_image */}
                                                 <img src="/assets/Sample.jpg"></img>
                                             </div>
+                                            {/* 강의 name */}
                                             <div className="leading-loose">{post.id}
+                                                {/* lecture의 start_date, end_date , lectureschedule의 start_time, day를 활용 다음 수업시작날짜, 시간 연산 필요 */}
                                                 <div>수업 예정 : {post.id}</div>
                                             </div>
                                         </Link>
