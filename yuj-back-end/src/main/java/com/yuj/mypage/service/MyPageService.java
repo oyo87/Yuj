@@ -7,11 +7,14 @@ import com.yuj.lecture.repository.LectureRepository;
 import com.yuj.lecture.repository.LectureScheduleRepository;
 import com.yuj.mypage.dto.request.MyPageRequestDTO;
 
+import com.yuj.mypage.dto.response.MyPageUserLectureResponseDTO;
 import com.yuj.mypage.repository.MyPageUserLectureRepository;
+import com.yuj.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,14 +26,45 @@ public class MyPageService {
 
     private final LectureScheduleRepository lectureScheduleRepository;
 
-    public List<UserLecture> getUserLecturesById(long userId){
+    public List<MyPageUserLectureResponseDTO> getUserLecturesById(long userId){
         System.out.println("1111111111111111111111111\n");
-        return myPageUserLectureRepository.findAllByUser_UserId(userId);
+        List<UserLecture> allByUserUserId = myPageUserLectureRepository.findAllByUser_UserId(userId);
+
+        List<MyPageUserLectureResponseDTO>myPageUserLectureResponseDTOS = new ArrayList<>();
+
+        for(UserLecture dto : allByUserUserId){
+            myPageUserLectureResponseDTOS.add(entityToResponseDTO(dto));
+        }
+
+        return myPageUserLectureResponseDTOS;
     }
     public List<LectureSchedule> getLectureScheduleByLectureId(long lectureId){
         System.out.println("212222222222222222222222222222222\n");
         return lectureScheduleRepository.findAllByLecture_LectureId(lectureId);
     }
+
+    private MyPageUserLectureResponseDTO entityToResponseDTO(UserLecture userLecture){
+        User user = userLecture.getUser();
+        Lecture lecture = userLecture.getLecture();
+
+        return MyPageUserLectureResponseDTO.builder().
+                userLectureId(userLecture.getUserLectureId()).
+                userRegistDate(userLecture.getRegistDate()).
+                userLectureId(userLecture.getUserLectureId()).
+                userId(user.getUserId()).
+                id(user.getId()).
+                nickname(user.getNickname()).
+                lectureId(lecture.getLectureId()).
+                thumbnailImage(lecture.getThumbnailImage()).
+                lectureRegistDate(lecture.getRegistDate()).
+                startDate(lecture.getStartDate()).
+                endDate(lecture.getEndDate()).
+                limitStudents(lecture.getLimitStudents()).
+                totalCount(lecture.getTotalCount()).
+                isActive(lecture.isActive()).//?
+                build();
+    }
+
 //    private final MyPageRepository myPageRepository;
 //
 //    @Autowired

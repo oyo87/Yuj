@@ -5,6 +5,7 @@ import com.yuj.lecture.domain.LectureSchedule;
 import com.yuj.lecture.domain.UserLecture;
 import com.yuj.mypage.dto.request.MyPageRequestDTO;
 import com.yuj.mypage.dto.response.MyPageResponseDTO;
+import com.yuj.mypage.dto.response.MyPageUserLectureResponseDTO;
 import com.yuj.mypage.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class MyPageController {
 
     @GetMapping("/dashboard/{userId}")
     public ResponseEntity<?> getUserLecture(@PathVariable long userId) {
-        List<UserLecture> userLecturesById = myPageService.getUserLecturesById(userId);
+        List<MyPageUserLectureResponseDTO> userLecturesById = myPageService.getUserLecturesById(userId);
         System.out.println("마이페이지 컨트롤러진입후 할당");
 
         if(userLecturesById != null){
@@ -38,7 +39,6 @@ public class MyPageController {
 
         System.out.println("마이페이지 컨트롤러 뭔가 오류");
         return ResponseEntity.badRequest().body("오류가 발생하였습니다.");
-
 
 //        return new ResponseEntity(userLecturesById, HttpStatus.OK);
     }

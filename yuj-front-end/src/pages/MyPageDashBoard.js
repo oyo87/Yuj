@@ -19,7 +19,7 @@ const MyPageDashBoard = () => {
     // }
 
     // backend URL
-    const MYPAGE_URL = "http://localhost:5000/mypage/dashboard/2" //뒤에 유저Id입력
+    const MYPAGE_URL = "http://localhost:5000/mypage/dashboard/3" //뒤에 유저Id입력
     const LECTURE_SCHEDULE_URL = "http://localhost:5000/mypage/dashboard/lectureSchedule/3" //이 뒤에 lectureId입력
 
     //현재 수강중인 강의
