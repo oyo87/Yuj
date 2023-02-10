@@ -69,41 +69,6 @@ const Messages = ({ session, messages, setMessages, userName='need to set userNa
     // const [messages, setMessages] = useState([]);
     const inputRef = useRef(null);
 
-    //채팅 받는 부분
-    useEffect(() => {
-        session.on('signal:chat', (event) => { 
-            let chatdata = event.data.split(',');
-
-            if (chatdata[0] !== userName) {
-                // setMessages(current => {
-                //     return [...current, {
-                //         userName: chatdata[0],
-                //         text: chatdata[1],
-                //         chatClass: 'messages__item--visitor',
-                //     }]
-                // })
-                setMessages({
-                    userName: chatdata[0],
-                    text: chatdata[1],
-                    chatClass: 'messages__item--visitor',
-                })
-            }
-        })
-        return () => {
-            session.off('signal:chat')
-        }
-    }, []);
-
-    useEffect(() => {
-        session.on("subscribeToSpeechToText", event => {
-            if (event.reason === "recognizing") {
-                console.log("User " + event.connection.connectionId + " is speaking: " + event.text);
-            } else if (event.reason === "recognized") {
-                console.log("User " + event.connection.connectionId + " spoke: " + event.text);
-            }
-        })
-    }, []);
-
     const messageRef = createRef(null);
     const scrollToBottom = () => { 
         if (messageRef.current) { 
@@ -161,6 +126,7 @@ const Messages = ({ session, messages, setMessages, userName='need to set userNa
                                 id="chat_message"
                                 type="text"
                                 placeholder="내용을 입력하세요"
+                                onKeyDown={sendmessageByClick}
                             />
                             <button onClick={sendmessageByClick}>
                                 <span class="material-symbols-outlined">send</span>
