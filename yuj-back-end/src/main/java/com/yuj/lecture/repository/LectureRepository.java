@@ -13,13 +13,18 @@ import java.util.Optional;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
-    Optional<List<Lecture>> findByUser_UserId(Long userId);
+
     Optional<Lecture> findByUser_UserIdAndIsActiveTrue(Long userId);
+    @Query(value = "select l from Lecture l join l.user u where u.userId = :userId and l.endDate >= :threshold order by l.registDate desc")
+    List<Lecture> findLectureByUserId(@Param("userId") Long userId, @Param("threshold") LocalDate threshold);
+
+    @Query(value = "select l from Lecture l join l.user u where u.userId = :userId and l.endDate >= :threshold order by l.registDate desc")
+    List<Lecture> findLectureEndByUserId(@Param("userId") Long userId, @Param("threshold") LocalDate threshold);
     
  // 강의 이름에 name 키워드가 들어있다면 모두 반환
     @Query(value = "select l from Lecture l where l.name like %:name% and l.endDate >= :threshold order by l.registDate desc")
     List<Lecture> findLecture(@Param("name") String name, @Param("threshold") LocalDate threshold);
     
     @Query(value = "select l from Lecture l where l.name like %:name% and l.endDate < :threshold order by l.registDate desc")
-    List<Lecture> findLecture2(@Param("name") String name, @Param("threshold") LocalDate threshold);
+    List<Lecture> findLectureEnd(@Param("name") String name, @Param("threshold") LocalDate threshold);
 }
