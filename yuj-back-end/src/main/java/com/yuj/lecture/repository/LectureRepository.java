@@ -18,7 +18,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     @Query(value = "select l from Lecture l join l.user u where u.userId = :userId and l.endDate >= :threshold order by l.registDate desc")
     List<Lecture> findLectureByUserId(@Param("userId") Long userId, @Param("threshold") LocalDate threshold);
 
-    @Query(value = "select l from Lecture l join l.user u where u.userId = :userId and l.endDate >= :threshold order by l.registDate desc")
+    @Query(value = "select l from Lecture l join l.user u where u.userId = :userId and l.endDate < :threshold order by l.registDate desc")
     List<Lecture> findLectureEndByUserId(@Param("userId") Long userId, @Param("threshold") LocalDate threshold);
     
  // 강의 이름에 name 키워드가 들어있다면 모두 반환
