@@ -7,9 +7,11 @@ import com.yuj.lecture.repository.LectureRepository;
 import com.yuj.lecture.repository.LectureScheduleRepository;
 import com.yuj.mypage.dto.request.MyPageRequestDTO;
 
+import com.yuj.mypage.dto.response.MyPageLectureScheduleResponseDTO;
 import com.yuj.mypage.dto.response.MyPageUserLectureResponseDTO;
 import com.yuj.mypage.repository.MyPageUserLectureRepository;
 import com.yuj.user.domain.User;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,23 +29,30 @@ public class MyPageService {
     private final LectureScheduleRepository lectureScheduleRepository;
 
     public List<MyPageUserLectureResponseDTO> getUserLecturesById(long userId){
-        System.out.println("1111111111111111111111111\n");
         List<UserLecture> allByUserUserId = myPageUserLectureRepository.findAllByUser_UserId(userId);
 
         List<MyPageUserLectureResponseDTO>myPageUserLectureResponseDTOS = new ArrayList<>();
 
         for(UserLecture dto : allByUserUserId){
-            myPageUserLectureResponseDTOS.add(entityToResponseDTO(dto));
+            myPageUserLectureResponseDTOS.add(entityToUserLectureResponseDTO(dto));
         }
 
         return myPageUserLectureResponseDTOS;
     }
-    public List<LectureSchedule> getLectureScheduleByLectureId(long lectureId){
-        System.out.println("212222222222222222222222222222222\n");
-        return lectureScheduleRepository.findAllByLecture_LectureId(lectureId);
+    public List<MyPageLectureScheduleResponseDTO> getLectureScheduleByLectureId(long lectureId){
+        List<LectureSchedule> allByLectureLectureId = lectureScheduleRepository.findAllByLecture_LectureId(lectureId);
+
+        List<MyPageLectureScheduleResponseDTO> myPageLectureScheduleResponseDTOS = new ArrayList<>();
+
+        for(LectureSchedule dto : allByLectureLectureId){
+            myPageLectureScheduleResponseDTOS.add(entityToLectureScheduleResponseDTO(dto));
+        }
+
+        return myPageLectureScheduleResponseDTOS;
+
     }
 
-    private MyPageUserLectureResponseDTO entityToResponseDTO(UserLecture userLecture){
+    private MyPageUserLectureResponseDTO entityToUserLectureResponseDTO(UserLecture userLecture){
         User user = userLecture.getUser();
         Lecture lecture = userLecture.getLecture();
 
@@ -61,7 +70,19 @@ public class MyPageService {
                 endDate(lecture.getEndDate()).
                 limitStudents(lecture.getLimitStudents()).
                 totalCount(lecture.getTotalCount()).
-                isActive(lecture.isActive()).//?
+                isActive(lecture.isActive()).
+                build();
+    }
+
+    private MyPageLectureScheduleResponseDTO entityToLectureScheduleResponseDTO(LectureSchedule lectureSchedule){
+        Lecture lecture = lectureSchedule.getLecture();
+
+        return MyPageLectureScheduleResponseDTO.builder().
+                scheduleId(lectureSchedule.getScheduleId()).
+                startTime(lectureSchedule.getStartTime()).
+                endTime(lectureSchedule.getEndTime()).
+                day(lectureSchedule.getDay()).
+                lectureId(lecture.getLectureId()).
                 build();
     }
 

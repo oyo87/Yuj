@@ -1,14 +1,10 @@
 package com.yuj.mypage.controller;
 
-import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.LectureSchedule;
-import com.yuj.lecture.domain.UserLecture;
-import com.yuj.mypage.dto.request.MyPageRequestDTO;
-import com.yuj.mypage.dto.response.MyPageResponseDTO;
+import com.yuj.mypage.dto.response.MyPageLectureScheduleResponseDTO;
 import com.yuj.mypage.dto.response.MyPageUserLectureResponseDTO;
 import com.yuj.mypage.service.MyPageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +41,7 @@ public class MyPageController {
 
     @GetMapping("/dashboard/lectureSchedule/{lectureId}")
     public ResponseEntity<?> getLectureSchedule(@PathVariable long lectureId){
-        List<LectureSchedule> lectureScheduleByLectureId = myPageService.getLectureScheduleByLectureId(lectureId);
+        List<MyPageLectureScheduleResponseDTO> lectureScheduleByLectureId = myPageService.getLectureScheduleByLectureId(lectureId);
 
         System.out.println("lectureScheduleByLectureId = " + lectureScheduleByLectureId);
 
@@ -59,26 +55,4 @@ public class MyPageController {
         return ResponseEntity.badRequest().body("오류가 발생하였습니다.");
 
     }
-
-
-    @GetMapping("/info/1")
-    public ResponseEntity<?> Test1() {
-
-        MyPageResponseDTO dto = new MyPageResponseDTO(1L, "2", "3", "4", "5", "6");
-
-        return new ResponseEntity(dto, HttpStatus.OK);
-    }
-
-//    @GetMapping("/test")
-//    public ResponseEntity<?> Test() {
-//        return new ResponseEntity<>("success", HttpStatus.BAD_GATEWAY);
-//    }
-
-//    @PutMapping("/info/{id}")
-//    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody MyPageRequestDTO myPageRequestDTO) {
-//        myPageRequestDTO.setId(id);
-//        return myPageService.updateUser(myPageRequestDTO);
-//        User updatedUser = userService.updateUser(id, user);
-//        return ResponseEntity.ok(updatedUser);
-//    }
 }
