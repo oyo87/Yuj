@@ -11,6 +11,10 @@ import { SignalCellularNull } from "@mui/icons-material";
 
 import { Navigate } from 'react-router-dom';
 
+import { ModelParams } from '../utils/ModelParams';
+
+import { setModelBackend, loadModel, warmUpModel } from '../utils/ModelFunction';
+
 const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io";
 const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
 // const APPLICATION_SERVER_URL = "http://localhost:5000";
@@ -53,6 +57,9 @@ class Vidu extends Component {
 
             // 선택 여부
             isActive: false,
+
+            modelConfig : ModelParams,
+            model : ''
         };
 
         this.joinSession = this.joinSession.bind(this);
@@ -78,10 +85,21 @@ class Vidu extends Component {
 
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
+
+        //set model inference devices
+        setModelBackend();
+        //load model and warm up
+        this.state.model = loadModel(this.state.modelConfig.Config, this.state.modelConfig.imageShape);
+        console.log('did mount done');
     }
 
     componentWillUnmount() {
         window.removeEventListener('beforeunload', this.onbeforeunload);
+    }
+
+    componentDidUpdate(prefProps, prevState){
+        console.log(prefProps.state.model);
+        console.log(this.props.state.model);
     }
 
     onbeforeunload(event) {
@@ -468,20 +486,20 @@ class Vidu extends Component {
                             <div>
                                 {this.state.mainStreamManager !== undefined && this.state.isActive === true ? (
                                     <div style={{ position: 'relative', width: 'auto' }} onClick={() => {this.handleMainVideoStream(this.state.mainStreamManager) }}>
-                                        <UserVideoComponent isActive={ this.state.isActive} streamManager={this.state.mainStreamManager} />
+                                        <UserVideoComponent type={this.state.myUserType} isActive={ this.state.isActive} streamManager={this.state.mainStreamManager} />
                                     </div>
                                 ) : null}
                             </div>
                             <VideoGrid>
                                 {this.state.publisher !== undefined ? (
                                     <div style={{ position: 'relative', width: '50%' }} onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                        <UserVideoComponent streamManager={this.state.publisher} />
+                                        <UserVideoComponent type={this.state.myUserType} streamManager={this.state.publisher} />
                                     </div>
                                 ): null}
                                 {this.state.subscribers.map((sub, i) => (
                                     ( JSON.parse(sub.stream.connection.data).clientType === '강사' ? (
                                         <div key={i} style={{ width: '50%' }} onClick={() => this.handleMainVideoStream(sub)}>
-                                            <UserVideoComponent streamManager={sub} />
+                                            <UserVideoComponent type={'강사'} streamManager={sub} />
                                         </div>
                                     ) : null)
                                 ))}

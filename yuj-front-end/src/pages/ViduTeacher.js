@@ -10,10 +10,10 @@ import { Base64 } from 'js-base64';
 import { SignalCellularNull } from "@mui/icons-material";
 import { Navigate } from 'react-router-dom';
 
-// const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io";
-// const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
-const APPLICATION_SERVER_URL = "http://localhost:5000/";
-const OPENVIDU_SERVER_URL = 'http://localhost:4443';
+const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io";
+const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
+// const APPLICATION_SERVER_URL = "http://localhost:5000/";
+// const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
 
 class Vidu extends Component {
@@ -235,7 +235,7 @@ class Vidu extends Component {
                                 resolution: '640x480', // 영상 해상도 "320x240", "640x480", "1280x720"
                                 frameRate: 25, // 초당 프레임 수
                                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-                                mirror: false, // 미러 버전
+                                mirror: true, // 미러 버전
                             });
 
                             mySession.publish(publisher);

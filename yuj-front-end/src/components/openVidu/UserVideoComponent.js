@@ -5,7 +5,7 @@ import './UserVideo.css';
 
 const NameTag = styled.p`
     /* width: 150px; */
-    color:white;
+    color:black;
     font-weight: bold;
 `;
 export default class UserVideoComponent extends Component {
@@ -18,8 +18,8 @@ export default class UserVideoComponent extends Component {
             <div style={{padding: '10px'}}>
                 {this.props.streamManager !== undefined ? (
                     <div className="streamcomponent">
-                        <OpenViduVideoComponent isActive={ this.props.isActive} streamManager={this.props.streamManager} />
-                        <div><NameTag>{this.getNicknameTag()} 님</NameTag></div>
+                        <OpenViduVideoComponent type={this.props.type} isActive={ this.props.isActive} streamManager={this.props.streamManager} />
+                        <div><NameTag>{this.getNicknameTag() + this.props.type} 님</NameTag></div>
                     </div>
                 ) : null}
             </div>
