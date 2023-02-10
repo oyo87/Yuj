@@ -70,6 +70,14 @@ public class User implements UserDetails {
     @ColumnDefault("0")
     private boolean isAdmin = false;
 
+    @Builder.Default
+    @ColumnDefault("0")
+    private int ratingSum = 0;
+
+    @Builder.Default
+    @ColumnDefault("0")
+    private int ratingCnt = 0;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();

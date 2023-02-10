@@ -1,6 +1,7 @@
 package com.yuj.service;
 
 import com.yuj.lecture.repository.LectureRepository;
+import com.yuj.lecture.repository.UserLectureRepository;
 import com.yuj.lecture.service.LectureService;
 import com.yuj.studio.domain.Studio;
 import com.yuj.studio.dto.response.StudioResponseDTO;
@@ -19,12 +20,13 @@ import static org.mockito.Mockito.verify;
 public class StudioServiceTest {
     private StudioRepository studioRepository = Mockito.mock(StudioRepository.class);
     private LectureRepository lectureRepository = Mockito.mock(LectureRepository.class);
+    private UserLectureRepository userLectureRepository = Mockito.mock(UserLectureRepository.class);
     private StudioService studioService;
     private LectureService lectureService;
 
     @BeforeEach
     void setUpTest() {
-        studioService = new StudioService(studioRepository);
+        studioService = new StudioService(studioRepository, lectureRepository, userLectureRepository);
         lectureService = new LectureService(lectureRepository);
     }
 
