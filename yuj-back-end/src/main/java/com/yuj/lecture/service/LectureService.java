@@ -26,10 +26,15 @@ public class LectureService {
 
 
     public List<LectureResponseDTO> getLecturesByUserId(Long userId) throws Exception {
-        List<Lecture> list = lectureRepository.findByUser_UserId(userId).orElseThrow(() -> new Exception("수업이 존재하지 않습니다."));
+        List<Lecture> Lecturelist = lectureRepository.findLectureByUserId(userId, LocalDate.now());
+        List<Lecture> LectureEndlist = lectureRepository.findLectureEndByUserId(userId, LocalDate.now());
+
         List<LectureResponseDTO> returnList = new ArrayList<>();
 
-        for(Lecture lecture : list) {
+        for(Lecture lecture : Lecturelist) {
+            returnList.add(entityToResponseDTO(lecture));
+        }
+        for(Lecture lecture : LectureEndlist) {
             returnList.add(entityToResponseDTO(lecture));
         }
 
@@ -63,7 +68,7 @@ public class LectureService {
     	List<Lecture> list = lectureRepository.findLecture(name, threshold);
     	
     	// 현재 종료된 강의 검색
-    	List<Lecture> list2 = lectureRepository.findLecture2(name, threshold);
+    	List<Lecture> list2 = lectureRepository.findLectureEnd(name, threshold);
     	
     	for (Lecture lecture : list) {
 			result.add(entityToResponseDTO(lecture));
