@@ -217,6 +217,20 @@ class Vidu extends Component {
                     });
                 });
 
+                mySession.on('signal:chat', (event) => { 
+                    let chatdata = event.data.split(',');
+        
+                    if (chatdata[0] !== this.state.myUserName) {
+                        this.setState({
+                            messages: [...this.state.messages, {
+                                userName: chatdata[0],
+                                text: chatdata[1],
+                                chatClass: 'messages__item--visitor'
+                            }]
+                        });
+                    }
+                });
+
                 mySession.on('streamDestroyed', (event) => {
                     this.deleteSubscriber(event.stream.streamManager);
                 });
