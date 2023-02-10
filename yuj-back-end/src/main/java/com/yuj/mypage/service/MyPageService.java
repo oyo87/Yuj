@@ -24,9 +24,11 @@ public class MyPageService {
     private final LectureScheduleRepository lectureScheduleRepository;
 
     public List<UserLecture> getUserLecturesById(long userId){
+        System.out.println("1111111111111111111111111\n");
         return myPageUserLectureRepository.findAllByUser_UserId(userId);
     }
     public List<LectureSchedule> getLectureScheduleByLectureId(long lectureId){
+        System.out.println("212222222222222222222222222222222\n");
         return lectureScheduleRepository.findAllByLecture_LectureId(lectureId);
     }
 //    private final MyPageRepository myPageRepository;

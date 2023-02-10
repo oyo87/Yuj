@@ -19,7 +19,7 @@ const MyPageDashBoard = () => {
     // }
 
     // backend URL
-    const MYPAGE_URL = "http://localhost:5000/mypage/dashboard/3" //뒤에 유저Id입력
+    const MYPAGE_URL = "http://localhost:5000/mypage/dashboard/2" //뒤에 유저Id입력
     const LECTURE_SCHEDULE_URL = "http://localhost:5000/mypage/dashboard/lectureSchedule/3" //이 뒤에 lectureId입력
 
     //현재 수강중인 강의
@@ -47,7 +47,6 @@ const MyPageDashBoard = () => {
             url: MYPAGE_URL
         }).then(response => {
             setCompletedLectures(response.data)
-            // console.log(response.data);
         })
             .catch(error => {
                 console.log(error.response);
@@ -68,7 +67,6 @@ const MyPageDashBoard = () => {
 
     return (
         <>
-            <MainHeader />
             <container className="flex ml-100">
                 <MyPageSidebar />
                 <main>
@@ -167,11 +165,6 @@ const MyPageDashBoard = () => {
                     </div>
                 </main>
             </container>
-            <div>
-                <MainFooter />
-            </div>
-
-
         </>
     );
 }

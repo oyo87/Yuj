@@ -72,7 +72,6 @@ const MyPageInfo = () => {
 
     return (
         <>
-            <MainHeader />
             <div className="flex">
                 <MyPageSidebar />
                 <div className="px-40 w-full">
@@ -166,8 +165,6 @@ const MyPageInfo = () => {
                     </div>
                 </div>
             </div>
-            <MainFooter />
-
         </>
     );
 }
