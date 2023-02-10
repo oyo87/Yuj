@@ -36,15 +36,20 @@ const MyPageLecture = () => {
                     <div>
                     {lectures.map(data => (
                                         <>
-                                        {console.log(data)}
+                                        {console.log("data: ", data)}
                                             <div to="/studio" className="h-20 my-2 flex">
                                                 <div className="h-full w-32 mx-5">
                                                     <img src="/assets/Sample2.jpg"></img>
                                                 </div>
                                                 <div className="leading-loose truncate">{data.name}
-                                                    <div>완료 수강일 : {data.endDate}</div>
+                                                    <div>완료 수강일 : {data.endDate}
+                                                        요가 영어 이름 : {data.yoga.englishName}
+                                                        요가 썸네일 이미지 :{data.thumbnailImage}
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
+                                            
                                         </>
                                     ))}
                     </div>
