@@ -69,6 +69,13 @@ public class User implements UserDetails {
     private boolean isAdmin = false;
 
     private String roleName;
+    @Builder.Default
+    @ColumnDefault("0")
+    private int ratingSum = 0;
+
+    @Builder.Default
+    @ColumnDefault("0")
+    private int ratingCnt = 0;
 
 //    @OneToOne
 //    @JoinColumn(name = "token_id")

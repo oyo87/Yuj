@@ -14,6 +14,7 @@ import com.yuj.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,10 +79,15 @@ public class LectureService {
 
 
     public List<LectureResponseDTO> getLecturesByUserId(Long userId) throws Exception {
-        List<Lecture> list = lectureRepository.findByUser_UserId(userId).orElseThrow(() -> new Exception("수업이 존재하지 않습니다."));
+        List<Lecture> Lecturelist = lectureRepository.findLectureByUserId(userId, LocalDate.now());
+        List<Lecture> LectureEndlist = lectureRepository.findLectureEndByUserId(userId, LocalDate.now());
+
         List<LectureResponseDTO> returnList = new ArrayList<>();
 
-        for(Lecture lecture : list) {
+        for(Lecture lecture : Lecturelist) {
+            returnList.add(entityToResponseDTO(lecture));
+        }
+        for(Lecture lecture : LectureEndlist) {
             returnList.add(entityToResponseDTO(lecture));
         }
 
@@ -109,10 +115,20 @@ public class LectureService {
     
     public List<LectureResponseDTO> searchLectureByName(String name) throws Exception{
     	List<LectureResponseDTO> result = new ArrayList<>();
-    	List<Lecture> list = lectureRepository.findLecture(name);
+    	LocalDate threshold = LocalDate.now();
+    	
+    	// 현재 진행하고 있는 강의 검색
+    	List<Lecture> list = lectureRepository.findLecture(name, threshold);
+    	
+    	// 현재 종료된 강의 검색
+    	List<Lecture> list2 = lectureRepository.findLectureEnd(name, threshold);
     	
     	for (Lecture lecture : list) {
 			result.add(entityToResponseDTO(lecture));
+		}
+    	
+    	for (Lecture lecture : list2) {
+    		result.add(entityToResponseDTO(lecture));
 		}
     	return result;
     }
