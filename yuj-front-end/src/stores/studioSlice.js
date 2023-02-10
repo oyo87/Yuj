@@ -12,7 +12,7 @@ const getStudioDetail = createAsyncThunk("GET_STUDIO_DETAIL", async(userId) => {
 
 const getStudioLectureList = createAsyncThunk("GET_STUDIO_LECTURE_LIST", async(userId) => {
 
-	const response = await axios.get(`http://localhost:5000/studio/${userId}/lectures`);
+	const response = await axios.get(`https://i8a504.p.ssafy.io/api/studio/${userId}/lectures`);
 	console.log("GET_STUDIO_LECTURE_LIST: ",response);
 
 	return response.data;

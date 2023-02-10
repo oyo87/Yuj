@@ -8,13 +8,9 @@ const LectureItemCard = (props) => {
     const lecture = props.thisLecture;
 
     const thumbnail = './assets/Sample.jpg';
-
-    // const date = new Date();
-    // const currDate = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
-    // console.log(date);
     
+    // 강의 종료 날짜와 현재 날짜를 비교하여 '완료'를 띄워줄지 체크
     const date = new Date();
-    const currDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     const endDate = new Date(lecture.endDate);
 
     function complete() {

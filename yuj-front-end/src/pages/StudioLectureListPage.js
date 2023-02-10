@@ -25,7 +25,7 @@ const StudioLectureListPage = () => {
   return (
     <>
       <div className="flex w-full">
-        {/* <StudioSidebar /> */}
+        <StudioSidebar />
         <div className="flex-auto px-40 pt-20">
           <p className="text-3xl font-bold text-accent mb-6 mr-3">강의 목록</p>
           <StudioLectureListTopBar userAuth={userAuth} />
