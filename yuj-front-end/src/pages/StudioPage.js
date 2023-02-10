@@ -24,7 +24,6 @@ const StudioPage = () => {
 
     return (
         <>
-            <MainHeader/>
             <div className={'flex'}>
                 <StudioSidebar studioDetail={studio.studioDetail} userId={user.userId} studioLiveLecture={studio.studioLiveLecture}/>
                 <div>
@@ -40,7 +39,6 @@ const StudioPage = () => {
                     </div>
                 </div>
             </div>
-            <MainFooter/>
         </>
     );
 }
