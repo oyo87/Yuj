@@ -1,7 +1,6 @@
 package com.yuj.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yuj.studio.domain.Studio;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -70,10 +68,7 @@ public class User implements UserDetails {
     @ColumnDefault("0")
     private boolean isAdmin = false;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
-
+    private String roleName;
 
 //    @OneToOne
 //    @JoinColumn(name = "token_id")
@@ -84,11 +79,20 @@ public class User implements UserDetails {
 
 
 
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return this.roles
+//                .stream().map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles
-                .stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+        authorities.add(new SimpleGrantedAuthority(this.getRoleName()));
+
+        return authorities;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
