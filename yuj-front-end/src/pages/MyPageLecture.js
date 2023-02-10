@@ -27,7 +27,7 @@ const MyPageLecture = () => {
 
     return (
         <>
-            <div className="flex">
+            <div className="flex w-full">
                 <MyPageSidebar />
                 <div>
                     <div>수강목록</div>

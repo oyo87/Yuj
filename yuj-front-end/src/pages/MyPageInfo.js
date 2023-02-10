@@ -72,8 +72,8 @@ const MyPageInfo = () => {
 
     return (
         <>
-            <div className="flex">
-                <MyPageSidebar />
+            <div className="flex w-full ">
+                <MyPageSidebar/>
                 <div className="px-40 w-full">
                     <div className={"flex " + Styles[`info-background-image`]} >
 

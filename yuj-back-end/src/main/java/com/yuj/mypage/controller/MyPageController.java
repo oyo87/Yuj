@@ -24,19 +24,19 @@ public class MyPageController {
     @GetMapping("/dashboard/{userId}")
     public ResponseEntity<?> getUserLecture(@PathVariable long userId) {
         List<UserLecture> userLecturesById = myPageService.getUserLecturesById(userId);
-        System.out.println("컨트롤러진입후 할당");
+        System.out.println("마이페이지 컨트롤러진입후 할당");
 
         if(userLecturesById != null){
-            System.out.println("컨트롤러정상반환");
+            System.out.println("마이페이지 컨트롤러정상반환");
             return ResponseEntity.ok().body(userLecturesById);
         }
         else if (userLecturesById == null){
-            System.out.println("컨트롤러널");
+            System.out.println("마이페이지 컨트롤러널");
             return ResponseEntity.ok().body("수강중인 강의가 없습니다.");
         }
         //오늘날짜이후로 가장 가까운 start시간 3개로해야함 일단은 전체 lecture라도 반환해보기
 
-        System.out.println("컨트롤러 뭔가 오류");
+        System.out.println("마이페이지 컨트롤러 뭔가 오류");
         return ResponseEntity.badRequest().body("오류가 발생하였습니다.");
 
 
@@ -69,10 +69,10 @@ public class MyPageController {
         return new ResponseEntity(dto, HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> Test() {
-        return new ResponseEntity<>("success", HttpStatus.BAD_GATEWAY);
-    }
+//    @GetMapping("/test")
+//    public ResponseEntity<?> Test() {
+//        return new ResponseEntity<>("success", HttpStatus.BAD_GATEWAY);
+//    }
 
 //    @PutMapping("/info/{id}")
 //    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody MyPageRequestDTO myPageRequestDTO) {
