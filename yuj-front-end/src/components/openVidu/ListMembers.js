@@ -21,7 +21,7 @@ const MemberBox = styled.div`
     position: absolute;
     width: 320px;
     height: 280px;
-    padding: 20px;
+    padding: 10px;
 
     z-index: 99;
     background-color: rgba(0, 0, 0, 0.33);
