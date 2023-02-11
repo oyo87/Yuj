@@ -481,7 +481,7 @@ class Vidu extends Component {
                             {this.state.liston ? (
                                 <div>
                                     {this.state.session ?
-                                        <ListMembers listMembers={this.state.listMembers} /> : SignalCellularNull}
+                                        <ListMembers listMembers={this.state.listMembers} exitMember={ this.exitMember}/> : SignalCellularNull}
                                 </div>
                             ) : null}
                         </div>

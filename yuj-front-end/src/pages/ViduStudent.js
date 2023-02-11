@@ -62,6 +62,7 @@ class Vidu extends Component {
         this.videoControl = this.videoControl.bind(this);
         this.voiceControl = this.voiceControl.bind(this);
         this.listControl = this.listControl.bind(this);
+        this.exitMember = this.exitMember.bind(this);
 
         this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
         this.handleChangeUserName = this.handleChangeUserName.bind(this);
@@ -407,6 +408,8 @@ leaveSession
                         member[1] = JSON.parse(c.clientData).clientType;
                         member[2] = c.publishers[0].mediaOptions.videoActive;
                         member[3] = c.publishers[0].mediaOptions.audioActive;
+                        member[4] = c.id;
+                        member[5] = this.state.myUserType;
                         listMembersDemo.push(member);
                     });
                 }
@@ -417,6 +420,17 @@ leaveSession
         } else { 
             this.setState({ listMessage: '참가자 켜기' });
         }
+    }
+
+    async exitMember(connectionId) { 
+        await axios.delete(
+            '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
+            {
+                headers: {
+                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+                },
+            }
+        )
     }
 
     render() {

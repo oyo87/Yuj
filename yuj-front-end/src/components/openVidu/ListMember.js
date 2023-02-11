@@ -10,7 +10,7 @@ const Member = styled.p`
     }
 `;
 
-const ListMember = ({ listMember }) => {
+const ListMember = ({ listMember, exitMember }) => {
     return (
         <Member>
             <p style={{width:'80px'}}>{listMember[0]}</p>
@@ -25,6 +25,10 @@ const ListMember = ({ listMember }) => {
             {
                 listMember[1] === '강사' ?
                 <span class="material-symbols-outlined">  how_to_reg</span> : <span class="material-symbols-outlined">  person</span>
+            }
+            {
+                listMember[5] === '강사' ?
+                <button onClick={() => exitMember(listMember[4])}><span class="material-symbols-outlined"> exit_to_app </span></button> : null
             }
         </Member>
     )
