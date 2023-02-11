@@ -1,15 +1,39 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import { useNavigate } from 'react-router';
+import { Buffer } from 'buffer'
 import axios from 'axios';
 
-const loginRequest = createAsyncThunk("LOGIN", async(userId, password) => {
-	const loginForm = {
-		id: userId,
-		password: password
-	}
+const loginRequest = createAsyncThunk("LOGIN", async(loginForm) => {
 
-	const response = await axios.post(`https://i8a504.p.ssafy.io/api/login`,JSON.stringify(loginForm));
-	console.log("LOGIN: ",response);
+	const response = await axios.post(
+		`http://localhost:5000/login`,
+		JSON.stringify(loginForm),
+		{
+			headers: {
+				'Content-type': 'application/json',
+				'Accept': '*/*'
+			}
+		}
+	);
+
+	console.log("LOGIN response: ",response);
+
+	return {tokenInfo: response.data.data, id: loginForm.id};
+})
+
+const getUserInfo = createAsyncThunk("GET_USER_INFO", async({accessToken, userId}) => {
+	const response = await axios.get(
+		`http://localhost:5000/users/${userId}`
+		,
+		{
+			headers: {
+				'X-AUTH-TOKEN': accessToken,
+				'Accept': '*/*'
+			}
+		}
+	)
+
+	console.log("GET_USER_INFO response: ",response);
 
 	return response.data;
 })
@@ -32,7 +56,18 @@ const userSlice = createSlice({
 			refreshToken: "",
 			accessTokenExpireDate: 0
 		},
-		userId: ''
+		userId: '',
+		userInfo: {
+			id: "",
+			name: "",
+			nickname: "",
+			phone: "",
+			email: "",
+			birthDate: "",
+			gender: "",
+			profileImage: "",
+			isTeacher: "",
+		}
 	},
 
 	reducers: {
@@ -44,10 +79,13 @@ const userSlice = createSlice({
 
 	extraReducers: {
 		[loginRequest.fulfilled]: (state, {payload}) => {
-			const tokenInfo = payload.data;
+			const tokenInfo = payload.tokenInfo;
+			const id = payload.id;
 			state.tokenInfo = tokenInfo;
 			state.userId = decodeJwtToken(tokenInfo.accessToken);
-			useNavigate('/');
+		},
+		[getUserInfo.fulfilled]: (state, {payload}) => {
+			state.userInfo = payload;
 		},
 	}
 });
@@ -56,4 +94,4 @@ export default userSlice;
 
 export const { clearUserState } = userSlice.actions;
 
-export { loginRequest };
+export { loginRequest, getUserInfo };
