@@ -35,7 +35,7 @@ const getUserInfo = createAsyncThunk("GET_USER_INFO", async({accessToken, userId
 
 	console.log("GET_USER_INFO response: ",response);
 
-	return response.data;
+	return response.data.data;
 })
 
 const decodeJwtToken = (token) => {
@@ -73,7 +73,8 @@ const userSlice = createSlice({
 	reducers: {
 		clearUserState:(state, action) => {
 			state.tokenInfo = {};
-			state.userInfo = '';
+			state.userId = '';
+			state.userInfo = {};
 		}
 	},
 
