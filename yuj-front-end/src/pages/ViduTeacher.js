@@ -422,6 +422,9 @@ class Vidu extends Component {
                         member[1] = JSON.parse(c.clientData).clientType;
                         member[2] = c.publishers[0].mediaOptions.videoActive;
                         member[3] = c.publishers[0].mediaOptions.audioActive;
+                        member[4] = c.id;
+                        member[5] = this.state.myUserType;
+                        
                         listMembersDemo.push(member);
                     });
                 }
@@ -434,6 +437,17 @@ class Vidu extends Component {
         } else { 
             this.setState({ listMessage: '참가자 켜기' });
         }
+    }
+
+    async exitMember(connectionId) { 
+        await axios.delete(
+            '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
+            {
+                headers: {
+                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+                },
+            }
+        )
     }
 
     render() {
