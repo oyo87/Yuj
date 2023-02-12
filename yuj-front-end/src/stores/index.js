@@ -20,6 +20,7 @@ const persistConfig = {
     key: 'yuj',
     storage,
     whitelist: ['studio', 'lecture', 'studioSample'],
+    blacklist: ['studioSample']
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers);

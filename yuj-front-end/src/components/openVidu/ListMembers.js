@@ -21,7 +21,7 @@ const MemberBox = styled.div`
     position: absolute;
     width: 320px;
     height: 280px;
-    padding: 20px;
+    padding: 10px;
 
     z-index: 99;
     background-color: rgba(0, 0, 0, 0.33);
@@ -40,7 +40,7 @@ const MemberBox = styled.div`
 
     color: white;
 `;
-const ListMembers = ({ listMembers }) => {
+const ListMembers = ({ listMembers, exitMember }) => {
     return (
         <>
             <MemberBox>
@@ -48,7 +48,7 @@ const ListMembers = ({ listMembers }) => {
                 {
                     listMembers?.map((listMember, i) => (
                         <div key={'list member' + listMember[0] + i}>
-                            <ListMember listMember={ listMember } />
+                            <ListMember listMember={ listMember } exitMember={ exitMember} />
                         </div>
                     ))
                 }

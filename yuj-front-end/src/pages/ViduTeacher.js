@@ -59,6 +59,7 @@ class Vidu extends Component {
         this.videoControl = this.videoControl.bind(this);
         this.voiceControl = this.voiceControl.bind(this);
         this.listControl = this.listControl.bind(this);
+        this.exitMember = this.exitMember.bind(this);
 
         this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
         this.handleChangeUserName = this.handleChangeUserName.bind(this);
@@ -305,14 +306,10 @@ class Vidu extends Component {
             mainStreamManager: undefined,
             publisher: undefined
         });
-        // OpenVidu.deleteSession(this.state.mySessionId)
-        //     .then(() => { 
-        //         console.log("Session deleted");
-        //     })
-        //     .catch(error => { 
-        //         console.log(error);
-        //     })
-        let Tanos = await axios.delete(
+        this.setState({
+            session: undefined
+        })
+        await axios.delete(
             '/openvidu/api/sessions/' + this.state.mySessionId,
             {
                 headers: {
@@ -320,7 +317,6 @@ class Vidu extends Component {
                 },
             }
         );
-        console.log(Tanos);
     }
 
     async switchCamera() {
@@ -422,6 +418,9 @@ class Vidu extends Component {
                         member[1] = JSON.parse(c.clientData).clientType;
                         member[2] = c.publishers[0].mediaOptions.videoActive;
                         member[3] = c.publishers[0].mediaOptions.audioActive;
+                        member[4] = c.id;
+                        member[5] = this.state.myUserType;
+                        
                         listMembersDemo.push(member);
                     });
                 }
@@ -434,6 +433,17 @@ class Vidu extends Component {
         } else { 
             this.setState({ listMessage: '참가자 켜기' });
         }
+    }
+
+    async exitMember(connectionId) { 
+        await axios.delete(
+            '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
+            {
+                headers: {
+                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+                },
+            }
+        )
     }
 
     render() {
@@ -481,7 +491,7 @@ class Vidu extends Component {
                             {this.state.liston ? (
                                 <div>
                                     {this.state.session ?
-                                        <ListMembers listMembers={this.state.listMembers} /> : SignalCellularNull}
+                                        <ListMembers listMembers={this.state.listMembers} exitMember={ this.exitMember}/> : SignalCellularNull}
                                 </div>
                             ) : null}
                         </div>
@@ -520,19 +530,19 @@ class Vidu extends Component {
                         {this.state.mainStreamManager !== undefined ? (
                             <ButtonContainer>
                                 <img className='yuj-logo' alt='No Image' src='/assets/YujMainLogo.svg' style={{ marginBottom: '10px' }}></img>
-                                <button class="clickControl" onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
-                                    <span class="material-symbols-outlined">videocam</span> : <span class="material-symbols-outlined">videocam_off</span>}  {this.state.videoMessage}</div>
+                                <button className="clickControl " onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
+                                    <span className="material-symbols-outlined">videocam</span> : <span className="material-symbols-outlined">videocam_off</span>}    {this.state.videoMessage}</div>
                                 </button>
-                                <button class="clickControl" onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
-                                    <span class="material-symbols-outlined">mic</span> : <span class="material-symbols-outlined">mic_off</span>}  {this.state.voiceMessage}</div>
+                                <button className="clickControl" onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
+                                    <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>}    {this.state.voiceMessage}</div>
                                 </button>
-                                <button class="clickControl" onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
-                                    <span class="material-symbols-outlined">person</span> : <span class="material-symbols-outlined">person_off</span>} {this.state.listMessage}</div>
+                                <button className="clickControl" onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
+                                    <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>} {this.state.listMessage}</div>
                                 </button>
-                                <button class="clickControl" onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
-                                    <span class="material-symbols-outlined">chat</span> : <span class="material-symbols-outlined">speaker_notes_off</span>} {this.state.chatMessage}</div>
+                                <button className="clickControl" onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
+                                    <span className="material-symbols-outlined">chat</span> : <span className="material-symbols-outlined">speaker_notes_off</span>} {this.state.chatMessage}</div>
                                 </button>
-                                <button class="clickControl" onClick={this.leaveSession}><div className="flex w-full justify-center"><span class="material-symbols-outlined">exit_to_app</span> 종료</div></button>
+                                <button className="clickControl" onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span> 종료</div></button>
                             </ButtonContainer>
                         ) : null}
                     </div>
