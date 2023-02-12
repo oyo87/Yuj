@@ -10,6 +10,8 @@ const getLecture = createAsyncThunk("GET_LECTURE", async(lectureId) => {
 // 특정 강의의 스케줄을 가져오는 함수
 const getLectureSchedule = createAsyncThunk("GET_LECTURE_SCHDULE", async(lectureId) => {
     const response = await axios.get(`http://localhost:5000/lectures/lectureSchedule/${lectureId}`);
+	console.log("GET_LECTURE_SCHEDULE_LIST: ",response);
+    return response.data;
 })
 
 const searchLectures = createAsyncThunk("SEARCH_LECTURES", async(keyword) => {
@@ -37,7 +39,6 @@ const lectureSlice = createSlice({
             state.currLecture = payload;
         },
         [getLectureSchedule.fulfilled]: (state, {payload}) => {
-            console.log("get lecture Schedule", payload);
             state.lectureSchedule = payload;
         },
         [searchLectures.fulfilled]: (state, {payload}) => {
