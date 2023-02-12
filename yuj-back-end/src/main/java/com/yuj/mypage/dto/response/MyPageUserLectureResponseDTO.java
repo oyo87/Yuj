@@ -1,8 +1,13 @@
 package com.yuj.mypage.dto.response;
 
+import com.yuj.lecture.domain.Lecture;
+import com.yuj.lecture.domain.UserLecture;
+import com.yuj.user.domain.User;
 import lombok.*;
 
+import javax.persistence.Column;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -12,10 +17,23 @@ import java.time.LocalDate;
 @Setter
 public class MyPageUserLectureResponseDTO {
     //필요한 정보 : thumbnailImage, name 강의 제목,  startTime, day, endDate 강의 시간정보,
+
+//  UserLecture
+    private Long userLectureId;
+    private LocalDate userRegistDate;
+//    User
+    private Long userId;
+    private String id;
+    private String nickname;
+//    Lecture
+    private Long lectureId;
+
     private String name;
     private String thumbnailImage;
-    private LocalDate startTime;
+    private LocalDate lectureRegistDate;
+    private LocalDate startDate;
     private LocalDate endDate;
-    private int day;
-
+    private int limitStudents;
+    private int totalCount;
+    private boolean isActive;
 }

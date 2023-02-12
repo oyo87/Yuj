@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 const MyPageDashBoard = () => {
 
     //HH:MM:SS 시간 표시를 HH:MM으로 표시하는 함수
-    // function convertToHM(time) {
+    // function convertToHM(time) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     //     let [hours, minutes, _] = time.split(":");
     //     return `${hours}:${minutes}`;
     // }
@@ -47,7 +47,6 @@ const MyPageDashBoard = () => {
             url: MYPAGE_URL
         }).then(response => {
             setCompletedLectures(response.data)
-            // console.log(response.data);
         })
             .catch(error => {
                 console.log(error.response);
@@ -68,8 +67,7 @@ const MyPageDashBoard = () => {
 
     return (
         <>
-            <MainHeader />
-            <container className="flex ml-100">
+            <container className="flex ml-100 w-full">
                 <MyPageSidebar />
                 <main>
                     <div className="mx-28 mt-16 w-full">
@@ -167,11 +165,6 @@ const MyPageDashBoard = () => {
                     </div>
                 </main>
             </container>
-            <div>
-                <MainFooter />
-            </div>
-
-
         </>
     );
 }
