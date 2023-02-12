@@ -6,8 +6,8 @@ import axios from 'axios';
 const loginRequest = createAsyncThunk("LOGIN", async(loginForm) => {
 
 	const response = await axios.post(
-		// `http://localhost:5000/login`,
-		`https://i8a504.p.ssafy.io/api/login`,
+		`http://localhost:5000/login`,
+		// `https://i8a504.p.ssafy.io/api/login`,
 		JSON.stringify(loginForm),
 		{
 			headers: {
