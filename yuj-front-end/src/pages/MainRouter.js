@@ -5,7 +5,7 @@ import Styles from './MainRouter.module.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Home from './Home';
 import LoginPage from './LoginPage';
-import SignIn from './Signin';
+import SignUp from './SignUp';
 import ViduTeacher from '../utils/FunctionalizedViduTeacher'
 import ViduStudent from '../utils/FunctionalizedViduStudent'
 import StudioPage from './StudioPage';
@@ -20,6 +20,7 @@ import MyPageInfo from './MyPageInfo';
 import MyPageLecture from './MyPageLecture';
 import MyPageDashBoard from './MyPageDashBoard';
 import StudioModifyPage from './StudioModifyPage';
+import MainSearchPage from './MainSearchPage';
 
 const Test = () => {
   const location = useLocation();
@@ -38,7 +39,7 @@ const Test = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path='/viduTeacher' element={<ViduTeacher />} />
           <Route path='/viduStudent' element={<ViduStudent />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/studio" element={<StudioPage />}/>
           <Route path="/studioModify" element={<StudioModifyPage />} />
           <Route path="/mypage/dashboard" element={<MyPageDashBoard />}/>
@@ -51,6 +52,7 @@ const Test = () => {
           <Route path="/studioLectureUpdatePage" element={<StudioLectureUpdatePage />} />
           <Route path="/fileInput" element={<FileInput initialLabelText={'확장자: png, jp,g jpeg / 용량 100MB 이하'} onChangeEvent={(file) => {console.log(file)}}/>} />
           <Route path="/userlive" element={<UserLivePage/>}/>
+          <Route path="/search" element={<MainSearchPage/>}/>
         </Routes>
       </div> 
       {location.pathname !== '/viduTeacher' ? location.pathname !== '/viduStudent' ? <MainFooter /> : null : null}
