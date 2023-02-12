@@ -2,6 +2,7 @@ package com.yuj.user.controller;
 
 import java.util.List;
 
+import com.yuj.user.dto.response.TeacherResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class UserController {
     
     @GetMapping
     public ResponseEntity<?> searchTeacherByName(@RequestParam("search") String name){
-    	List<UserResponseDTO> resultList = userService.searchTeacherByName(name);
+    	List<TeacherResponseDTO> resultList = userService.searchTeacherByName(name);
     	
     	return new ResponseEntity<>(resultList, HttpStatus.OK);
     }

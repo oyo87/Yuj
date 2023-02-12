@@ -3,6 +3,8 @@ package com.yuj.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.yuj.studio.domain.Studio;
+import com.yuj.user.dto.response.TeacherResponseDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,11 +73,11 @@ public class UserService {
         return true;
     }
     
-    public List<UserResponseDTO> searchTeacherByName(String name){
-    	List<UserResponseDTO> result = new ArrayList<>();
+    public List<TeacherResponseDTO> searchTeacherByName(String name){
+    	List<TeacherResponseDTO> result = new ArrayList<>();
     	List<User> list = userRepository.findUser(name);
     	for (User user : list) {
-			result.add(entityToResponseDTO(user));
+			result.add(entityToTeacherResponseDTO(user));
 		}
     	return result;
     }
@@ -92,5 +94,22 @@ public class UserService {
         		.profileImage(user.getProfileImagePath())
         		.isTeacher(user.isTeacher())
         		.build();
+    }
+    private TeacherResponseDTO entityToTeacherResponseDTO(User user) {
+        Studio studio = user.getStudio();
+
+        return TeacherResponseDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .birthDate(user.getBirthDate())
+                .gender(user.getGender())
+                .profileImage(user.getProfileImagePath())
+                .isTeacher(user.isTeacher())
+                .rating((float) user.getRatingSum() / user.getRatingCnt())
+                .description(studio.getDescription())
+                .build();
     }
 }
