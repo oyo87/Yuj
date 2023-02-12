@@ -6,8 +6,9 @@ import axios from 'axios';
 const loginRequest = createAsyncThunk("LOGIN", async(loginForm) => {
 
 	const response = await axios.post(
-		`http://localhost:5000/login`,
-		// `https://i8a504.p.ssafy.io/api/login`,
+		// `http://localhost:5000/login`,
+		`https://i8a504.p.ssafy.io/api/login`,
+
 		JSON.stringify(loginForm),
 		{
 			headers: {
@@ -24,7 +25,7 @@ const loginRequest = createAsyncThunk("LOGIN", async(loginForm) => {
 
 const getUserInfo = createAsyncThunk("GET_USER_INFO", async({accessToken, userId}) => {
 	const response = await axios.get(
-		`http://localhost:5000/users/${userId}`
+		`https://i8a504.p.ssafy.io/api/users/${userId}`
 		,
 		{
 			headers: {

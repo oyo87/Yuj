@@ -6,7 +6,10 @@ import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.Yoga;
 import com.yuj.lecture.dto.request.LectureVO;
 import com.yuj.lecture.dto.response.LectureResponseDTO;
+import com.yuj.lecture.dto.response.LectureScheduleResponseDTO;
 import com.yuj.lecture.repository.LectureRepository;
+import com.yuj.lecture.repository.LectureScheduleRepository;
+//import com.yuj.lectureimage.domain.LectureImage;
 import com.yuj.lecture.repository.YogaRepository;
 import com.yuj.lectureimage.domain.ImageFile;
 import com.yuj.lectureimage.handler.FileHandler;
@@ -108,6 +111,21 @@ public class LectureService {
         return returnList;
     }
 
+    public List<LectureResponseDTO> getLecturesByUserIdAndYogaId(Long userId, Long yogaId) throws Exception {
+        List<Lecture> LectureList = lectureRepository.findLectureByUserIdAndYogaId(userId, yogaId, LocalDate.now());
+        List<Lecture> LectureEndList = lectureRepository.findLectureEndByUserIdAndYogaId(userId,yogaId, LocalDate.now());
+
+        List<LectureResponseDTO> returnList = new ArrayList<>();
+
+        for(Lecture lecture : LectureList) {
+            returnList.add(entityToResponseDTO(lecture));
+        }
+        for(Lecture lecture : LectureEndList) {
+            returnList.add(entityToResponseDTO(lecture));
+        }
+        return returnList;
+    }
+
     public LectureResponseDTO updateLectureActive(Long lectureId, long userId, Boolean isActive) throws Exception {
         Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(() -> new Exception("강의가 존재하지 않습니다."));
 
@@ -122,9 +140,9 @@ public class LectureService {
     }
 
     public LectureResponseDTO getActiveLectureByUserId(Long userId) throws Exception {
-        Lecture lecture = lectureRepository.findByUser_UserIdAndIsActiveTrue(userId).orElseThrow(() -> new Exception("수업이 존재하지 않습니다."));
+        List<Lecture> lectures = lectureRepository.findByUser_UserIdAndIsActiveTrue(userId).orElseThrow(() -> new Exception("수업이 존재하지 않습니다."));
 
-        return entityToResponseDTO(lecture);
+        return entityToResponseDTO(lectures.get(0));
     }
     
     public List<LectureResponseDTO> searchLectureByName(String name) throws Exception{

@@ -18,10 +18,25 @@ const getStudioLectureList = createAsyncThunk("GET_STUDIO_LECTURE_LIST", async(u
 	return response.data;
 })
 
+const getStudioSelectedLectureList = createAsyncThunk("GET_STUDIO_SELECTED_LECTURE_LIST", async({userId, yogaId}) => {
+	const response = await axios.get(`https://i8a504.p.ssafy.io/api/studio/${userId}/lectures/${yogaId}`);
+	console.log("GET_STUDIO_SELECTED_LECTURE_LIST: ",response);
+
+	return response.data;
+})
+
 const getStudioLiveLecture = createAsyncThunk("GET_STUDIO_LIVE_LECTURE", async(userId) => {
 
 	const response = await axios.get(`https://i8a504.p.ssafy.io/api/studio/${userId}/checkLive`);
 	console.log("GET_STUDIO_LIVE_LECTURE: ",response);
+
+	return response.data;
+})
+
+const searchTeachers = createAsyncThunk("SEARCH_TEACHERS", async(keyword) => {
+
+	const response = await axios.get(`https://i8a504.p.ssafy.io/api/users?search=${keyword}`);
+	console.log("SEARCH_TEACHERS", response);
 
 	return response.data;
 })
@@ -44,6 +59,8 @@ const studioSlice = createSlice({
 		},
 		studioLectureList: [],
 		studioLiveLecture: {},
+		studioLectureDetailItem: {},
+		teachersSearched: [],
 	},
 
 	reducers: {
@@ -58,6 +75,14 @@ const studioSlice = createSlice({
 		addStudioLectureList:(state, action) => {
 			const newStudioLecture = action.payload;
 			state.studioLectureList = [...state.studioLectureList, newStudioLecture];
+		},
+		changeSelectedCategory:(state, action) => {
+			const newSelectedCategery = action.payload;
+			state.selectedCategory = newSelectedCategery;
+		},
+		changeStudioLectureDetailItem:(state, action) => {
+			const newItem = action.payload;
+			state.studioLectureDetailItem = newItem;
 		}
 	},
 
@@ -70,13 +95,19 @@ const studioSlice = createSlice({
 		},
 		[getStudioLiveLecture.fulfilled]: (state, {payload}) => {
 			state.studioLiveLecture = payload;
-		}
+		},
+		[getStudioSelectedLectureList.fulfilled]: (state, {payload}) => {
+			state.studioLectureList = payload;
+		},
+		[searchTeachers.fulfilled]: (state, {payload}) => {
+			state.teachersSearched = payload;
+		},
 	}
 });
 
 
 export default studioSlice;
 
-export const { changeStudioDetail, changeStudioLectureList, addStudioLectureList } = studioSlice.actions;
+export const { changeStudioDetail, changeStudioLectureList, addStudioLectureList, changeSelectedCategory, changeStudioLectureDetailItem } = studioSlice.actions;
 
-export { getStudioDetail, getStudioLectureList, getStudioLiveLecture };
+export { getStudioDetail, getStudioLectureList, getStudioLiveLecture, getStudioSelectedLectureList, searchTeachers };
