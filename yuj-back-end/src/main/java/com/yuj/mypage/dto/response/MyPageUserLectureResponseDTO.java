@@ -27,7 +27,6 @@ public class MyPageUserLectureResponseDTO {
     private String nickname;
 //    Lecture
     private Long lectureId;
-
     private String name;
     private String thumbnailImage;
     private LocalDate lectureRegistDate;

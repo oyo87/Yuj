@@ -64,6 +64,7 @@ public class MyPageService {
                 id(user.getId()).
                 nickname(user.getNickname()).
                 lectureId(lecture.getLectureId()).
+                name(lecture.getName()).
                 thumbnailImage(lecture.getThumbnailImage()).
                 lectureRegistDate(lecture.getRegistDate()).
                 startDate(lecture.getStartDate()).
