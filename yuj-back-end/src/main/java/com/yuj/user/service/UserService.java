@@ -97,6 +97,7 @@ public class UserService {
     }
     private TeacherResponseDTO entityToTeacherResponseDTO(User user) {
         Studio studio = user.getStudio();
+        float rating = user.getRatingCnt() == 0 ? 3 : (float) user.getRatingSum() / user.getRatingCnt();
 
         return TeacherResponseDTO.builder()
                 .id(user.getId())
@@ -108,8 +109,9 @@ public class UserService {
                 .gender(user.getGender())
                 .profileImage(user.getProfileImagePath())
                 .isTeacher(user.isTeacher())
-                .rating((float) user.getRatingSum() / user.getRatingCnt())
+                .rating(rating)
                 .description(studio.getDescription())
+                .userId(user.getUserId())
                 .build();
     }
 }

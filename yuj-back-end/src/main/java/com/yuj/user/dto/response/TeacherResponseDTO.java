@@ -25,5 +25,6 @@ public class TeacherResponseDTO {
     private boolean isTeacher;
     private float rating;
     private String description;
+    private long userId;
 
 }
