@@ -153,7 +153,7 @@ const MyPageDashBoard = () => {
                                     <MyPageWeeklyStudyChart />
                                 </div>
                                 <div className="pl-5">
-                                    주간 학습 : 5 / 9회 참여하였습니다.
+                                    5 / 9회 참여하였습니다.
                                 </div>
                             </div>
                         </div>

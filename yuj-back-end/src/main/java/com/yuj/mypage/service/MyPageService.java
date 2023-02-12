@@ -3,6 +3,7 @@ package com.yuj.mypage.service;
 import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.LectureSchedule;
 import com.yuj.lecture.domain.UserLecture;
+import com.yuj.lecture.domain.Yoga;
 import com.yuj.lecture.repository.LectureRepository;
 import com.yuj.lecture.repository.LectureScheduleRepository;
 import com.yuj.mypage.dto.request.MyPageRequestDTO;
@@ -55,6 +56,7 @@ public class MyPageService {
     private MyPageUserLectureResponseDTO entityToUserLectureResponseDTO(UserLecture userLecture){
         User user = userLecture.getUser();
         Lecture lecture = userLecture.getLecture();
+        Yoga yoga = lecture.getYoga();
 
         return MyPageUserLectureResponseDTO.builder().
                 userLectureId(userLecture.getUserLectureId()).
@@ -63,6 +65,7 @@ public class MyPageService {
                 userId(user.getUserId()).
                 id(user.getId()).
                 nickname(user.getNickname()).
+                profileImagePath(user.getProfileImagePath()).
                 lectureId(lecture.getLectureId()).
                 name(lecture.getName()).
                 thumbnailImage(lecture.getThumbnailImage()).
@@ -72,6 +75,8 @@ public class MyPageService {
                 limitStudents(lecture.getLimitStudents()).
                 totalCount(lecture.getTotalCount()).
                 isActive(lecture.isActive()).
+                description(lecture.getDescription()).
+                englishName(yoga.getEnglishName()).
                 build();
     }
 

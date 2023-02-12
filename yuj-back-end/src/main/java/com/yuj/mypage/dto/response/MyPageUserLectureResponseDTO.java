@@ -2,6 +2,7 @@ package com.yuj.mypage.dto.response;
 
 import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.UserLecture;
+import com.yuj.lecture.domain.Yoga;
 import com.yuj.user.domain.User;
 import lombok.*;
 
@@ -25,9 +26,11 @@ public class MyPageUserLectureResponseDTO {
     private Long userId;
     private String id;
     private String nickname;
-//    Lecture
+    private String profileImagePath;
+    //    Lecture
     private Long lectureId;
     private String name;
+    private String description;
     private String thumbnailImage;
     private LocalDate lectureRegistDate;
     private LocalDate startDate;
@@ -35,4 +38,7 @@ public class MyPageUserLectureResponseDTO {
     private int limitStudents;
     private int totalCount;
     private boolean isActive;
+//    Yoga
+    private String englishName;
+
 }
