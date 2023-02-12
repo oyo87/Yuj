@@ -38,7 +38,7 @@ const StudioSidebar = (props) => {
     },
     {
       name: "수강 후기",
-      path: "/studio",
+      path: "/studio/reviews",
     },
   ];
 
