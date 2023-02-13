@@ -1,10 +1,7 @@
 package com.yuj.studio.domain;
 
 import com.yuj.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,9 +10,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Studio {
+    @SequenceGenerator(
+            name="STUDIO_SEQ_GEN",
+            sequenceName = "STUDIO_SEQ",
+            initialValue = 100,
+            allocationSize = 1
+    )
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STUDIO_SEQ_GEN")
     @Column(name = "studio_id")
     private Long studioId;
 

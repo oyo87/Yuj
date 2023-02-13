@@ -1,6 +1,19 @@
 package com.yuj.user.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.yuj.studio.domain.Studio;
+import com.yuj.studio.service.StudioService;
+import com.yuj.user.dto.response.TeacherResponseDTO;
+import com.yuj.lectureimage.domain.ImageFile;
+import com.yuj.lectureimage.handler.FileHandler;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.yuj.config.jwt.JwtProvider;
+import com.yuj.exception.CSignUpFailedCException;
 import com.yuj.exception.CUserNotFoundException;
 import com.yuj.user.domain.User;
 import com.yuj.user.dto.request.UserSignupRequestDTO;
@@ -8,18 +21,19 @@ import com.yuj.user.dto.request.UserUpdateRequestDTO;
 import com.yuj.user.dto.response.UserResponseDTO;
 import com.yuj.user.repository.TokenRepository;
 import com.yuj.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final StudioService studioService;
     private final PasswordEncoder passwordEncoder;
+    private final FileHandler fileHandler;
     private final JwtProvider jwtProvider;
     private final TokenRepository tokenRepository;
 
@@ -30,21 +44,51 @@ public class UserService {
     }
 
     @Transactional
-    public boolean signUp(UserSignupRequestDTO userSignupRequestDTO) {
+    public String signUp(List<MultipartFile> files, UserSignupRequestDTO userSignupRequestDTO) {
+        String ret = "";
+        Long userId = -1L;
+
         //  이미 존재하는 아이디인 경우
         if(isExist(userSignupRequestDTO.getId()))
-            return false;
-        userRepository.save(userSignupRequestDTO.toEntity(passwordEncoder)).getUserId();
-        return true;
+            throw new CSignUpFailedCException("이미 존재하는 아이디입니다.");
+
+        try {
+            List<ImageFile> imageFileList = fileHandler.parseLectureImageInfo(files);
+
+            //  파일이 존재하면 처리
+            if(!imageFileList.isEmpty()) {
+                ImageFile imageFile = imageFileList.get(0);
+                userSignupRequestDTO.setProfileImagePath(imageFile.getFilePath());
+            }
+
+            userId = userRepository.save(userSignupRequestDTO.toEntity(passwordEncoder)).getUserId();
+            ret += "회원가입한 id = " + userSignupRequestDTO.getId();
+            
+            if(userSignupRequestDTO.getRoleName().equals("ROLE_TEACHER")) { //  강사일 경우 studio 생성
+                Long studioId = studioService.createStudio(userId);
+                ret += "\n스튜디오 번호 = " + studioId;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            return ret;
+        }
     }
 
     @Transactional(readOnly = true)
     public UserResponseDTO searchById(String id) {
         User user = userRepository.findById(id).orElseThrow(CUserNotFoundException::new);
-
-        return new UserResponseDTO(user);
+        
+        return entityToResponseDTO(user);
     }
 
+    @Transactional(readOnly = true)
+    public UserResponseDTO searchByUserId(String id) {
+        long userId = Long.parseLong(id);
+        User user = userRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+
+        return entityToResponseDTO(user);
+    }
     @Transactional
     public boolean updateUser(String id, UserUpdateRequestDTO updateRequestDTO) {
         User modifiedUser = userRepository.findById(id).orElseThrow(CUserNotFoundException::new);
@@ -57,5 +101,49 @@ public class UserService {
         modifiedUser.setProfileImagePath(updateRequestDTO.getProfileImagePath());
 
         return true;
+    }
+    
+    public List<TeacherResponseDTO> searchTeacherByName(String name){
+    	List<TeacherResponseDTO> result = new ArrayList<>();
+    	List<User> list = userRepository.findUser(name);
+    	for (User user : list) {
+			result.add(entityToTeacherResponseDTO(user));
+		}
+
+        log.info("UserService - searchTeacherByName keyword, firstItem : {}, {}",name,result.get(0).getName());
+    	return result;
+    }
+    
+    private UserResponseDTO entityToResponseDTO(User user) {
+    	return UserResponseDTO.builder()
+        		.id(user.getId())
+        		.name(user.getName())
+        		.nickname(user.getNickname())
+        		.phone(user.getPhone())
+        		.email(user.getEmail())
+        		.birthDate(user.getBirthDate())
+        		.gender(user.getGender())
+        		.profileImage(user.getProfileImagePath())
+        		.isTeacher(user.isTeacher())
+        		.build();
+    }
+    private TeacherResponseDTO entityToTeacherResponseDTO(User user) {
+        Studio studio = user.getStudio();
+        float rating = user.getRatingCnt() == 0 ? 3 : (float) user.getRatingSum() / user.getRatingCnt();
+
+        return TeacherResponseDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .birthDate(user.getBirthDate())
+                .gender(user.getGender())
+                .profileImage(user.getProfileImagePath())
+                .isTeacher(user.isTeacher())
+                .rating(rating)
+                .description(studio.getDescription())
+                .userId(user.getUserId())
+                .build();
     }
 }

@@ -3,6 +3,8 @@ package com.yuj.user.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yuj.studio.domain.Studio;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +14,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -21,9 +22,16 @@ import java.util.stream.Collectors;
 @Setter
 @Builder
 @ToString
+@DynamicInsert
 public class User implements UserDetails {
+    @SequenceGenerator(
+            name="USER_SEQ_GEN",
+            sequenceName = "USER_SEQ",
+            initialValue = 100,
+            allocationSize = 1
+    )
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ_GEN")
     @Column(name = "user_id")
     private Long userId;
 
@@ -53,30 +61,53 @@ public class User implements UserDetails {
 
     private String profileImagePath;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    @ColumnDefault("0")
+    private boolean isTeacher = false;
+
+    @Builder.Default
+    @ColumnDefault("0")
+    private boolean isAdmin = false;
+
+    private String roleName;
+    @Builder.Default
+    @ColumnDefault("0")
+    private int ratingSum = 0;
+
+    @Builder.Default
+    @ColumnDefault("0")
+    private int ratingCnt = 0;
 
 //    @OneToOne
 //    @JoinColumn(name = "token_id")
 //    private Token token;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Studio studio;
 
 
+
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return this.roles
+//                .stream().map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles
-                .stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+        authorities.add(new SimpleGrantedAuthority(this.getRoleName()));
+
+        return authorities;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
 //        return String.valueOf(this.userId);
-        return this.id;
+        return String.valueOf(this.userId);
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

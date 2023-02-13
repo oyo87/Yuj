@@ -1,6 +1,7 @@
-// import { useState } from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
-// import { getStudio, createStudio, changeStudioName, changeStudioDesc } from '../stores/studioSlice';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getStudioDetail, getStudioLectureList, getStudioLiveLecture } from '../stores/studioSlice';
+import { useNavigate, useLocation } from 'react-router-dom';
 import StudioSidebar from '../components/StudioSidebar';
 import MainHeader from './../components/mainHeader/MainHeader';
 import MainFooter from "../components/mainFooter/MainFooter";
@@ -12,25 +13,44 @@ import LectureItemCard from '../components/LectureItemCard';
 
 const StudioPage = () => {
 
+    const user = useSelector(state => state.user);
+    const studio = useSelector(state => state.studio);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        console.log(location.state);
+        if(location.state != null){
+            getStudioData(location.state.teacherId);
+        }else if(studio.studioDetail.studioId == null) {
+            navigate(-1);
+        }
+    },[])
+
+    const getStudioData = (teacherId) => {
+        dispatch(getStudioDetail(teacherId));
+        dispatch(getStudioLectureList(teacherId));
+        dispatch(getStudioLiveLecture(teacherId));
+    }
+
     return (
         <>
-            <MainHeader/>
-            <div className={'flex'}>
-                <StudioSidebar/>
+            <div className={'flex w-full'}>
+                <StudioSidebar studioDetail={studio.studioDetail} userId={user.userId} studioLiveLecture={studio.studioLiveLecture}/>
                 <div>
-                    <StudioMainBanner/>
+                    <StudioMainBanner studioBannerImage={studio.studioDetail.bannerImage}/>
                     <div className={'px-40'}>
-                        <StudioMainDescription/>
-                        <ListTitle titleText={'강의 목록'} onClickEvent={() => console.log('강의 목록 clicked!')}/>
-                        <div className={'mt-20 my-48 flex justify-evenly'}>
-                            <LectureItemCard />
-                            <LectureItemCard />
-                            <LectureItemCard />
+                        <StudioMainDescription studioDetail={studio.studioDetail}/>
+                        <ListTitle className={'text-2xl font-bold'} titleText={'강의 목록'} onClickEvent={() => { navigate("/studioLectureListPage")}}/>
+                        <div className={'mt-20 my-48  flex justify-evenly'}>
+                            {studio.studioLectureList.map((lecture, index) => 
+                                index < 3 ? <LectureItemCard key={lecture.lectureId} thisLecture={lecture}/> : null
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
-            <MainFooter/>
         </>
     );
 }

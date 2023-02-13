@@ -69,41 +69,6 @@ const Messages = ({ session, messages, setMessages, userName='need to set userNa
     // const [messages, setMessages] = useState([]);
     const inputRef = useRef(null);
 
-    //채팅 받는 부분
-    useEffect(() => {
-        session.on('signal:chat', (event) => { 
-            let chatdata = event.data.split(',');
-
-            if (chatdata[0] !== userName) {
-                // setMessages(current => {
-                //     return [...current, {
-                //         userName: chatdata[0],
-                //         text: chatdata[1],
-                //         chatClass: 'messages__item--visitor',
-                //     }]
-                // })
-                setMessages({
-                    userName: chatdata[0],
-                    text: chatdata[1],
-                    chatClass: 'messages__item--visitor',
-                })
-            }
-        })
-        return () => {
-            session.off('signal:chat')
-        }
-    }, []);
-
-    useEffect(() => {
-        session.on("subscribeToSpeechToText", event => {
-            if (event.reason === "recognizing") {
-                console.log("User " + event.connection.connectionId + " is speaking: " + event.text);
-            } else if (event.reason === "recognized") {
-                console.log("User " + event.connection.connectionId + " spoke: " + event.text);
-            }
-        })
-    }, []);
-
     const messageRef = createRef(null);
     const scrollToBottom = () => { 
         if (messageRef.current) { 
@@ -140,8 +105,26 @@ const Messages = ({ session, messages, setMessages, userName='need to set userNa
             type: 'chat',
         });
         inputRef.current.value = null;
-        
     }
+
+    function sendmessageByEnter(e) {
+        if (e.key === 'Enter') {
+            const currentText = inputRef.current.value;
+            setMessages({
+                userName,
+                text: currentText,
+                chatClass: 'messages__item--operator',
+            })
+            const mySession = session;
+            mySession.signal({
+                data: `${userName},${inputRef.current.value}`,
+                to: [],
+                type: 'chat',
+            });
+            inputRef.current.value = null;
+        }
+    }
+
     return (
         <Wrapper>
             <ChatBox className="where" ref={messageRef}>
@@ -161,6 +144,7 @@ const Messages = ({ session, messages, setMessages, userName='need to set userNa
                                 id="chat_message"
                                 type="text"
                                 placeholder="내용을 입력하세요"
+                                onKeyDown={sendmessageByEnter}
                             />
                             <button onClick={sendmessageByClick}>
                                 <span class="material-symbols-outlined">send</span>

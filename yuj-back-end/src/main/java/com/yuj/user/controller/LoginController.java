@@ -5,12 +5,12 @@ import com.yuj.response.SingleResult;
 import com.yuj.user.dto.request.TokenRequestDTO;
 import com.yuj.user.dto.request.UserLoginRequestDTO;
 import com.yuj.user.dto.response.TokenResponseDTO;
-import com.yuj.user.dto.response.UserResponseDTO;
 import com.yuj.user.service.LoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "LogIn / LogOut")
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class LoginController {
     private final LoginService loginService;
     private final ResponseService responseService;
@@ -28,8 +29,9 @@ public class LoginController {
             @ApiParam(value = "로그인 요청 DTO", required = true)
             @RequestBody UserLoginRequestDTO userLoginRequestDTO
             ) {
-        TokenResponseDTO tokenResponseDTO = loginService.login(userLoginRequestDTO);
-        return responseService.getSingleResultSuccess(tokenResponseDTO);
+        log.info("Login API RequestDTO = {}",userLoginRequestDTO);
+        TokenResponseDTO tokenLoginResponseDTO = loginService.login(userLoginRequestDTO);
+        return responseService.getSingleResultSuccess(tokenLoginResponseDTO);
     }
 
     @ApiOperation(
@@ -41,8 +43,8 @@ public class LoginController {
             @ApiParam(value = "토큰 재발급 요청 DTO", required = true)
             @RequestBody TokenRequestDTO tokenRequestDTO
             ) {
-        System.out.println("tokenRequestDTO.getAccessToken() = " + tokenRequestDTO.getAccessToken());
-        System.out.println("tokenRequestDTO.getRefreshToken() = " + tokenRequestDTO.getRefreshToken());
+        log.info("tokenRequestDTO.getAccessToken() = " + tokenRequestDTO.getAccessToken());
+        log.info("tokenRequestDTO.getRefreshToken() = " + tokenRequestDTO.getRefreshToken());
         
         return responseService.getSingleResultSuccess(loginService.reissue(tokenRequestDTO));
     }

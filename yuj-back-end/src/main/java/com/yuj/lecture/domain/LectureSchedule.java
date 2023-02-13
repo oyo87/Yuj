@@ -1,9 +1,7 @@
 package com.yuj.lecture.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -13,9 +11,11 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@ToString
 public class LectureSchedule {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "schedule_id")
     private Long scheduleId;
 

@@ -1,12 +1,9 @@
 import './App.css';
 import { white, black } from 'tailwindcss/colors';
 import { BrowserRouter, Routes } from 'react-router-dom/dist';
-import StudioPage from './pages/StudioPage';
 import { Route } from 'react-router-dom';
-import MyPageInfo from './pages/MyPageInfo';
-import MyPageLecture from './pages/MyPageLecture';
-import MyPageDashBoard from './pages/MyPageDashBoard';
-import Test from './pages/ComponentsTest';
+import MainRouter from './pages/MainRouter';
+import ScrollToTop from './utils/ScrollRestoration';
 
 
 
@@ -16,12 +13,10 @@ function App() {
     <div className="App" style={{background : white}}> 
 
       <BrowserRouter>
+      {/* 이동 시 화면 최상단 스크롤 위치 */}
+        <ScrollToTop />
         <Routes>
-          <Route path='*' element={<Test />}></Route>
-          <Route path="/studio" element={<StudioPage />}></Route>
-          <Route path="/mypage/dashboard" element={<MyPageDashBoard />}></Route>
-          <Route path="/mypage/info" element={<MyPageInfo />}></Route>
-          <Route path="/mypage/lecture" element={<MyPageLecture />}></Route>
+          <Route path='*' element={<MainRouter />}/>
         </Routes>
       </BrowserRouter>
       
