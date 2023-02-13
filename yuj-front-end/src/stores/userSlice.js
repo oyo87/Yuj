@@ -7,7 +7,7 @@ const loginRequest = createAsyncThunk("LOGIN", async(loginForm) => {
 
 	const response = await axios.post(
 		// `http://localhost:5000/login`,
-		`https://i8a504.p.ssafy.io/api/login`,
+		`${process.env.REACT_APP_API_URL}/login`,
 
 		JSON.stringify(loginForm),
 		{
@@ -25,7 +25,8 @@ const loginRequest = createAsyncThunk("LOGIN", async(loginForm) => {
 
 const getUserInfo = createAsyncThunk("GET_USER_INFO", async({accessToken, userId}) => {
 	const response = await axios.get(
-		`https://i8a504.p.ssafy.io/api/users/${userId}`
+		// `${process.env.REACT_APP_API_URL}/users/${userId}`
+		`${process.env.REACT_APP_API_URL}/users/${userId}`
 		,
 		{
 			headers: {
