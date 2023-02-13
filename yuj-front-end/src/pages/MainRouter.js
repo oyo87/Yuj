@@ -3,7 +3,6 @@ import MainFooter from '../components/mainFooter/MainFooter';
 import MainHeader from '../components/mainHeader/MainHeader';
 import Styles from './MainRouter.module.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import Home from './Home';
 import LoginPage from './LoginPage';
 import SignUp from './SignUp';
 import ViduTeacher from '../utils/FunctionalizedViduTeacher'
@@ -24,6 +23,7 @@ import StudioReview from './StudioReview';
 import MainSearchPage from './MainSearchPage';
 import MainSearchLecture from '../components/MainSearchLecture';
 import MainSearchTeacher from '../components/MainSearchTeacher'
+import HomePage from './HomePage';
 
 const Test = () => {
   const location = useLocation();
@@ -32,13 +32,12 @@ const Test = () => {
     console.log('경로 : ', location.pathname);
   }, [location])
   return (
-    // <div className={Styles.wrapper}>
-    <div>
+    <div className={Styles.wrapper}>
       {location.pathname !== '/viduTeacher' ? location.pathname !== '/viduStudent' ? <MainHeader /> : null : null}
       
       <div className={Styles.contentWrapper}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path='/viduTeacher' element={<ViduTeacher />} />
           <Route path='/viduStudent' element={<ViduStudent />} />
