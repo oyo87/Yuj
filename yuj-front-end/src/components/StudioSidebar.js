@@ -69,7 +69,7 @@ const StudioSidebar = (props) => {
           <div className={'flex flex-col bg-primary items-center pt-16 '+Styles.studioSidebar}>
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
             <div className={'cursor-pointer'} onClick={() => navigate('/studio')}>
-              <img className={Styles.profileImg} src={`${process.env.REACT_APP_IMAGE_URL}/assets/${studioDetail.profileImagePath}`}/>
+              <img className={Styles.profileImg} src={`${process.env.REACT_APP_IMAGE_URL}/${studioDetail.profileImagePath}`}/>
             </div>
             <p className={Styles.teacherNickname+' mt-6'}>{studioDetail.nickname}</p>
             <p className={Styles.teacherEmail+' mt-3'}>{studioDetail.email}</p>
