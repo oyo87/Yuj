@@ -36,10 +36,10 @@ const LectureReviewItem = (props) => {
     return(
         <>
             <div id="review-item-container" style={{border : '3px solid pink'}}>
-                <div className="flex justify" id="review-item-profile-container" style={{border : '2px solid purple'}}>
+                <div className="flex justify gap-3" id="review-item-profile-container" style={{border : '2px solid purple'}}>
                     <img className="w-12 rounded-full" src={item.profileImg} style={{border : '2px solid red'}}/>
-                    <div id="review-text-info-container" className="flex justify-around" style={{border : '2px solid blue'}}>
-                        <div style={{border : '1px solid green'}}>{item.user_id}</div>
+                    <div id="review-text-info-container" className="flex justify-around gap-2 items-center" style={{border : '2px solid blue'}}>
+                        <div className="w-20 truncate" style={{border : '1px solid green'}}>{item.user_id}</div>
                         <div style={{border : '1px solid green'}}>{item.date}</div>
                         <div style={{border : '1px solid green'}} className="rating rating-sm flex justify-evenly w-24">
                             {drawRating(item.rating)}
