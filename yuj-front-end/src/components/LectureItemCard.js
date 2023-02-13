@@ -8,10 +8,11 @@ import { changeStudioLectureDetailItem } from '../stores/studioSlice';
 const LectureItemCard = (props) => {
 
     const dispatch = useDispatch();
-
+    console.log("props.thisLecture는 ")
+    console.log(props.thisLecture);
     const lecture = props.thisLecture;
 
-    const thumbnail = './assets/Sample.jpg';
+    const thumbnail = '/assets/Sample.jpg';
 
     const teacherProfile = '/assets/YujMainLogo.svg';
 
@@ -27,9 +28,16 @@ const LectureItemCard = (props) => {
 
     const yogaCategory = useSelector(state => state.common.yogaCategory);
     function yogaCategorySearch(lecture) {
-        for (let i = 0; i < yogaCategory.length; i++) {
-            if (yogaCategory[i].yogaId === lecture.yoga.yogaId) {
-                return yogaCategory[i].englishName;
+        if ("englishName" in lecture) { //마이페이지 수강목록에서 사용합니다.
+            for (let i = 0; i < yogaCategory.length; i++) {
+                return lecture.englishName
+            }
+        }
+        else {
+            for (let i = 0; i < yogaCategory.length; i++) { // 기존에 있던 LectureItemCard방식입니다.
+                if (yogaCategory[i].yogaId === lecture.yoga.yogaId) {
+                    return yogaCategory[i].englishName;
+                }
             }
         }
     }
@@ -55,17 +63,19 @@ const LectureItemCard = (props) => {
                     <div className='flex'>
                         <Link to='' className='flex align-center'>
                             <img className='h-3.5 pr-2' src={teacherProfile} />
-                            <div className='text-xs font-bold'>요가소년</div>
+                            <div className='text-xs font-bold hover:text-accent'>{lecture.nickname}</div>
                         </Link>
                         <div></div>
                     </div>
-                    <p className='text-sm font-bold truncate text-ellipsis'>
-                        {/* 글자수 제한 및 대체 기능 구현 */}
-                        {lecture.name}
-                    </p>
-                    <p className='text-xs line-clamp-3 text-ellipsis'>
-                        {lecture.description}
-                    </p>
+                    <Link to='' className=''>
+                        <p className='text-sm font-bold truncate text-ellipsis hover:underline decoration-1.5 decoration-dashed'>
+                            {/* 글자수 제한 및 대체 기능 구현 */}
+                            {lecture.name}
+                        </p>
+                        <p className='text-xs line-clamp-3 text-ellipsis hover:underline decoration-1 decoration-dashed'>
+                            {lecture.description}
+                        </p>
+                    </Link>
 
                 </div>
             </div>
