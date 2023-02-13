@@ -19,6 +19,7 @@ const LectureReviewItem = (props) => {
     })
 
     /*
+        not fixed
         별점이 잘 표시되지 않는 버그 있음 e.g) 4-> 5점으로 표시
     */
     function drawRating(point){
@@ -32,26 +33,6 @@ const LectureReviewItem = (props) => {
         return result;
     }
 
-    // function drawRating(point){
-    //     const result = [];
-
-    //     for(let i=0; i<5; i++){
-    //         let item = '';
-    //         if(i === point)
-    //             item = <input type='radio' name='rating-2' className="mask mask-star=2 bg-accent" disabled checked/>
-    //         else
-    //             item = <input type='radio' name='rating-2' className="mask mask-star=2 bg-accent" disabled />
-            
-    //         console.log(result);
-            
-    //         result.push(item)
-    //     }
-        
-    //     // result[point-1].setAttribute('checked');
-    //     console.log(result[point-1]);
-    //     return result;
-    // }
-
     return(
         <>
             <div id="review-item-container" style={{border : '3px solid pink'}}>
@@ -60,7 +41,7 @@ const LectureReviewItem = (props) => {
                     <div id="review-text-info-container" className="flex justify-around" style={{border : '2px solid blue'}}>
                         <div style={{border : '1px solid green'}}>{item.user_id}</div>
                         <div style={{border : '1px solid green'}}>{item.date}</div>
-                        <div style={{border : '1px solid green'}} className="rating mt-6 rating-sm flex justify-evenly w-24">
+                        <div style={{border : '1px solid green'}} className="rating rating-sm flex justify-evenly w-24">
                             {drawRating(item.rating)}
                         </div>
                         {loginUserInfo.userInfo.id === item.user_id ? 

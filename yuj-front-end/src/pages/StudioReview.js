@@ -46,7 +46,7 @@ const StudioReview = (props) => {
                 profileImg : alt_img
             },
             {
-                review_id : 1,
+                review_id : 2,
                 user_id : "",
                 date : "2023.02.14",
                 rating: 3,
@@ -86,7 +86,7 @@ const StudioReview = (props) => {
                     <div className="justify-between items-center">
                         <div className="justify-between">
                             <span className="text-success">총 {reviewList.length}개의 후기</span>
-                            <button className="border-none btn-accent mt-12 btn-access text-white gap-2"><CreateIcon/>후기 작성</button>
+                            <button className="border-none btn-accent btn-access text-white gap-2"><CreateIcon/>후기 작성</button>
                         </div>
                         <div className="items-center">
                             {reviewList.map((item) => ( <LectureReviewItem item={item} key={item.review_id}/> ))}
