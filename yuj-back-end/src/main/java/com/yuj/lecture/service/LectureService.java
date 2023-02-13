@@ -108,6 +108,7 @@ public class LectureService {
             returnList.add(entityToResponseDTO(lecture));
         }
 
+        log.info("Lecture service - getLecturesByUserId : {}",returnList.get(0));
         return returnList;
     }
 

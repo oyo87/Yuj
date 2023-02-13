@@ -47,7 +47,9 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> searchTeacherByName(@RequestParam("search") String name){
     	List<TeacherResponseDTO> resultList = userService.searchTeacherByName(name);
-    	
+        System.out.println("userController searchTeacherByName");
+    	log.info("UserController - searchTeacherByName : {}",resultList.get(0));
+
     	return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
     

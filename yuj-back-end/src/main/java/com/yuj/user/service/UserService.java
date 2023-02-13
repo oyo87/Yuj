@@ -100,6 +100,8 @@ public class UserService {
     	for (User user : list) {
 			result.add(entityToTeacherResponseDTO(user));
 		}
+
+        log.info("UserService - searchTeacherByName : {}",result.get(0));
     	return result;
     }
     

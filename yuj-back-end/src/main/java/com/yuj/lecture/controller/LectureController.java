@@ -76,7 +76,7 @@ public class LectureController {
     @GetMapping
     public ResponseEntity<?> searchLectureByName(@RequestParam("search") String name) throws Exception{
     	List<LectureResponseDTO> resultList = lectureService.searchLectureByName(name);
-    	
+    	log.info("lecture controller - searchLectureByName : {}",resultList.get(0).getName());
     	return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
     
