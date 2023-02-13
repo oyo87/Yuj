@@ -11,9 +11,9 @@ import { SignalCellularNull } from "@mui/icons-material";
 import { Navigate } from 'react-router-dom';
 
 const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io";
-// const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
+const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
 // const APPLICATION_SERVER_URL = "http://localhost:5000/";
-const OPENVIDU_SERVER_URL = 'http://localhost:4443';
+// const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
 
 class Vidu extends Component {
@@ -250,7 +250,7 @@ class Vidu extends Component {
                                 publishAudio: true, // 최초 입장 시 오디오 설정 여부
                                 publishVideo: true, // 최초 입장 시 비디오 설정 여부
                                 resolution: '640x480', // 영상 해상도 "320x240", "640x480", "1280x720"
-                                frameRate: 25, // 초당 프레임 수
+                                frameRate: 60, // 초당 프레임 수
                                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                                 mirror: true, // 미러 버전
                             });
@@ -309,14 +309,14 @@ class Vidu extends Component {
         this.setState({
             session: undefined
         })
-        await axios.delete(
-            '/openvidu/api/sessions/' + this.state.mySessionId,
-            {
-                headers: {
-                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-                },
-            }
-        );
+        // await axios.delete(
+        //     OPENVIDU_SERVER_URL +'/openvidu/api/sessions/' + this.state.mySessionId,
+        //     {
+        //         headers: {
+        //             'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+        //         },
+        //     }
+        // );
     }
 
     async switchCamera() {
@@ -394,7 +394,7 @@ class Vidu extends Component {
         if (this.state.liston === false) {
             this.setState({ listMessage: '참가자 끄기' });
             let Sessions = await axios.get(
-                '/openvidu/api/sessions',
+                OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
                 {
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -436,14 +436,14 @@ class Vidu extends Component {
     }
 
     async exitMember(connectionId) { 
-        await axios.delete(
-            '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
-            {
-                headers: {
-                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-                },
-            }
-        )
+        // await axios.delete(
+        //     OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
+        //     {
+        //         headers: {
+        //             'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+        //         },
+        //     }
+        // )
     }
 
     render() {
@@ -557,7 +557,7 @@ class Vidu extends Component {
     }
 
     async createSession(sessionId) {
-        const response = await axios.post('/api/openvidu/sessions', { customSessionId: sessionId }, {
+        const response = await axios.post(OPENVIDU_SERVER_URL + '/api/openvidu/sessions', { customSessionId: sessionId }, {
             headers: { 'Content-Type': 'application/json', },
         });
         console.log("createSession 함수 호출", response.data);
@@ -566,7 +566,7 @@ class Vidu extends Component {
     
     // 백앤드로부터 토큰 요청 (백앤드에서 오픈비두로부터 토큰 받음)
     async createToken(sessionId) {
-        const response = await axios.post('/api/openvidu/sessions/' + sessionId + '/connections', {}, {
+        const response = await axios.post(OPENVIDU_SERVER_URL + '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
             headers: { 'Content-Type': 'application/json', },
         });
         return response.data; // The token

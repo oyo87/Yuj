@@ -13,10 +13,10 @@ import { Navigate } from 'react-router-dom';
 
 import { ModelParams } from '../utils/ModelParams';
 
-import { setModelBackend, loadModel, warmUpModel } from '../utils/ModelFunction';
+import { setModelBackend, loadModel } from '../utils/ModelFunction';
 
 const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io";
-const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
+const OPENVIDU_SERVER_URL = "https://i8a504.p.ssafy.io";
 // const APPLICATION_SERVER_URL = "http://localhost:5000";
 // const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
@@ -45,6 +45,7 @@ class Vidu extends Component {
             voiceMessage: '음소거 하기',
             listMessage: '참가자 켜기',
             chatMessage: '채팅창 켜기',
+            aiMessage : 'AI 피드백 켜기',
 
             // 채팅 관련
             messages: [],
@@ -58,8 +59,10 @@ class Vidu extends Component {
             // 선택 여부
             isActive: false,
 
+            //model preset
             modelConfig : ModelParams,
-            model : ''
+            model : '',
+            timer : '',
         };
 
         this.joinSession = this.joinSession.bind(this);
@@ -69,6 +72,7 @@ class Vidu extends Component {
         this.videoControl = this.videoControl.bind(this);
         this.voiceControl = this.voiceControl.bind(this);
         this.listControl = this.listControl.bind(this);
+        this.aiInference = this.aiInference.bind(this);
 
         this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
         this.handleChangeUserName = this.handleChangeUserName.bind(this);
@@ -89,18 +93,14 @@ class Vidu extends Component {
         //set model inference devices
         setModelBackend();
         //load model and warm up
-        this.state.model = loadModel(this.state.modelConfig.Config, this.state.modelConfig.imageShape);
+        // this.state.model = loadModel(this.state.modelConfig.Config, this.state.modelConfig.imageShape);
+        this.setState({ model: loadModel(this.state.modelConfig.Config, this.state.modelConfig.imageShape) });
         console.log('did mount done');
     }
 
     componentWillUnmount() {
         window.removeEventListener('beforeunload', this.onbeforeunload);
         this.leaveSession();
-    }
-
-    componentDidUpdate(prefProps, prevState){
-        console.log(prefProps.state.model);
-        console.log(this.props.state.model);
     }
 
     onbeforeunload(event) {
@@ -201,7 +201,6 @@ class Vidu extends Component {
             });
         }
     }
-leaveSession
     async getSessions() {
         let Sessions = await axios.get(
             OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
@@ -219,7 +218,7 @@ leaveSession
     // 세션 생성하는 과정
     async joinSession() {
         this.OV = new OpenVidu();
-
+        console.log('join session')
         this.setState(
             {
                 session: this.OV.initSession(),
@@ -403,7 +402,7 @@ leaveSession
         if (this.state.liston === false) {
             this.setState({ listMessage: '참가자 끄기' });
             let Sessions = await axios.get(
-                '/openvidu/api/sessions',
+                OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
                 {
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -435,6 +434,15 @@ leaveSession
         } else { 
             this.setState({ listMessage: '참가자 켜기' });
         }
+    }
+
+    async aiInference(){
+        let prevModelConfig = { ...this.state.modelConfig };
+        prevModelConfig.INFERENCE = !prevModelConfig.INFERENCE;
+        this.setState({ modelConfig: prevModelConfig });
+        let timer = setInterval(() => {
+            console.log('hello');
+        }, this.state.modelConfig.INFERENCE ? 100:null);
     }
 
     render() {
@@ -530,6 +538,9 @@ leaveSession
                                 <button className="clickControl" onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
                                     <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>}    {this.state.voiceMessage}</div>
                                 </button>
+                                <button className="clickControl " onClick={this.aiInference}><div className="flex w-full justify-center">{this.state.modelConfig.INFERENCE === true ?
+                                    <span className="material-symbols-outlined">psychology_alt</span> : <span className="material-symbols-outlined">psychology</span>}    {this.state.aiMessage}</div>
+                                </button>
                                 <button className="clickControl" onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
                                     <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>} {this.state.listMessage}</div>
                                 </button>
@@ -551,7 +562,7 @@ leaveSession
     }
 
     async createSession(sessionId) {
-        const response = await axios.post('/api/openvidu/sessions', { customSessionId: sessionId }, {
+        const response = await axios.post(OPENVIDU_SERVER_URL + '/api/openvidu/sessions', { customSessionId: sessionId }, {
             headers: { 'Content-Type': 'application/json', },
         });
         console.log("createSession 함수 호출", response.data);
@@ -560,7 +571,7 @@ leaveSession
     
     // 백앤드로부터 토큰 요청 (백앤드에서 오픈비두로부터 토큰 받음)
     async createToken(sessionId) {
-        const response = await axios.post('/api/openvidu/sessions/' + sessionId + '/connections', {}, {
+        const response = await axios.post(OPENVIDU_SERVER_URL + '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
             headers: { 'Content-Type': 'application/json', },
         });
         return response.data; // The token

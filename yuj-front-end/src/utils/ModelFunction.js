@@ -20,6 +20,7 @@ async function loadModel(modelConfig, imageShape){
     //warm up
     await model.estimatePoses(tf.zeros(imageShape));
     console.log(model);
+    model.dispose();
     return model;
 }
 

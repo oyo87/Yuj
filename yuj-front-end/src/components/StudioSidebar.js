@@ -85,7 +85,10 @@ const StudioSidebar = (props) => {
               studioDetail.userId != userId ?
               <CommonModalBtn text={'Go Live'} className={Styles.liveBtn +' border-none btn-accent mt-12'+ (Object.keys(studioLiveLecture).length === 0 ?' btn-disabled':'')} modalId={'studio-sidebar'}/>
               :
+              <>
               <button className={Styles.liveBtn+' btn border-none mt-12 btn-accent'} onClick={() => startLiveClicked()}>Start Live</button>
+              <button className={Styles.liveBtn+' btn border-none mt-12 btn-accent'} onClick={() => goLiveClicked()}>go Live</button>
+              </>
             }
             <ul className={Styles.myPageSidebar+" menu pt-7 text-base-content w-full"} >
               {sidebarMenu.map((menu, index) => {

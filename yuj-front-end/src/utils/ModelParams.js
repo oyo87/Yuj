@@ -7,6 +7,7 @@ export const ModelParams = {
         //const value for draw skeleton
         LINE_WIDTH : 2,
         RADIUS : 4,
+        INFERENCE : false,
         imageShape : [192, 192, 3],
         modelArch : 'MoveNet',
         Config : {modelType : poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING}
