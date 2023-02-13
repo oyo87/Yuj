@@ -9,7 +9,6 @@ import com.yuj.lecture.dto.response.LectureResponseDTO;
 import com.yuj.lecture.dto.response.LectureScheduleResponseDTO;
 import com.yuj.lecture.repository.LectureRepository;
 import com.yuj.lecture.repository.LectureScheduleRepository;
-//import com.yuj.lectureimage.domain.LectureImage;
 import com.yuj.lecture.repository.YogaRepository;
 import com.yuj.lectureimage.domain.ImageFile;
 import com.yuj.lectureimage.handler.FileHandler;
@@ -162,6 +161,8 @@ public class LectureService {
     	for (Lecture lecture : list2) {
     		result.add(entityToResponseDTO(lecture));
 		}
+        log.info("Lecture service - getLecturesByUserId keyword : {}", name);
+        log.info("Lecture service - getLecturesByUserId firstItem : {}",result.get(0).getName());
     	return result;
     }
 

@@ -109,6 +109,8 @@ public class UserService {
     	for (User user : list) {
 			result.add(entityToTeacherResponseDTO(user));
 		}
+
+        log.info("UserService - searchTeacherByName keyword, firstItem : {}, {}",name,result.get(0).getName());
     	return result;
     }
     
