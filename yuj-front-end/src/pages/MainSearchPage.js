@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { searchLectures } from '../stores/lectureSlice';
 import { searchTeachers } from '../stores/studioSlice';
+import { getYogaList } from '../stores/commonSlice';
 import { useNavigate, useLocation } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search';
 import SearchTeacherListItem from '../components/SearchTeacherListItem'
@@ -22,6 +23,7 @@ const MainSearchPage = (props) => {
   const doSearch = () => {
     dispatch(searchLectures(keyword));
     dispatch(searchTeachers(keyword));
+    dispatch(getYogaList());
   }
 
   const handleOnKeyPress = (e) => {
@@ -37,9 +39,9 @@ const MainSearchPage = (props) => {
     }
   }, [location.state.keyword])
 
-  useEffect(() => {
-    doSearch();
-  }, [keyword])
+  // useEffect(() => {
+  //   doSearch();
+  // }, [keyword])
 
   
 
