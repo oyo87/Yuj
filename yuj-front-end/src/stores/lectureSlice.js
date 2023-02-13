@@ -3,7 +3,19 @@ import axios from 'axios';
 
 // 특정 강의의 정보를 가져오는 함수
 const getLecture = createAsyncThunk("GET_LECTURE", async(lectureId) => {
-    const response = await axios.get(`https://i8a504.p.ssafy.io/api/lectures/${lectureId}`);
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/lectures/${lectureId}`);
+    return response.data;
+})
+
+// 특정 강의의 스케줄을 가져오는 함수
+const getLectureSchedule = createAsyncThunk("GET_LECTURE_SCHDULE", async(lectureId) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/lectures/lectureSchedule/${lectureId}`);
+	console.log("GET_LECTURE_SCHEDULE_LIST: ",response);
+    return response.data;
+})
+
+const searchLectures = createAsyncThunk("SEARCH_LECTURES", async(keyword) => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/lectures?search=${keyword}`);
     return response.data;
 })
 
@@ -12,11 +24,12 @@ const lectureSlice = createSlice({
 
     initialState: {
         thumnail: './assets/Sample.jpg',
+        lectureSchedule: [],
         lectures: [],
+        lecturesSearched:[],
     },
 
     reducers: {
-
     },
 
     extraReducers: {
@@ -24,10 +37,17 @@ const lectureSlice = createSlice({
             console.log("get lecture", payload);
             state.thumnail = '/assets/Sample.jpg';
             state.currLecture = payload;
-        }
+        },
+        [getLectureSchedule.fulfilled]: (state, {payload}) => {
+            state.lectureSchedule = payload;
+        },
+        [searchLectures.fulfilled]: (state, {payload}) => {
+            console.log("search lectures", payload);
+            state.lecturesSearched = payload;
+        },
     }
 })
 
 export default lectureSlice;
 
-export {getLecture};
+export {getLecture, getLectureSchedule, searchLectures};

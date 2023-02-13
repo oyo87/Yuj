@@ -1,5 +1,6 @@
 package com.yuj.config.jwt;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -10,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
@@ -24,23 +26,27 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     //  JwtProvider.validationToken()을 필터로서 FilterChain에 추가
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("JWT doFilter");
+        log.info("JWT doFilter");
         //  request에서 token을 취한다.
         String token = jwtProvider.resolveToken((HttpServletRequest)request);
-        System.out.println("token = " + token);
-        System.out.println("URL = " + ((HttpServletRequest)request).getRequestURL());
+
+        log.info("token = " + token);
+        log.info("URL = " + ((HttpServletRequest)request).getRequestURL());
         
         //  검증
         log.info("[Verifying token]");
         log.info(((HttpServletRequest)request).getRequestURL().toString());
+        
+        try {
+            if (token != null && jwtProvider.validationToken(token)) {
+                Authentication authentication = jwtProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if(token != null && jwtProvider.validationToken(token)) {
-            Authentication authentication = jwtProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            System.out.println("authentication.getName() = " + authentication.getName());
-//            request.setAttribute("id", authentication.getName());
-            System.out.println("에헴!!!!!!!!!");
+                log.info("authentication.getName() = " + authentication.getName());
+            }
+        } catch(ExpiredJwtException e) {
+            System.out.println("response = " + response);
+//            ((HttpServletResponse)response).sendRedirect("localhost:5000/reissue");
         }
         filterChain.doFilter(request, response);
     }

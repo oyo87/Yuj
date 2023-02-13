@@ -21,7 +21,8 @@ const LoginBox = () => {
         <>
           <li>
             <Link to="/mypage/dashboard" className={styles.menu}>
-              <img src={'https://i8a504.p.ssafy.io/'+user.userInfo.profileImage}/>
+              {/* <img src={'https://i8a504.p.ssafy.io/'+user.userInfo.profileImage}/> */}
+              <img src={user.userInfo.profileImage}/>
             </Link>
           </li>
           <li><Link to="/mypage/dashboard" className={styles.menu + ""}>{user.userInfo.nickname}님 환영합니다.</Link></li>
@@ -40,7 +41,7 @@ const LoginBox = () => {
             </Link>
           </li>
           <li><Link to="/login" className={styles.menu + ""}>로그인</Link></li>
-          <li><Link to="/signin" className={styles.menu + " mr-7"}>회원가입</Link></li>
+          <li><Link to="/signup" className={styles.menu + " mr-7"}>회원가입</Link></li>
         </>
 
       }
