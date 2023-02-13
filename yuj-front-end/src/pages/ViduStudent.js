@@ -230,9 +230,16 @@ class Vidu extends Component {
                         });
                     }
                 });
-
+                //강사가 강의 나가면 수강생도 종료
                 mySession.on('streamDestroyed', (event) => {
                     this.deleteSubscriber(event.stream.streamManager);
+                    this.leaveSession();
+                });
+                // 강퇴 당할 시 session에 undefined 정의하고 dom 리랜더링 -> 스튜디오로 이동
+                mySession.on('sessionDisconnected', (event) => {
+                    this.setState({
+                        session: undefined
+                    });
                 });
 
                 mySession.on('exception', (exception) => {
@@ -382,7 +389,8 @@ class Vidu extends Component {
         if (this.state.liston === false) {
             this.setState({ listMessage: '참가자 끄기' });
             let Sessions = await axios.get(
-                APPLICATION_SERVER_URL + '/openvidu/api/sessions',
+                '/openvidu/api/sessions',
+                //APPLICATION_SERVER_URL + '/openvidu/api/sessions',
                 {
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -530,7 +538,10 @@ class Vidu extends Component {
     }
 
     async createSession(sessionId) {
-        const response = await axios.post(APPLICATION_SERVER_URL + '/api/openvidu/sessions', { customSessionId: sessionId }, {
+        const response = await axios.post(
+            //APPLICATION_SERVER_URL + '/api/openvidu/sessions', 
+            '/api/openvidu/sessions', 
+            { customSessionId: sessionId }, {
             headers: { 'Content-Type': 'application/json', },
         });
         console.log("createSession 함수 호출", response.data);
@@ -539,7 +550,9 @@ class Vidu extends Component {
     
     // 백앤드로부터 토큰 요청 (백앤드에서 오픈비두로부터 토큰 받음)
     async createToken(sessionId) {
-        const response = await axios.post(APPLICATION_SERVER_URL + '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
+        const response = await axios.post(
+            //APPLICATION_SERVER_URL + '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
+            '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
             headers: { 'Content-Type': 'application/json', },
         });
         return response.data; // The token
