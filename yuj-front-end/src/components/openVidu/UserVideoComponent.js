@@ -9,16 +9,27 @@ const NameTag = styled.p`
     font-weight: bold;
 `;
 export default class UserVideoComponent extends Component {
+
+    constructor(props){
+        super(props);
+    }
+
+    componentDidUpdate(){
+        console.log('update comp');
+    }
+
+
     getNicknameTag() {
         // Gets the nickName of the user
         return JSON.parse(this.props.streamManager.stream.connection.data).clientData;
     }
     render() {
+        console.log('rendering comp');
         return (
             <div style={{padding: '10px'}}>
                 {this.props.streamManager !== undefined ? (
                     <div className="streamcomponent">
-                        <OpenViduVideoComponent type={this.props.type} isActive={ this.props.isActive} streamManager={this.props.streamManager} />
+                        <OpenViduVideoComponent type={this.props.type} isActive={ this.props.isActive} streamManager={this.props.streamManager} coordinates={this.props.coordinates}/>
                         <div><NameTag>{this.getNicknameTag() + this.props.type} 님</NameTag></div>
                     </div>
                 ) : null}

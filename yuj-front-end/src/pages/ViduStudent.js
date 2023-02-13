@@ -46,6 +46,7 @@ class Vidu extends Component {
             listMessage: '참가자 켜기',
             chatMessage: '채팅창 켜기',
             aiMessage : 'AI 피드백 켜기',
+            teacherSkeletonMessage : '강사 스켈레톤 켜기',
 
             // 채팅 관련
             messages: [],
@@ -63,6 +64,10 @@ class Vidu extends Component {
             modelConfig : ModelParams,
             model : '',
             timer : '',
+            teacherSkeletonActive: false,
+
+            studentInfResults : '',
+            reacherInfResults : '',
         };
 
         this.joinSession = this.joinSession.bind(this);
@@ -72,7 +77,8 @@ class Vidu extends Component {
         this.videoControl = this.videoControl.bind(this);
         this.voiceControl = this.voiceControl.bind(this);
         this.listControl = this.listControl.bind(this);
-        this.aiInference = this.aiInference.bind(this);
+        this.aiInferenceToggle = this.aiInferenceToggle.bind(this);
+        this.teacherSkeletonToggle = this.teacherSkeletonToggle.bind(this);
 
         this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
         this.handleChangeUserName = this.handleChangeUserName.bind(this);
@@ -90,12 +96,43 @@ class Vidu extends Component {
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
 
+        //for interval timer
+        this.timer = null;
+
         //set model inference devices
         setModelBackend();
         //load model and warm up
         // this.state.model = loadModel(this.state.modelConfig.Config, this.state.modelConfig.imageShape);
         this.setState({ model: loadModel(this.state.modelConfig.Config, this.state.modelConfig.imageShape) });
         console.log('did mount done');
+    }
+
+    componentDidUpdate(prevProps, prevState){
+
+        if(prevState.modelConfig.INFERENCE){
+            clearInterval(this.timer);
+            console.log('timer done');
+        }
+
+        else if(this.state.modelConfig.INFERENCE){
+            let context = document.getElementById('student-canvas');
+            context = context.getContext('2d');
+            /*
+            To be fixed
+            console 만 동작하고 아무런 반응이 없음
+            */
+            this.timer = setInterval(()=>{
+                console.log('timer attack');
+                const circle = new Path2D();
+                circle.arc(50, 50, 100, 0, 2 * Math.PI);
+                context.fill(circle);
+                context.fillText("Hello", 100, 100);
+                context.stroke(circle);
+            }, 100);
+        }
+
+        console.log('hi!!!');
+
     }
 
     componentWillUnmount() {
@@ -436,13 +473,21 @@ class Vidu extends Component {
         }
     }
 
-    async aiInference(){
+    async aiInferenceToggle() {
         let prevModelConfig = { ...this.state.modelConfig };
         prevModelConfig.INFERENCE = !prevModelConfig.INFERENCE;
         this.setState({ modelConfig: prevModelConfig });
-        let timer = setInterval(() => {
-            console.log('hello');
-        }, this.state.modelConfig.INFERENCE ? 100:null);
+
+        let message = prevModelConfig.INFERENCE ? 'AI 피드백 끄기' : 'AI 피드백 켜기';
+
+        this.setState({ aiMessage: message })
+    }
+
+    async teacherSkeletonToggle() {
+        let prevState = !this.state.teacherSkeletonActive;
+        this.setState({teacherSkeletonActive: prevState})
+        let message = prevState ? '강사 스켈레톤 끄기' : '강사 스켈레톤 켜기';
+        this.setState({teacherSkeletonMessage: message});
     }
 
     render() {
@@ -538,8 +583,11 @@ class Vidu extends Component {
                                 <button className="clickControl" onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
                                     <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>}    {this.state.voiceMessage}</div>
                                 </button>
-                                <button className="clickControl " onClick={this.aiInference}><div className="flex w-full justify-center">{this.state.modelConfig.INFERENCE === true ?
+                                <button className="clickControl " onClick={this.aiInferenceToggle}><div className="flex w-full justify-center">{this.state.modelConfig.INFERENCE === true ?
                                     <span className="material-symbols-outlined">psychology_alt</span> : <span className="material-symbols-outlined">psychology</span>}    {this.state.aiMessage}</div>
+                                </button>
+                                <button className="clickControl " onClick={this.teacherSkeletonToggle}><div className="flex w-full justify-center">{this.state.teacherSkeletonActive === true ?
+                                    <span className="material-symbols-outlined">auto_fix_off</span> : <span className="material-symbols-outlined">auto_fix</span>}    {this.state.teacherSkeletonMessage}</div>
                                 </button>
                                 <button className="clickControl" onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
                                     <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>} {this.state.listMessage}</div>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import VideoCanvas from '../VideoCanvas';
 
 export default class OpenViduVideoComponent extends Component {
 
@@ -14,6 +13,7 @@ export default class OpenViduVideoComponent extends Component {
         this.videoRef = React.createRef();
         this.canvasRef = React.createRef();
         this.context = null;
+        this.coordinate = props.coordnates;
     }
 
     componentDidUpdate(props) {        
@@ -27,11 +27,11 @@ export default class OpenViduVideoComponent extends Component {
     componentDidMount() {
         this.context = this.canvasRef.current.getContext('2d');
 
-        if(this.props.type == '강사'){
-            this.canvasRef.current.id = 'test1';
+        if(this.props.type === '강사'){
+            this.canvasRef.current.id = 'teacher-canvas';
         }
         else{
-            this.canvasRef.current.id = 'test2';
+            this.canvasRef.current.id = 'student-canvas';
         }
         
         if (this.props && !!this.videoRef) {
@@ -59,21 +59,5 @@ export default class OpenViduVideoComponent extends Component {
                 <video width={"0px"} height={"0px"} autoPlay = { true} ref = { this.videoRef } style={{visibility:'hidden'}}/>
             </>))
     }
-
-    // render(){
-    //     return(
-    //         <VideoCanvas isActive={this.props.isActive} videoRef={this.videoRef} 
-    //         canvasTagName={"userCanvas"} videoTagName={"userVideo"}/>
-    //     )
-    // }
-
-    // render(){
-    //     <video autoPlay={true} width={0} height={0} ref={this.videoRef}
-    //             style={{visibility:'hidden'}}/>
-    //     // <canvas ref={this.canvasRef}/>
-    //     return ( this.props.isActive === true ? 
-    //     (<canvas ref={this.canvasRef} style={{width:'auto', height:'90vh'}}/>) 
-    //     : (<canvas ref={this.canvasRef} style={{width:'100%', height:'100%'}}/>))
-    // }
 
 }
