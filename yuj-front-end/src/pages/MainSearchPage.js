@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { searchLectures } from '../stores/lectureSlice';
 import { searchTeachers } from '../stores/studioSlice';
+import { getYogaList } from '../stores/commonSlice';
 import { useNavigate, useLocation } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search';
 import SearchTeacherListItem from '../components/SearchTeacherListItem'
@@ -35,11 +36,12 @@ const MainSearchPage = (props) => {
     if(location.state != null){
       setKeyword(location.state.keyword);
     }
+    dispatch(getYogaList());
   }, [location.state.keyword])
 
-  useEffect(() => {
-    doSearch();
-  }, [keyword])
+  // useEffect(() => {
+  //   doSearch();
+  // }, [keyword])
 
   
 
