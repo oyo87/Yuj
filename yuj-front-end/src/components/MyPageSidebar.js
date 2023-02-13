@@ -20,7 +20,7 @@ function MyPageSidebar() {
       path: "/mypage/info",
     },
     {
-      name: "수강목록",
+      name: "강의 목록",
       path: "/mypage/lecture",
     },
   ];
