@@ -11,9 +11,9 @@ import { SignalCellularNull } from "@mui/icons-material";
 import { Navigate } from 'react-router-dom';
 
 const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io";
-const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
+// const OPENVIDU_SERVER_URL = 'https://i8a504.p.ssafy.io';
 // const APPLICATION_SERVER_URL = "http://localhost:5000/";
-// const OPENVIDU_SERVER_URL = 'http://localhost:4443';
+const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
 
 class Vidu extends Component {
@@ -132,6 +132,7 @@ class Vidu extends Component {
     }
 
     sendmessageByClick() {
+        console.log('문자 보내기', this.state.subscribers);
         this.setState({
             messages: [
                 ...this.state.messages,
@@ -198,7 +199,6 @@ class Vidu extends Component {
 
     // 세션 생성하는 과정
     async joinSession() {
-        console.log("join Session 호출", this.state.mySessionId);
         this.OV = new OpenVidu();
 
         this.setState(
@@ -298,19 +298,19 @@ class Vidu extends Component {
 
         // Empty all properties...
         this.OV = null;
-        // this.setState({
-        //     session: '',
-        //     subscribers: [],
-        //     mySessionId: 'SessionA',
-        //     myUserName: 'Participant' + Math.floor(Math.random() * 100),
-        //     mainStreamManager: undefined,
-        //     publisher: undefined
-        // });
+        this.setState({
+            session: '',
+            subscribers: [],
+            mySessionId: 'SessionA',
+            myUserName: 'Participant' + Math.floor(Math.random() * 100),
+            mainStreamManager: undefined,
+            publisher: undefined
+        });
         this.setState({
             session: undefined
         })
         await axios.delete(
-            APPLICATION_SERVER_URL + '/openvidu/api/sessions/' + this.state.mySessionId,
+            '/openvidu/api/sessions/' + this.state.mySessionId,
             {
                 headers: {
                     'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -394,8 +394,7 @@ class Vidu extends Component {
         if (this.state.liston === false) {
             this.setState({ listMessage: '참가자 끄기' });
             let Sessions = await axios.get(
-                // '/openvidu/api/sessions',
-                APPLICATION_SERVER_URL + '/openvidu/api/sessions',
+                '/openvidu/api/sessions',
                 {
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -413,6 +412,7 @@ class Vidu extends Component {
                         // console.log(c.publishers[0].mediaOptions.videoActive); // 해당 세션 아이디의 비디오 사용 여부
                         // console.log(c.publishers[0].mediaOptions.audioActive); // 해당 세션 아이디의 오디오 사용 여부
                         console.log('목록  : ', c);
+                        console.log(c.publishers[0]);
                         let member = {};
                         member[0] = JSON.parse(c.clientData).clientData;
                         member[1] = JSON.parse(c.clientData).clientType;
@@ -424,7 +424,7 @@ class Vidu extends Component {
                         listMembersDemo.push(member);
                     });
                 }
-                // console.log('리스트 데모 : ', listMembersDemo);
+                console.log('리스트 데모 : ', listMembersDemo);
                 this.setState(() => ({
                     listMembers: listMembersDemo
                 }));
@@ -437,8 +437,7 @@ class Vidu extends Component {
 
     async exitMember(connectionId) { 
         await axios.delete(
-            OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
-            // '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
+            '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
             {
                 headers: {
                     'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -558,8 +557,7 @@ class Vidu extends Component {
     }
 
     async createSession(sessionId) {
-        console.log(APPLICATION_SERVER_URL + '/api/openvidu/sessions');
-        const response = await axios.post(APPLICATION_SERVER_URL + '/api/openvidu/sessions', { customSessionId: sessionId }, {
+        const response = await axios.post('/api/openvidu/sessions', { customSessionId: sessionId }, {
             headers: { 'Content-Type': 'application/json', },
         });
         console.log("createSession 함수 호출", response.data);
@@ -568,8 +566,7 @@ class Vidu extends Component {
     
     // 백앤드로부터 토큰 요청 (백앤드에서 오픈비두로부터 토큰 받음)
     async createToken(sessionId) {
-        console.log('token : ', APPLICATION_SERVER_URL + '/api/openvidu/sessions');
-        const response = await axios.post(APPLICATION_SERVER_URL + '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
+        const response = await axios.post('/api/openvidu/sessions/' + sessionId + '/connections', {}, {
             headers: { 'Content-Type': 'application/json', },
         });
         return response.data; // The token
