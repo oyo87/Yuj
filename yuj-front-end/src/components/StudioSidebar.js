@@ -75,11 +75,11 @@ const StudioSidebar = (props) => {
             <p className={Styles.teacherNickname+' mt-6'}>{studioDetail.nickname}</p>
             <p className={Styles.teacherEmail+' mt-3'}>{studioDetail.email}</p>
             <div className="rating mt-6 rating-sm flex justify-evenly w-24">
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
             </div>
             {
               studioDetail.userId != userId ?
