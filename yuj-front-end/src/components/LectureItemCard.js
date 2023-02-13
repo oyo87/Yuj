@@ -12,7 +12,7 @@ const LectureItemCard = (props) => {
     console.log(props.thisLecture);
     const lecture = props.thisLecture;
 
-    const thumbnail = './assets/Sample.jpg';
+    const thumbnail = '/assets/Sample.jpg';
 
     const teacherProfile = '/assets/YujMainLogo.svg';
 

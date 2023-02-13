@@ -3,6 +3,7 @@ import Styles from './MyPageSidebar.module.css';
 
 
 import { Link, Route, useNavigate } from 'react-router-dom';
+import { Icon } from '@mui/material';
 
 function MyPageSidebar() {
 
@@ -29,11 +30,13 @@ function MyPageSidebar() {
     <div className="drawer-side">
       <ul className={"flex items-start justify-between menu p-5 bg-primary text-base-content " + Styles.myPageSidebar}>
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-        <div className={'cursor-pointer'} onClick={() => navigate('/mypage/dashboard')}>
-          <img className={Styles.myProfileImg} src="/assets/Sample3.jpg" />
-          {/* <img className='profile-img' src={studioDetail.profileImagePath}/> */}
-          <p className={Styles.myNickname + ' mt-6 justify-center'}>닉네임</p>
-          <p className={Styles.myEmail + ' mt-3 justify-center	'}>yuj@gmail.com</p>
+        <div>
+        <img className={Styles.myProfileImg + " cursor-pointer flex m-auto mb-5 "} onClick={() => navigate('/mypage/info')} src="/assets/Sample3.jpg" />
+        {/* <img className='profile-img' src={studioDetail.profileImagePath}/> */}      
+        <div>
+          <p className={Styles.myNickname + ' justify-center'}>요가연습생</p>
+          <p className={Styles.myEmail + ' mt-3 justify-center	'}>yogapractice@gmail.com</p>
+        </div>
         </div>
 
         <div>
