@@ -107,7 +107,6 @@ public class LectureService {
             returnList.add(entityToResponseDTO(lecture));
         }
 
-        log.info("Lecture service - getLecturesByUserId : {}",returnList.get(0));
         return returnList;
     }
 
@@ -162,6 +161,8 @@ public class LectureService {
     	for (Lecture lecture : list2) {
     		result.add(entityToResponseDTO(lecture));
 		}
+
+        log.info("Lecture service - getLecturesByUserId keyword, firstItem : {}, {}",name,result.get(0).getName());
     	return result;
     }
 
