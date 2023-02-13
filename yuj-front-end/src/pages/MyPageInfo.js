@@ -158,7 +158,7 @@ const MyPageInfo = () => {
                                 </label>
                             </div>
                             <div class='flex justify-end'>
-                                <button className={"btn btn-accent " + Styles[`mypage-save-button`]}>저장하기</button>
+                                <button className={"btn btn-accent " + Styles[`mypage-save-button`]}>변경하기</button>
 
                             </div>
                         </form>

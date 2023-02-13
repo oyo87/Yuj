@@ -33,23 +33,18 @@ const MyPageLecture = () => {
                         {lectures.map(lecture => (
                             <div key={lecture.lectureId} className="mx-4 my-4">
                                 {console.log("MyPageLecture lecture: ", lecture)}
-                                
                                     <LectureItemCard thisLecture={lecture} key={lecture.lectureId} />
                                     {/* <LectureItemCard thisLecture={lecture} key={lecture.lectureId} />
                                     <LectureItemCard thisLecture={lecture} key={lecture.lectureId} /> */}
-                                
-
                             </div>
                         ))}
+                        {/* 임시로 복사해둔 것입니다. */}
                         {lectures.map(lecture => (
                             <div key={lecture.lectureId} className="mx-4 my-4">
                                 {console.log("MyPageLecture lecture: ", lecture)}
-                                <Link to="/studio">
                                     <LectureItemCard thisLecture={lecture} key={lecture.lectureId} />
                                     {/* <LectureItemCard thisLecture={lecture} key={lecture.lectureId} />
                                     <LectureItemCard thisLecture={lecture} key={lecture.lectureId} /> */}
-                                </Link>
-
                             </div>
                         ))}
                     </div>
