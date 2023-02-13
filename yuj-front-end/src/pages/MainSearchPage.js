@@ -23,7 +23,6 @@ const MainSearchPage = (props) => {
   const doSearch = () => {
     dispatch(searchLectures(keyword));
     dispatch(searchTeachers(keyword));
-    dispatch(getYogaList());
   }
 
   const handleOnKeyPress = (e) => {
@@ -37,6 +36,7 @@ const MainSearchPage = (props) => {
     if(location.state != null){
       setKeyword(location.state.keyword);
     }
+    dispatch(getYogaList());
   }, [location.state.keyword])
 
   // useEffect(() => {
