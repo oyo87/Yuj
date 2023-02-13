@@ -23,11 +23,11 @@ const SearchTeacherListItem = (props) => {
                     <p className={'text-sm text-left font-bold'}>{nickname}</p>
                     <p className={'text-xs text-left my-1 w-32'}>{email}</p>
                     <div className="rating rating-md flex justify-evenly w-24">
-                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 1}/>
-                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 2}/>
-                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 3}/>
-                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 4}/>
-                        <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 5}/>
+                        <input type="radio" name={userId} className="mask mask-star-2 bg-accent" readOnly checked={rating == 1}/>
+                        <input type="radio" name={userId} className="mask mask-star-2 bg-accent" readOnly checked={rating == 2}/>
+                        <input type="radio" name={userId} className="mask mask-star-2 bg-accent" readOnly checked={rating == 3}/>
+                        <input type="radio" name={userId} className="mask mask-star-2 bg-accent" readOnly checked={rating == 4}/>
+                        <input type="radio" name={userId} className="mask mask-star-2 bg-accent" readOnly checked={rating == 5}/>
                     </div>
                 </div>
                 <div>
