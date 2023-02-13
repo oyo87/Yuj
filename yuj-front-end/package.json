@@ -25,6 +25,7 @@
     "buffer": "^6.0.3",
     "css-loader": "^6.7.3",
     "daisyui": "^2.49.0",
+    "dayjs": "^1.11.7",
     "js-base64": "^3.7.4",
     "node-sass": "^7.0.3",
     "openvidu-browser": "^2.25.0",

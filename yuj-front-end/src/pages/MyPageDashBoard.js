@@ -7,6 +7,7 @@ import MyPageWeeklyStudyChart from '../components/MyPageWeeklyStudyChart';
 import MyPageCalendar from "../components/MyPageCalendar";
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const LOCAL_URL = "http://localhost:5000";
 const URL = LOCAL_URL;
