@@ -1,14 +1,10 @@
 package com.yuj.user.dto.request;
 
 import com.yuj.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.Collections;
 
 /**
  * 회원가입 요청 보내는 RequestDto
@@ -18,6 +14,7 @@ import java.util.Collections;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UserSignupRequestDTO {
     private String id;
     private String password;
@@ -28,9 +25,15 @@ public class UserSignupRequestDTO {
     private LocalDate birthDate;
     private String gender;
     private String profileImagePath;
-    private String role;
+    private String roleName;
 
     public User toEntity(PasswordEncoder passwordEncoder) {
+//        Role role = this.role.equals("ROLE_USER") ? Role.USER : (this.role.equals("ROLE_TEACHER") ? Role.TEACHER : Role.ADMIN);
+        boolean isTeacher = false;
+
+        if(roleName.equals("ROLE_TEACHER"))
+            isTeacher = true;
+
         return User.builder()
                 .id(id)
                 .password(passwordEncoder.encode(password))
@@ -41,7 +44,9 @@ public class UserSignupRequestDTO {
                 .birthDate(birthDate)
                 .gender(gender)
                 .profileImagePath(profileImagePath)
-                .roles(Collections.singletonList(role))
+//                .roles(Collections.singletonList(role))
+                .roleName(roleName)
+                .isTeacher(isTeacher)
                 .build();
     }
 

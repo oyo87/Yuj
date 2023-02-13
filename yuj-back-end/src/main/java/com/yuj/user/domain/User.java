@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -70,32 +69,45 @@ public class User implements UserDetails {
     @ColumnDefault("0")
     private boolean isAdmin = false;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    private String roleName;
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    @ColumnDefault("0")
+    private int ratingSum = 0;
 
+    @Builder.Default
+    @ColumnDefault("0")
+    private int ratingCnt = 0;
 
 //    @OneToOne
 //    @JoinColumn(name = "token_id")
 //    private Token token;
 
-//    @OneToOne(mappedBy = "user")
-//    private Studio studio;
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Studio studio;
 
 
+
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return this.roles
+//                .stream().map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles
-                .stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+        authorities.add(new SimpleGrantedAuthority(this.getRoleName()));
+
+        return authorities;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
 //        return String.valueOf(this.userId);
-        return this.id;
+        return String.valueOf(this.userId);
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

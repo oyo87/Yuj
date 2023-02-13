@@ -30,7 +30,7 @@ const StudioSidebar = (props) => {
   const sidebarMenu = [
     {
       name: "강의 목록",
-      path: "/studio",
+      path: "/studioLectureListPage",
     },
     {
       name: "공지사항",
@@ -38,7 +38,7 @@ const StudioSidebar = (props) => {
     },
     {
       name: "수강 후기",
-      path: "/studio",
+      path: "/studio/reviews",
     },
   ];
 
@@ -68,18 +68,18 @@ const StudioSidebar = (props) => {
         <div className="drawer-side">
           <div className={'flex flex-col bg-primary items-center pt-16 '+Styles.studioSidebar}>
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-            <div>
+            <div className={'cursor-pointer'} onClick={() => navigate('/studio')}>
               <img className={Styles.profileImg} src='https://s3-alpha-sig.figma.com/img/fe31/dd15/e50ed1ea8df3d76ee0fec38dd23b2efe?Expires=1676246400&Signature=NvelojA-kFn0FICuDGVPAcI-Ji8bQIJc4NqYdETTENesYlRiQ6VjPmKxztJovTduxJmbZhkROp~TXMk~0g8q6wRrBU~x2X~cX1FAsuL-IepZ~-MVe6-EEuw-dAq-M57i~kytmhzidEBi9savqmfGENdkqSFdy~8MRdM4tp8BrEPDXuTFnMlnq2alZJMPPL9DZPubdJEVXrUP8h6EvvE3rXbEQ5CP2BZJkjDPXJnNp5Kc-1rt6JNbnehLeymFkZVcaoE4BOFDMP0lsZOeHHxPF4uatxgmpAJAF4JLh09PlLIwW8h5ACf7FHPv88ViJJWxK9AJC8kUDfgeFEMZDVaYdQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
               {/* <img className='profile-img' src={studioDetail.profileImagePath}/> */}
             </div>
             <p className={Styles.teacherNickname+' mt-6'}>{studioDetail.nickname}</p>
             <p className={Styles.teacherEmail+' mt-3'}>{studioDetail.email}</p>
             <div className="rating mt-6 rating-sm flex justify-evenly w-24">
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" />
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
             </div>
             {
               studioDetail.userId != userId ?
@@ -87,7 +87,7 @@ const StudioSidebar = (props) => {
               :
               <button className={Styles.liveBtn+' btn border-none mt-12 btn-accent'} onClick={() => startLiveClicked()}>Start Live</button>
             }
-            <ul className={Styles.myPageSidebar+" menu pt-16  text-base-content w-full"} >
+            <ul className={Styles.myPageSidebar+" menu pt-7 text-base-content w-full"} >
               {sidebarMenu.map((menu, index) => {
                 return (
                   <li key={index}>

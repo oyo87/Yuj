@@ -8,10 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -50,5 +49,25 @@ public class StudioController {
         LectureResponseDTO lectureResponseDTO = lectureService.getActiveLectureByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(lectureResponseDTO);
+    }
+
+    // 위의 강사별 강의 리스트 중, 셀렉트박스에서 선택된 요가 카테고리에 부합하는 강의 리스트를 반환
+    @GetMapping("/{userId}/lectures/{yogaId}")
+    public ResponseEntity<List<LectureResponseDTO>> getLecturesByUserIdAndYogaId(@PathVariable Long userId, @PathVariable Long yogaId) throws  Exception {
+        log.info("getLecturesByUserIdAndYogaId controller");
+        List<LectureResponseDTO> lectureResponseDTOList = lectureService.getLecturesByUserIdAndYogaId(userId, yogaId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(lectureResponseDTOList);
+    }
+
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateStudio(
+              @RequestPart(value="files", required = false) List<MultipartFile> files
+            , @RequestParam(value = "description") String description
+            , @PathVariable("userId")Long userId
+    ) {
+        String ret = studioService.updateStudio(userId, files, description);
+        return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 }

@@ -230,7 +230,7 @@ class Vidu extends Component {
                             }]
                         });
                     }
-                })
+                });
 
                 mySession.on('streamDestroyed', (event) => {
                     this.deleteSubscriber(event.stream.streamManager);
@@ -420,6 +420,7 @@ class Vidu extends Component {
                         member[3] = c.publishers[0].mediaOptions.audioActive;
                         member[4] = c.id;
                         member[5] = this.state.myUserType;
+                        
                         listMembersDemo.push(member);
                     });
                 }
@@ -437,6 +438,7 @@ class Vidu extends Component {
     async exitMember(connectionId) { 
         await axios.delete(
             OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
+            // '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
             {
                 headers: {
                     'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -490,7 +492,7 @@ class Vidu extends Component {
                             {this.state.liston ? (
                                 <div>
                                     {this.state.session ?
-                                        <ListMembers listMembers={this.state.listMembers} exitMember={ this.exitMember} /> : SignalCellularNull}
+                                        <ListMembers listMembers={this.state.listMembers} exitMember={ this.exitMember}/> : SignalCellularNull}
                                 </div>
                             ) : null}
                         </div>
