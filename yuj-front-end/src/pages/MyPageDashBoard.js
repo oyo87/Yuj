@@ -79,7 +79,7 @@ const MyPageDashBoard = () => {
 
         console.log('maxcnt, currcnt : ', maxCnt, currCnt)
 
-        setPercentage(maxCnt != 0 ? currCnt/maxCnt*100 : 100);
+        setPercentage(maxCnt != 0 ? Math.round(currCnt/maxCnt*100) : 100);
     }
 
     useEffect(() => {
