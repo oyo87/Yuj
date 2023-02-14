@@ -28,7 +28,10 @@ const ListMember = ({ listMember, exitMember }) => {
             }
             {
                 listMember[5] === '강사' ?
-                <button onClick={() => exitMember(listMember[4])}><span class="material-symbols-outlined"> exit_to_app </span></button> : null
+                    listMember[1] == '수강생'?
+                        <button onClick={() => exitMember(listMember[4])}><span class="material-symbols-outlined"> exit_to_app </span></button>
+                    : null
+                : null
             }
         </Member>
     )

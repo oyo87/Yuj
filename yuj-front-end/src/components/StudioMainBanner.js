@@ -8,8 +8,7 @@ const StudioMainBanner = (props) => {
         <>
         <div className="flex">
             <div className={'w-full flex h-60 overflow-hidden items-center justify-center'}>
-                <img className={''} src="./assets/Sample3.jpg" />
-                {/* <img className={''} src={studioBannerImage} /> */}
+                <img className={''} src={`${process.env.REACT_APP_IMAGE_URL}/${studioBannerImage}`} />
             </div>
         </div>
         </>
