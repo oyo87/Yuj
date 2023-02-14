@@ -14,12 +14,6 @@ const URL = LOCAL_URL;
 
 const MyPageDashBoard = () => {
 
-    // HH:MM:SS 시간 표시를 HH:MM으로 표시하는 함수
-    function convertToHM(time) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-        let [hours, minutes, _] = time.split(":");
-        return `${hours}:${minutes}`;
-    }
-
     // backend URL
     const MYPAGE_URL = `${URL}/mypage/dashboard/3` //뒤에 유저Id입력
     const LECTURE_SCHEDULE_URL = `${URL}/mypage/dashboard/lectureSchedule/3` //이 뒤에 lectureId입력
@@ -32,8 +26,53 @@ const MyPageDashBoard = () => {
     const [lectureSchedule, setLectureSchedule] = useState([]);
     //강의 일정 배열(1일 단위)
     const [lectureEvents, setLectureEvents] = useState([]);
+    //수강 참여 내역
+    const [userLectureSchedules, setUserLectureSchedules] = useState([]);
+    //이번주 강의 수강 퍼센트
+    const [percentage, setPercentage] = useState(50);
+    //이번주 강의 참여 횟수
+    const [maxAttandance, setMaxAttandance] = useState(0);
+    //이번주 강의 참여 횟수 최대치
+    const [currAttandance, setCurrAttandance] = useState(0);
 
 
+    //이번주 수강 퍼센트 계산하는 함수
+    const calcPercentage = () => {
+        const weekStart = dayjs().startOf('week');
+        const weekEnd = dayjs().endOf('week');
+
+        console.log("week start & end : ",weekStart.format(),weekEnd.format());
+
+        let maxCnt = 0;
+        let currCnt = 0;
+
+        lectureEvents.forEach(event => {
+            const classDate = dayjs(event.date);
+            const isAfter = classDate.isSame(weekStart) || classDate.isAfter(weekStart);
+            const isBefore = classDate.isSame(weekEnd) || classDate.isBefore(weekEnd);
+            
+            if(isAfter && isBefore){
+                maxCnt++;
+            }
+        })
+        // console.log('calcPercentage userLectureSchedules: ',userLectureSchedules);
+        userLectureSchedules.forEach(schedule => {
+            const classDate = dayjs(schedule.attendanceDate);
+            const isAfter = classDate.isSame(weekStart) || classDate.isAfter(weekStart);
+            const isBefore = classDate.isSame(weekEnd) || classDate.isBefore(weekEnd);
+
+            if(isAfter && isBefore){
+                currCnt++;
+            }
+        })
+
+        setMaxAttandance(maxCnt);
+        setCurrAttandance(currCnt);
+
+        console.log('maxcnt, currcnt : ', maxCnt, currCnt)
+
+        setPercentage(maxCnt != 0 ? currCnt/maxCnt*100 : 100);
+    }
 
     useEffect(() => {
         if(currentLectures.length != 0) {
@@ -41,6 +80,13 @@ const MyPageDashBoard = () => {
             makeLectureEvents();
         }
     }, [currentLectures])
+
+    useEffect(() => {
+        if(lectureEvents.length != 0 && userLectureSchedules.length != 0) {
+            //그래프 퍼센트 계산하기
+            calcPercentage();
+        }
+    }, [lectureEvents, userLectureSchedules])
 
 
     //현재 수강중인 모든 강의 일정을 계산해 합치는 함수
@@ -151,8 +197,15 @@ const MyPageDashBoard = () => {
             .catch(e => {
                 console.log(e.response);
             })
+
+        // 강의 몇번 수강했는지 내역 가져오기
+        getUserLectureScheduleByUserId(0)
+            .then(res => setUserLectureSchedules(res));
+        // setUserLectureSchedules(getUserLectureScheduleByUserId(0));
     }, [])
 
+
+    //강의id로 해당 스케줄 목록 가져오는 api 함수
     const getLectureScheduleByLectureId = (lectureId) => {
         return axios({
                 method: "GET",
@@ -166,6 +219,21 @@ const MyPageDashBoard = () => {
             })
     }
 
+    //유저id로 강의 참여 내역을 가져오는 api 함수
+    const getUserLectureScheduleByUserId = (userId) => {
+        return axios({
+                method: "GET",
+                // url: `${process.env.REACT_APP_API_URL}/mypage/dashboard/userlectureSchedule/${userId}`
+                url: `http://localhost:5000/mypage/dashboard/userLectureSchedule/${userId}`
+            })
+            .then(response => {
+                console.log('getUserLectureScheduleByUserId : ',response.data)
+                return response.data;
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+    }
 
     return (
         <>
@@ -253,10 +321,10 @@ const MyPageDashBoard = () => {
                             <div className={Styles[`dashboard-box`]}>
                                 <div className={"pl-5 pt-5 " + Styles[`box-font`]}>주간 학습 달성률</div>
                                 <div>
-                                    <MyPageWeeklyStudyChart />
+                                    <MyPageWeeklyStudyChart percentage={percentage}/>
                                 </div>
                                 <div className="pl-5">
-                                    5 / 9회 참여하였습니다.
+                                    {currAttandance} / {maxAttandance}회 참여하였습니다.
                                 </div>
                             </div>
                         </div>
