@@ -89,8 +89,8 @@ public class LectureController {
 //            }
 
             List<LectureScheduleRegistDTO> lsrDtos = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray(scheduleArr);
-            log.info("jsonArray = " + jsonArray);
+//            JSONArray jsonArray = new JSONArray(scheduleArr);
+//            log.info("jsonArray = " + jsonArray);
 
             if (scheduleArr != null) {
                 JSONArray jsonArray = new JSONArray(scheduleArr);
@@ -111,10 +111,11 @@ public class LectureController {
 
             Long ret = lectureService.registLecture(files, lectureVO, lsrDtos);
             return new ResponseEntity<>("강의 개설 성공\n강의 번호 : " + ret, HttpStatus.OK);
-        } catch (Exception e) {
+        } }catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("강의 개설 오류", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return null; //임시로 널 추가
     }
 
     @GetMapping
@@ -140,13 +141,13 @@ public class LectureController {
 
         return ResponseEntity.status(HttpStatus.OK).body(lectureResponseDTO);
     }
-    
+
     @GetMapping("/yoga/{yogaId}")
     public ResponseEntity<?> searchLectureByNameAndYoga(@PathVariable long yogaId, @RequestParam("search") String name) throws Exception{
     	List<LectureResponseDTO> resultList = lectureService.searchLectureByNameAndYoga(name, yogaId);
     	return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
-    
+
     @GetMapping("/{userId}/review")
     public ResponseEntity<?> getReviewByUserIdAndLectureId(@PathVariable long userId, @RequestParam("lectureId") long lectureId){
     	List<LectureReviewResponseDTO> resultList = lectureService.getReviewByUserIdAndLectureId(userId, lectureId);

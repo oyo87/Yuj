@@ -25,28 +25,8 @@ const MyPageInfo = () => {
     const inputClassName = "rounded-[5px] pl-2 h-6 input-bordered w-full text-base " + Styles[`myPageInput`];
     //현재 로그인한 유저
     const user = useSelector(state => state.user);
-
-
-    // useEffect(() => {
-    //     const getUserInfo = async () => {
-    //         try {
-    //             // 로그인한 유저 정보 가져오기
-    //             const response = await axios.get(`${URL}/users/3`); //id로 회원정보 조회하는 API
-    //             const userData = response.data;
-
-    //             // 유저 기본 정보 넣어주기
-    //             setProfileImage(userData.profileImage);
-    //             setNickname(userData.nickname);
-    //             setPassword(userData.password);
-    //             setPhone(userData.phone);
-    //             setEmail(userData.email);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-    //     getUserInfo();
-    // }, []);
-
+    console.log("유저입니다.");
+    console.log(user);
     const [profileImage, setProfileImage] = useState(user.userInfo.profileImage);
     const [nickname, setNickname] = useState(user.userInfo.nickname);
     const [password, setPassword] = useState("");
@@ -68,7 +48,11 @@ const MyPageInfo = () => {
         console.log("url")
 
         console.log(`${LOCAL_URL}/mypage/info/${userId}`)
-        axios.patch(`${LOCAL_URL}/mypage/info/${userId}`, updateUser)
+        axios.patch(`${LOCAL_URL}/mypage/info/${userId}`, updateUser, {
+            headers: {
+                token: `${user.tokenInfo}`,
+            }
+        })
             .then((res) => console.log(res))
             .catch((err) => console.error(err));
     };
@@ -77,13 +61,11 @@ const MyPageInfo = () => {
     return (
         <>
             <div className="flex w-full ">
-                <MyPageSidebar/>
+                <MyPageSidebar />
                 <div className="px-40 w-full">
                     <div className={"flex " + Styles[`info-background-image`]} >
 
                         <form className={"p-10 card bg-base-200 " + Styles[`info-container`]} onSubmit={handleSubmit}>
-
-                            {/* <input type="hidden" name="method" value="PUT"></input> */}
                             <input type="hidden" name="userId" value={userId} />
                             <div className="form-control">
                                 <label className="label">
@@ -91,11 +73,9 @@ const MyPageInfo = () => {
                                 </label>
                                 <div className="avatar">
                                     <div className="w-24 rounded-full">
-                                        {/* 이 아래 현재 로그인한 유저의 이미지파일을 받아와야함 */}
+                                        {/* 현재 로그인한 유저의 이미지 */}
                                         <img src={`${process.env.REACT_APP_IMAGE_URL}/${profileImage}`} />
                                     </div>
-                                    {/* 이전 사용하던 인풋박스 */}
-                                    {/* <input type="file" className="file-input file-input-bordered file-input-accent w-full profileInput myPageInput" /> */}
                                     <input type="file" name="profileImage" accept="image/*" className={"block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 " + Styles.profileInput + " " + Styles.myPageInput} onChange={(e) => setProfileImage(e.target.value)} />
                                 </div>
                             </div>
