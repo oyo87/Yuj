@@ -36,18 +36,22 @@ const MyPageDashBoard = () => {
 
 
     useEffect(() => {
-        if(currentLectures.length != 0 && lectureSchedule.length != 0) {
-            makeLectureEvents(currentLectures);
+        if(currentLectures.length != 0) {
+            //강의 일정 만들기
+            makeLectureEvents();
         }
-    }, [currentLectures, lectureSchedule])
+    }, [currentLectures])
 
 
-    //모든 강의 일정을 계산해 합치는 함수
-    const makeLectureEvents = async(currentLectures) => {
+    //현재 수강중인 모든 강의 일정을 계산해 합치는 함수
+    const makeLectureEvents = async() => {
         let events = [];
         for(const lecture of currentLectures){
             const schedules = await getLectureScheduleByLectureId(lecture.lectureId);
-            events = events.concat(calcEventsWithUserLectureAndSchedules(lecture, schedules));
+            const { calcEvents, calcEventCloseTime } = calcEventsWithUserLectureAndSchedules(lecture, schedules);
+            events = events.concat(calcEvents);
+            lecture.closeTime = calcEventCloseTime;
+            console.log("foreach lecture res: ",lecture)
         }
         setLectureEvents(events);
     }
@@ -55,7 +59,9 @@ const MyPageDashBoard = () => {
     //특정 강의와 스케줄을 가지고 일정을 생성하는 함수
     const calcEventsWithUserLectureAndSchedules = (userLecture, schedules) => {
         console.log("calcEventsWithUserLectureAndSchedules : ",userLecture, schedules)
-        const events = [];
+        const calcEvents = [];
+        let calcEventCloseTime = '';
+
 
         //시작날, 끝날, 수업요일 저장하기
         let { endDate, startDate, name } = userLecture;
@@ -68,15 +74,48 @@ const MyPageDashBoard = () => {
         //시작날부터 끝날까지 날짜를 1씩 추가하며 해당날짜가 수업하는 요일일 경우 배열에 집어넣기
         while(!startDate.isAfter(endDate)) {
             startDate = startDate.add(1, "d");
-            if(days.includes(startDate.get("day"))){
-                events.push({
-                    title: name,
-                    date: startDate.format("YYYY-MM-DD"),
-                })
-            }
+            schedules.map(schedule => {
+
+                if(schedule.day-1 == startDate.get("day")){
+                    calcEvents.push({
+                        title: name,
+                        date: startDate.format("YYYY-MM-DD"),
+                    })
+
+                    if(!calcEventCloseTime) {
+                        let getEventDateTime = startDate.format("YYYY-MM-DD") + schedule.startTime;
+                        calcEventCloseTime = elapsedTime(getEventDateTime);
+                    }
+                }
+            })
         }
-        return events;
+        return { calcEvents, calcEventCloseTime };
     }
+
+    //~분전, ~일전 계산하는 함수
+    function elapsedTime(date) {
+        const start = dayjs();
+        const end = dayjs(date);
+        
+        const diff = end.diff(start) / 1000;
+        
+        const times = [
+          { name: '년', milliSeconds: 60 * 60 * 24 * 365 },
+          { name: '개월', milliSeconds: 60 * 60 * 24 * 30 },
+          { name: '일', milliSeconds: 60 * 60 * 24 },
+          { name: '시간', milliSeconds: 60 * 60 },
+          { name: '분', milliSeconds: 60 },
+        ];
+      
+        for (const value of times) {
+          const betweenTime = Math.floor(diff / value.milliSeconds);
+      
+          if (betweenTime > 0) {
+            return `${betweenTime}${value.name} 후`;
+          }
+        }
+        return '잠시 후';
+      }
 
 
     useEffect(() => {
@@ -164,7 +203,8 @@ const MyPageDashBoard = () => {
                                             <div className="leading-loose truncate">{post.name}
                                             {/* {console.log(lectureSchedule)} */}
                                                 {/* lecture의 start_date, end_date , lectureschedule의 start_time, day를 활용 다음 수업시작날짜, 시간 연산 필요 */}
-                                                <div className="break-keep">예정 : {post.startDate} {convertToHM(lectureSchedule[0].startTime)} </div>
+                                                {/* <div className="break-keep">예정 : {post.startDate} {convertToHM(lectureSchedule[0].startTime)} </div> */}
+                                                <div className="break-keep">예정 : {post.closeTime? post.closeTime: null} </div>
                                             </div>
                                         </Link>
                                     </>
