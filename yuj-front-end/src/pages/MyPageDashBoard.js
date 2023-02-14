@@ -83,11 +83,11 @@ const MyPageDashBoard = () => {
     }
 
     useEffect(() => {
-        if(currentLectures.length != 0) {
+        if(currentLectures.length != 0 || completedLectures.length != 0) {
             //강의 일정 만들기
             makeLectureEvents();
         }
-    }, [currentLectures])
+    }, [currentLectures, completedLectures])
 
     useEffect(() => {
         if(lectureEvents.length != 0 && userLectureSchedules.length != 0) {
@@ -100,7 +100,7 @@ const MyPageDashBoard = () => {
     //현재 수강중인 모든 강의 일정을 계산해 합치는 함수
     const makeLectureEvents = async() => {
         let events = [];
-        for(const lecture of currentLectures){
+        for(const lecture of [...currentLectures, ...completedLectures]){
             const schedules = await getLectureScheduleByLectureId(lecture.lectureId);
             const { calcEvents, calcEventCloseTime } = calcEventsWithUserLectureAndSchedules(lecture, schedules);
             events = events.concat(calcEvents);
