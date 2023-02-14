@@ -10,5 +10,6 @@ export const ModelParams = {
         INFERENCE : false,
         imageShape : [192, 192, 3],
         modelArch : 'MoveNet',
-        Config : {modelType : poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING}
+        Config : {modelType : poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING},
+        strategy : 'weightedDistance'
 };
