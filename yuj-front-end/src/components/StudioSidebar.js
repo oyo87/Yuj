@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { updateLectureActive } from '../stores/lectureSlice';
 import Styles from './StudioSidebar.module.css';
 import { Link, Route } from 'react-router-dom';
 import { CommonModal, CommonModalBtn } from '../components/CommonModal';
@@ -8,8 +9,13 @@ import { useNavigate, Navigate } from 'react-router-dom';
 const StudioSidebar = (props) => {
 
   const {studioDetail, userId, studioLiveLecture} = props;
+  const [selectedLectureId, setSelectedLectureId] = useState(-1);
+
+  const studioLectureList = useSelector(state => state.studio.studioLectureList);
+
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //강사
   const startLiveClicked = () => {
@@ -20,12 +26,9 @@ const StudioSidebar = (props) => {
   //수강생
   const goLiveClicked = () => {
     console.log('Go Live!');
-    // <Link to='/vidu' state={{mySessionId : '20', myUserName : '황아영', myUserType : '강사'}}/>
-    // navigate('/viduStudent', { state: { mySessionId: '20', myUserName: '황아영', myUserType: '강사' } })
     navigate('/viduStudent', { state: { mySessionId: '20', myUserName: '황아영', myUserType: '수강생' } }) 
   }
-
-
+  
   // 사이드바 메뉴 추가하려면 아래 입력
   const sidebarMenu = [
     {
@@ -44,17 +47,32 @@ const StudioSidebar = (props) => {
 
   return (
     <>
+        {/* 수강생 버튼 */}
         <CommonModal 
           // title={'실시간 강의에 참여하시겠습니까?'} 
           content={'실시간 강의에 참여하시겠습니까?'} 
           buttons={[
             {
-              text: "수강생으로 참여하기",
+              text: "참여하기",
               className: "btn-accent text-white",
               onClickEvent: () => goLiveClicked()
             },
             {
-              text: "강사로 수업 시작하기",
+              text: "취소하기",
+              className: "btn-primary text-black"
+            }
+          ]}
+          modalId={'studio-go-live'}
+        />
+
+
+        {/* 강사 버튼 */}
+        <CommonModal 
+          // title={'실시간 강의에 참여하시겠습니까?'} 
+          content={'실시간으로 진행할 수업을 선택해주세요'} 
+          buttons={[
+            {
+              text: "수업 시작하기",
               className: "btn-accent text-white",
               onClickEvent: () => startLiveClicked()
             },
@@ -63,8 +81,28 @@ const StudioSidebar = (props) => {
               className: "btn-primary text-black"
             }
           ]}
-          modalId={'studio-sidebar'}
+          modalId={'studio-start-live'}
+          body={
+            <div className={'flex py-2'}>
+              <select
+                className="select max-w-md select-sm text-accent"
+                onChange={(e) => setSelectedLectureId(e.target.value)}
+                value={selectedLectureId}
+              >
+                <option value="default" className="bg-info">
+                  Select Category
+                </option>
+                {studioLectureList.map((lecture) => (
+                  <option value={lecture.lectureId} key={lecture.lectureId}>
+                    {lecture.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          }
         />
+
+
         <div className="drawer-side">
           <div className={'flex flex-col bg-primary items-center pt-16 '+Styles.studioSidebar}>
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
@@ -82,9 +120,10 @@ const StudioSidebar = (props) => {
             </div>
             {
               studioDetail.userId != userId ?
-              <CommonModalBtn text={'Go Live'} className={Styles.liveBtn +' border-none btn-accent mt-12'+ (Object.keys(studioLiveLecture).length === 0 ?' btn-disabled':'')} modalId={'studio-sidebar'}/>
+              <CommonModalBtn text={'Go Live'} className={Styles.liveBtn +' border-none btn-accent mt-12'+ (Object.keys(studioLiveLecture).length === 0 ?' btn-disabled':'')} modalId={'studio-go-live'}/>
               :
-              <button className={Styles.liveBtn+' btn border-none mt-12 btn-accent'} onClick={() => startLiveClicked()}>Start Live</button>
+              // <button className={Styles.liveBtn+' btn border-none mt-12 btn-accent'} onClick={() => startLiveClicked()}>Start Live</button>
+              <CommonModalBtn text={'Start Live'} className={Styles.liveBtn +' border-none btn-accent mt-12'} modalId={'studio-start-live'}/>
             }
             <ul className={Styles.myPageSidebar+" menu pt-7 text-base-content w-full"} >
               {sidebarMenu.map((menu, index) => {
