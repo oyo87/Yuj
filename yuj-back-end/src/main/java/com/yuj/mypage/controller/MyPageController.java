@@ -3,6 +3,7 @@ package com.yuj.mypage.controller;
 import com.yuj.lecture.domain.LectureSchedule;
 import com.yuj.mypage.dto.response.MyPageLectureScheduleResponseDTO;
 import com.yuj.mypage.dto.response.MyPageUserLectureResponseDTO;
+import com.yuj.mypage.dto.response.MyPageUserLectureScheduleResponseDTO;
 import com.yuj.mypage.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,23 @@ public class MyPageController {
             return ResponseEntity.ok().body(lectureScheduleByLectureId);
         }
         else if(lectureScheduleByLectureId == null){
+            return ResponseEntity.ok().body("강의 정보가 없습니다.");
+        }
+
+        return ResponseEntity.badRequest().body("오류가 발생하였습니다.");
+
+    }
+
+    @GetMapping("/dashboard/userLectureSchedule/{userId}")
+    public ResponseEntity<?> getUserLectureSchedule(@PathVariable long userId){
+        List<MyPageUserLectureScheduleResponseDTO> userLectureScheduleResponseDTOS = myPageService.getUserLectureScheduleByUserId(userId);
+
+        System.out.println("lectureScheduleByLectureId = " + userLectureScheduleResponseDTOS);
+
+        if(userLectureScheduleResponseDTOS != null){
+            return ResponseEntity.ok().body(userLectureScheduleResponseDTOS);
+        }
+        else if(userLectureScheduleResponseDTOS == null){
             return ResponseEntity.ok().body("강의 정보가 없습니다.");
         }
 
