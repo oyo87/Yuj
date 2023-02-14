@@ -30,6 +30,16 @@ const MyPageDashBoard = () => {
     const [completedLectures, setCompletedLectures] = useState([]);
     //강의 시간 정보
     const [lectureSchedule, setLectureSchedule] = useState([]);
+    //강의 일정 배열(1일 단위)
+    const [lectureEvents, setLectureEvents] = useState([
+        { title: '요가의 기초', date: '2023-02-01' },
+        { title: '요가의 정석', date: '2023-02-01' },
+        { title: '아침 요가', date: '2023-02-02' }
+    ])
+
+
+
+
 
     useEffect(() => {
         //현재 수강중인 강의 가져와야하는부분 현재 임시데이터
@@ -162,7 +172,7 @@ const MyPageDashBoard = () => {
                         <div className="m-14">
                             <div>학습 일정</div>
                             <div>
-                                <MyPageCalendar />
+                                <MyPageCalendar lectureEvents={lectureEvents} />
                             </div>
                         </div>
                     </div>
