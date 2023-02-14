@@ -31,14 +31,52 @@ const MyPageDashBoard = () => {
     //강의 시간 정보
     const [lectureSchedule, setLectureSchedule] = useState([]);
     //강의 일정 배열(1일 단위)
-    const [lectureEvents, setLectureEvents] = useState([
-        { title: '요가의 기초', date: '2023-02-01' },
-        { title: '요가의 정석', date: '2023-02-01' },
-        { title: '아침 요가', date: '2023-02-02' }
-    ])
+    const [lectureEvents, setLectureEvents] = useState([]);
 
 
 
+    useEffect(() => {
+        if(currentLectures.length != 0 && lectureSchedule.length != 0) {
+            makeLectureEvents(currentLectures);
+        }
+    }, [currentLectures, lectureSchedule])
+
+
+    //모든 강의 일정을 계산해 합치는 함수
+    const makeLectureEvents = async(currentLectures) => {
+        let events = [];
+        for(const lecture of currentLectures){
+            const schedules = await getLectureScheduleByLectureId(lecture.lectureId);
+            events = events.concat(calcEventsWithUserLectureAndSchedules(lecture, schedules));
+        }
+        setLectureEvents(events);
+    }
+
+    //특정 강의와 스케줄을 가지고 일정을 생성하는 함수
+    const calcEventsWithUserLectureAndSchedules = (userLecture, schedules) => {
+        console.log("calcEventsWithUserLectureAndSchedules : ",userLecture, schedules)
+        const events = [];
+
+        //시작날, 끝날, 수업요일 저장하기
+        let { endDate, startDate, name } = userLecture;
+        const days = schedules.map(schedule => schedule.day - 1);
+        console.log('days : ',days)
+
+        endDate = dayjs(endDate);
+        startDate = dayjs(startDate);
+
+        //시작날부터 끝날까지 날짜를 1씩 추가하며 해당날짜가 수업하는 요일일 경우 배열에 집어넣기
+        while(!startDate.isAfter(endDate)) {
+            startDate = startDate.add(1, "d");
+            if(days.includes(startDate.get("day"))){
+                events.push({
+                    title: name,
+                    date: startDate.format("YYYY-MM-DD"),
+                })
+            }
+        }
+        return events;
+    }
 
 
     useEffect(() => {
@@ -76,6 +114,19 @@ const MyPageDashBoard = () => {
             })
     }, [])
 
+    const getLectureScheduleByLectureId = (lectureId) => {
+        return axios({
+                method: "GET",
+                url: `${process.env.REACT_APP_API_URL}/mypage/dashboard/lectureSchedule/${lectureId}`
+            })
+            .then(response => {
+                return response.data;
+            })
+            .catch(e => {
+                console.log(e.response);
+            })
+    }
+
 
     return (
         <>
@@ -102,8 +153,8 @@ const MyPageDashBoard = () => {
                                         {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
                                         {/* post 내부에 있는 post.lecture.lectureId를 이용해서 lectureSchdule 데이터 findby해오고
                                         그안의 Day, startTime 이용해야함  */}
-                                        {console.log("현재 수강중인강의 ")}
-                                        {console.log(post)}
+                                        {/* {console.log("현재 수강중인강의 ")} */}
+                                        {/* {console.log(post)} */}
                                         <Link to="/studio" className="h-20 my-2 flex">
                                             <div className="h-full w-32 mx-5">
                                                 {/* 강의 thumbnail_image */}
@@ -111,7 +162,7 @@ const MyPageDashBoard = () => {
                                             </div>
                                             {/* 강의 name */}
                                             <div className="leading-loose truncate">{post.name}
-                                            {console.log(lectureSchedule)}
+                                            {/* {console.log(lectureSchedule)} */}
                                                 {/* lecture의 start_date, end_date , lectureschedule의 start_time, day를 활용 다음 수업시작날짜, 시간 연산 필요 */}
                                                 <div className="break-keep">예정 : {post.startDate} {convertToHM(lectureSchedule[0].startTime)} </div>
                                             </div>
@@ -135,8 +186,8 @@ const MyPageDashBoard = () => {
                                             .slice(0, 3)
                                             .map(post => (
                                                 <>
-                                                {console.log("수강완료한강의 post ")}
-                                                {console.log(post)}
+                                                {/* {console.log("수강완료한강의 post ")}
+                                                {console.log(post)} */}
                                                     {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
                                                     <Link to="/studio" className="h-20 my-2 flex">
                                                         <div className="h-full w-32 mx-5">
