@@ -1,7 +1,7 @@
 package com.yuj.lecture.service;
 
 import com.yuj.exception.CUserNotFoundException;
-import com.yuj.exception.controller.CYogaNotFoundException;
+import com.yuj.exception.CYogaNotFoundException;
 import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.LectureSchedule;
 import com.yuj.lecture.domain.Yoga;
