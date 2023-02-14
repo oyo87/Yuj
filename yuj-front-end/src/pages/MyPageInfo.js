@@ -57,7 +57,7 @@ const MyPageInfo = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const updateUser = {
+        const myPageUserInfoRequestDTO = {
             userId,
             profileImage,
             nickname,
@@ -66,9 +66,10 @@ const MyPageInfo = () => {
             email,
         };
         console.log("url")
+        console.log(myPageUserInfoRequestDTO)
 
         console.log(`${LOCAL_URL}/mypage/info/${userId}`)
-        axios.patch(`${LOCAL_URL}/mypage/info/${userId}`, updateUser)
+        axios.patch(`${LOCAL_URL}/mypage/info/${userId}`, myPageUserInfoRequestDTO)
             .then((res) => console.log(res))
             .catch((err) => console.error(err));
     };
@@ -104,10 +105,10 @@ const MyPageInfo = () => {
                                 <label className="label">
                                     <span className="label-text">닉네임</span>
                                 </label>
-                                <input type="text" name="nickname" placeholder="닉네임을 입력하세요." defaultValue={nickname} className={inputClassName} maxLength={16} onChange={(e) => setNickname(e.target.value)} />
+                                <input type="text" name="nickname" placeholder="닉네임을 입력하세요." defaultValue={nickname} className={inputClassName} maxLength={8} onChange={(e) => setNickname(e.target.value)} />
                                 <label className="label">
                                     <span className="label-text-alt"></span>
-                                    <span className="label-text-alt"></span>
+                                    <span className="label-text-alt">(8글자 이하로 입력하세요)</span>
                                 </label>
                             </div>
 
@@ -133,7 +134,7 @@ const MyPageInfo = () => {
                                 <input type="password" name="password" placeholder="새 비밀번호 확인" className={inputClassName} minLength={6} maxLength={16} onChange={(e) => setPassword(e.target.value)} />
                                 <label className="label">
                                     <span className="label-text-alt"></span>
-                                    <span className="label-text-alt justify-end">(비밀번호는 6글자 이상, 16글자 이하로 입력해주세요.)</span>
+                                    <span className="label-text-alt justify-end">(6글자 이상, 16글자 이하로 입력하세요  )</span>
                                 </label>
                             </div>
 
