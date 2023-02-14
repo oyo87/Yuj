@@ -1,13 +1,23 @@
 package com.yuj.lecture.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.yuj.exception.CUserNotFoundException;
 import com.yuj.exception.CYogaNotFoundException;
 import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.LectureSchedule;
+import com.yuj.lecture.domain.UserLecture;
 import com.yuj.lecture.domain.Yoga;
 import com.yuj.lecture.dto.request.LectureScheduleRegistDTO;
 import com.yuj.lecture.dto.request.LectureVO;
 import com.yuj.lecture.dto.response.LectureResponseDTO;
+import com.yuj.lecture.dto.response.LectureReviewResponseDTO;
 import com.yuj.lecture.repository.LectureRepository;
 import com.yuj.lecture.repository.LectureScheduleRepository;
 import com.yuj.lecture.repository.YogaRepository;
@@ -16,15 +26,9 @@ import com.yuj.lectureimage.handler.FileHandler;
 import com.yuj.lectureimage.repository.LectureImageRepository;
 import com.yuj.user.domain.User;
 import com.yuj.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +62,7 @@ public class LectureService {
                 .registDate(lectureVO.getRegistDate())
                 .startDate(lectureVO.getStartDate())
                 .endDate(lectureVO.getEndDate())
+                .registDate(lectureVO.getRegistDate())
                 .limitStudents(lectureVO.getLimitStudents())
                 .fee(lectureVO.getFee())
                 .totalCount(lectureVO.getTotalCount())
@@ -175,6 +180,26 @@ public class LectureService {
 		}
     	return result;
     }
+    
+    public List<LectureResponseDTO> searchLectureByNameAndYoga(String name, long yogaId) {
+    	List<LectureResponseDTO> result = new ArrayList<>();
+    	LocalDate threshold = LocalDate.now();
+//    	
+//    	// 현재 진행하고 있는 강의 검색
+    	List<Lecture> list = lectureRepository.findLectureByYoga(name, yogaId, threshold);
+//    	
+//    	// 현재 종료된 강의 검색
+    	List<Lecture> list2 = lectureRepository.findLectureEndByYoga(name, yogaId, threshold);
+    	
+    	for (Lecture lecture : list) {
+			result.add(entityToResponseDTO(lecture));
+		}
+    	
+    	for (Lecture lecture : list2) {
+    		result.add(entityToResponseDTO(lecture));
+		}
+    	return result;
+	}
 
     private LectureResponseDTO entityToResponseDTO(Lecture lecture) {
         User user = lecture.getUser();
@@ -197,4 +222,30 @@ public class LectureService {
                 .isActive(lecture.isActive())
                 .build();
     }
+
+
+	public List<LectureReviewResponseDTO> getReviewByUserIdAndLectureId(long userId, long lectureId) {
+		List<LectureReviewResponseDTO> result = new ArrayList<>();
+		List<UserLecture> list = lectureRepository.getReviewByUserIdAndLectureId(userId, lectureId);
+		
+		for (UserLecture userLecture : list) {
+			result.add(entityToReviewDTO(userLecture));
+		}
+		return result;
+	}
+	
+	private LectureReviewResponseDTO entityToReviewDTO(UserLecture userLecture) {
+		User user = userLecture.getUser();
+		Lecture lecture = userLecture.getLecture();
+		
+		return LectureReviewResponseDTO.builder()
+				.reviewId(userLecture.getUserLectureId())
+				.userName(user.getName())
+				.date(userLecture.getRegistDate())
+				.rating(userLecture.getScore())
+				.lectureName(lecture.getName())
+				.review(userLecture.getReview())
+				.profileImage(user.getProfileImagePath())
+				.build();
+	}
 }
