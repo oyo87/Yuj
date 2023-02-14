@@ -7,11 +7,13 @@ const MyPageCalendar = (props) => {
     const { lectureEvents } = props;
 
     return (
-        <div className="App">
+        <div className="App max-w-full">
             <FullCalendar
                 defaultView="dayGridMonth"
                 plugins={[dayGridPlugin]}
-                events={lectureEvents}
+                events={lectureEvents.map(event => {
+                    return {...event, title:event.title.substr(0,13)}
+                })}
             />
         </div>
     );

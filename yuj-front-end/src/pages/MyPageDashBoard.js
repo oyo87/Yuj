@@ -353,9 +353,9 @@ const MyPageDashBoard = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="m-14">
+                        <div className="px-5 my-16">
                             <div>학습 일정</div>
-                            <div>
+                            <div className={'max-w-5xl'}>
                                 <MyPageCalendar lectureEvents={lectureEvents} />
                             </div>
                         </div>
