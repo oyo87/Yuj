@@ -30,8 +30,6 @@ function MyPageSidebar() {
   return (
 
     <div className="drawer-side">
-      {console.log("유저")}
-      {console.log(user)}
       <ul className={"flex items-start justify-between menu p-5 bg-primary text-base-content " + Styles.myPageSidebar}>
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
         <div>
