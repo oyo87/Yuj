@@ -4,22 +4,17 @@ import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.LectureSchedule;
 import com.yuj.lecture.domain.UserLecture;
 import com.yuj.lecture.domain.Yoga;
-import com.yuj.lecture.repository.LectureRepository;
 import com.yuj.lecture.repository.LectureScheduleRepository;
-import com.yuj.mypage.dto.request.MyPageRequestDTO;
 
 import com.yuj.mypage.dto.response.MyPageLectureScheduleResponseDTO;
 import com.yuj.mypage.dto.response.MyPageUserLectureResponseDTO;
 import com.yuj.mypage.repository.MyPageUserLectureRepository;
 import com.yuj.user.domain.User;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,8 +49,9 @@ public class MyPageService {
     }
 
     private MyPageUserLectureResponseDTO entityToUserLectureResponseDTO(UserLecture userLecture){
-        User user = userLecture.getUser();
+
         Lecture lecture = userLecture.getLecture();
+        User user = lecture.getUser();
         Yoga yoga = lecture.getYoga();
 
         return MyPageUserLectureResponseDTO.builder().
