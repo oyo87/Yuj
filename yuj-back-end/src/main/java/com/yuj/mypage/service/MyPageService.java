@@ -63,6 +63,9 @@ public class MyPageService {
                 myPageUserLectureResponseDTOS.add(entityToUserLectureResponseDTO(dto));
             }
         }
+
+//        현재시간보다 endDate가 이전(강의가 완료된것)인 것들 중에서 가장 최근의것을 우선으로 정렬
+        Collections.sort(myPageUserLectureResponseDTOS, (o1, o2) -> o2.getEndDate().compareTo(o1.getEndDate()));
         return myPageUserLectureResponseDTOS;
     }
 
@@ -116,8 +119,7 @@ public class MyPageService {
 
 //    private MyPageUserLectureResponseDTO entityToUserLectureResponseDTO(UserLecture userLecture){
 //        User user = userLecture.getUser();
-////    유저 정보 수정
-//
+//    유저 정보 수정
     public Optional<User> updateUser(Long userId, MyPageUserInfoRequestDTO myPageUserInfoRequestDTO) {
         Optional<User> user = this.myPageUserInfoRepository.findById(userId);
 
