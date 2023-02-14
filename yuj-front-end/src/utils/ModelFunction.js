@@ -20,8 +20,51 @@ async function loadModel(modelConfig, imageShape){
     //warm up
     await model.estimatePoses(tf.zeros(imageShape));
     console.log(model);
-    model.dispose();
+    // model.dispose();
     return model;
 }
 
-export {setModelBackend, loadModel, }
+async function estimate(detector, imageElement){
+    console.log('estimate function access');
+    var infStartTime = Date.now();
+    const pose = await detector.estimatePoses(imageElement, {flipHorizontal: false});
+    console.log('inf time : ', Math.floor((Date.now() - infStartTime)/1000), tf.getBackend());
+    console.log(pose);
+
+    if(!pose.length)
+        throw new Error("Cannot find poses. try again or check your state");
+    return pose[0];
+}
+
+async function calSimilarity(config, origin, target){
+
+    var calStartTime = Date.now();
+    const similarity = await poseSimilarity(origin, target, config);
+    var calEndTime = Date.now();
+    let strategy = config.strategy;
+    console.log(similarity);
+
+    return {strategy : strategy, result : similarity, time : Math.floor((calEndTime - calStartTime)/1000)};
+}
+
+function convertToCalculateFormat(pose){
+    console.log('formatting to similarity');
+    const formatObjectList = [];
+    for(const [key, value] of pose.keypoints.entries()){
+        let formatObject = {
+            score : value.score,
+            part : value.name,
+            position : {
+                x : value.x,
+                y : value.y
+            }
+        }
+        formatObjectList.push(formatObject);
+    }
+
+    //deep copy
+    pose.keypoints = [...formatObjectList];
+    return pose;
+}
+
+export {setModelBackend, loadModel, estimate, convertToCalculateFormat, calSimilarity }

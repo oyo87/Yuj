@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { inferenceTarget } from '../../stores/modelSlice';
 
-export default class OpenViduVideoComponent extends Component {
+class OpenViduVideoComponent extends Component {
 
     /*
     props에 담겨 오는 streamManager 를
@@ -13,15 +15,15 @@ export default class OpenViduVideoComponent extends Component {
         this.videoRef = React.createRef();
         this.canvasRef = React.createRef();
         this.context = null;
-        this.coordinate = props.coordnates;
     }
 
-    componentDidUpdate(props) {        
-        if (props && !!this.videoRef) {
-            this.props.streamManager.addVideoElement(this.videoRef.current);
-            console.log('parent update');
-            this.drawVideoToCanvas();
-        }
+    componentDidUpdate(props) {
+        this.navigateDefaultOrAIDrawing(props);
+        // if (props && !!this.videoRef) {
+        //     this.props.streamManager.addVideoElement(this.videoRef.current);
+        //     console.log('parent update');
+        //     this.drawVideoToCanvas();
+        // }
     }
 
     componentDidMount() {
@@ -29,23 +31,64 @@ export default class OpenViduVideoComponent extends Component {
 
         if(this.props.type === '강사'){
             this.canvasRef.current.id = 'teacher-canvas';
+            this.videoRef.current.id = 'teacher-video';
         }
         else{
             this.canvasRef.current.id = 'student-canvas';
         }
-        
-        if (this.props && !!this.videoRef) {
+
+        const test = document.getElementById('teacher-video');
+        console.log(this.props.type, test);
+        console.log(typeof this.videoRef.current, this.videoRef.current);
+        this.navigateDefaultOrAIDrawing(this.props);
+    }
+
+    /*
+    순서
+    1. infState 가 토글되어 있는지 확인(undefined 아닌거도 체크할 것)
+    2. inference and save values
+    3. if inference && User -> draw
+    4. if skeleton -> draw teacher
+    
+    */
+
+    navigateDefaultOrAIDrawing(state){
+        if(state && !!this.videoRef){
             this.props.streamManager.addVideoElement(this.videoRef.current);
-            console.log('parent mount');
-            console.log(this.canvasRef.current.width, this.canvasRef.current.height);
-            this.drawVideoToCanvas();
+
+            const inferenceFlag = this.props.model.userInferenceState.inferenceState;
+            if(inferenceFlag){ this.drawVideoWithInferenceInfo() }
+            else { this.drawVideoToCanvas() }
         }
+    }
+
+    async drawVideoWithInferenceInfo(){
+        console.log('inference ready');
+        // this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
+        await this.renderResult();
+        requestAnimationFrame(this.drawVideoWithInferenceInfo.bind(this));
     }
     
     drawVideoToCanvas() {
         this.context.beginPath();
+        // console.log(this.props);
         this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
         requestAnimationFrame(this.drawVideoToCanvas.bind(this));
+    }
+
+    async renderResult(){
+        // console.log(this.props.model)
+
+        this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
+        let teacherVideo = document.getElementById('teacher-video');
+
+        let userPose = await this.props.inferenceTarget(this.props.model.model, "수강생", this.videoRef.current);
+        let teacherPose = await this.props.inferenceTarget(this.props.model.model, "강사", teacherVideo);
+        await console.log('user pose', this.props.model.userInferenceState.inferenceResult);
+        // console.log('teacher pose', teacherPose);
+
+        return;
+
     }
 
     render() {
@@ -61,3 +104,13 @@ export default class OpenViduVideoComponent extends Component {
     }
 
 }
+
+const mapStateToProps = (state) => {return{ model : state.model }}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        inferenceTarget : (model, target, videoTag) => {dispatch(inferenceTarget({model:model, target:target, videoTag:videoTag}))}
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(OpenViduVideoComponent);

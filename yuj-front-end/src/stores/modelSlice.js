@@ -9,15 +9,18 @@ const initModel = createAsyncThunk("SET_INITIAL_MODEL", async()=>{
 })
 
 const inferenceTarget = createAsyncThunk("INFERENCE_TARGET", async({model, target, videoTag})=>{
-    let pose = await estimate(videoTag, model);
-    await model.dispose();
+    // console.log('in async check params', model, videoTag, target);
+    let pose = estimate(model, videoTag);
+    console.log('inf result ', pose);
+    // await model.dispose();
     //결과 안나오면 여기 await 걸어 줘야 하는거 잊지마라
     pose = convertToCalculateFormat(pose);
     return {target: target, result: pose};
 })
 
-const calculateSimilarity = createAsyncThunk("CALCULATE_DISTANCE", async({})=>{
-    calSimilarity()
+const calculateSimilarity = createAsyncThunk("CALCULATE_DISTANCE", async({user, teacher})=>{
+    let similarity = calSimilarity(ModelParams.strategy, teacher, user);
+    return similarity;
 })
 
 const drawTargetCanvasResults = createAsyncThunk("DRAW_RESULT_TO_TARGET", async({videoTag, canvasTag, result, color})=>{
@@ -46,6 +49,7 @@ const modelSlice = createSlice({
         },
     
         teacherSkeletonState : {
+            isAttend : false,
             cameraState : true,
             targetCanvasContext: '',
             skeletonState : false,
@@ -56,6 +60,10 @@ const modelSlice = createSlice({
     
 
     reducers : {
+
+        teacherIsAttend:(state) => {
+            state.teacherSkeletonState.isAttend =!state.teacherSkeletonState.isAttend;
+        },
         toggleUserCamera:(state)=>{
             state.userInferenceState.cameraState =!state.userInferenceState.cameraState;
         },
@@ -71,12 +79,17 @@ const modelSlice = createSlice({
         },
         returnToInitState:(state)=>{
             state.model = '';
+            state.color = '';
             state.userInferenceState = {
+                cameraState : true,
                 targetCanvasContext: '',
                 inferenceState: false,
                 inferenceResult: {}
             };
+            //강사가 내 화면에 들어왔을 때 status 갱신해줘서 context 접근 가능하게 하자
             state.teacherSkeletonState = {
+                isOnline: false,
+                cameraState : true,
                 targetCanvasContext: '',
                 skeletonState : false, 
                 skeletonResult : {}
@@ -90,11 +103,16 @@ const modelSlice = createSlice({
             state.model = payload;
         },
         [inferenceTarget.fulfilled]:(state, payload) => {
+            console.log('fulfilled? ',payload);
             if(payload.target === "수강생"){
-                state.userInferenceState.inferenceResult = payload.result;
+                state.userInferenceState.inferenceResult = {...payload.result};
             }else {
-                state.teacherSkeletonState.skeletonResult = payload.result;
+                state.teacherSkeletonState.skeletonResult = {...payload.result};
             }
+        },
+        [calculateSimilarity.fulfilled]:(state, payload) => {
+            let color = payload <= ModelParams.SIMILARITY_THRESHHOLD ? "Green" : "White";
+            state.color = color;
         }
     }
 
