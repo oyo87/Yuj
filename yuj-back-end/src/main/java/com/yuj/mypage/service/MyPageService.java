@@ -6,15 +6,19 @@ import com.yuj.lecture.domain.UserLecture;
 import com.yuj.lecture.domain.Yoga;
 import com.yuj.lecture.repository.LectureScheduleRepository;
 
+import com.yuj.mypage.dto.request.MyPageUserInfoRequestDTO;
 import com.yuj.mypage.dto.response.MyPageLectureScheduleResponseDTO;
 import com.yuj.mypage.dto.response.MyPageUserLectureResponseDTO;
+import com.yuj.mypage.repository.MyPageUserInfoRepository;
 import com.yuj.mypage.repository.MyPageUserLectureRepository;
 import com.yuj.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,9 @@ public class MyPageService {
 
     private final LectureScheduleRepository lectureScheduleRepository;
 
+    private final MyPageUserInfoRepository myPageUserInfoRepository;
+
+//    userId를 사용하여 수강하고있는 모든 강의정보 가져오기
     public List<MyPageUserLectureResponseDTO> getUserLecturesById(long userId){
         List<UserLecture> allByUserUserId = myPageUserLectureRepository.findAllByUser_UserId(userId);
 
@@ -35,6 +42,8 @@ public class MyPageService {
 
         return myPageUserLectureResponseDTOS;
     }
+
+//    lectureId를 사용하여 모든 강의 스케쥴 가져오기
     public List<MyPageLectureScheduleResponseDTO> getLectureScheduleByLectureId(long lectureId){
         List<LectureSchedule> allByLectureLectureId = lectureScheduleRepository.findAllByLecture_LectureId(lectureId);
 
@@ -45,8 +54,47 @@ public class MyPageService {
         }
 
         return myPageLectureScheduleResponseDTOS;
-
     }
+
+//    유저 정보 수정
+
+    public Optional<User> updateUser(Long userId, MyPageUserInfoRequestDTO myPageUserInfoRequestDTO){
+        Optional<User> user = this.myPageUserInfoRepository.findById(userId);
+
+        user.ifPresent(u ->{
+            if(myPageUserInfoRequestDTO.getProfileImage() != null) {
+                u.setProfileImagePath(myPageUserInfoRequestDTO.getProfileImage());
+            }
+            if(myPageUserInfoRequestDTO.getNickname() != null){
+                u.setNickname(myPageUserInfoRequestDTO.getNickname());
+            }
+            if(myPageUserInfoRequestDTO.getPassword() != null){
+                u.setPassword(myPageUserInfoRequestDTO.getPassword());
+            }
+            if(myPageUserInfoRequestDTO.getPhone() != null){
+                u.setPhone(myPageUserInfoRequestDTO.getPhone());
+            }
+            if(myPageUserInfoRequestDTO.getEmail() != null){
+                u.setEmail(myPageUserInfoRequestDTO.getEmail());
+            }
+            this.myPageUserInfoRepository.save(u);
+        });
+        return user;
+    }
+//    public updateUser(MyPageRequestDTO){
+//        User user = MyPageRepository.findById(userDto.getId()).orElse(null);
+//        if (user == null) {
+//            throw new RuntimeException("User not found");
+//        }
+//
+//        user.setProfileImage(userDto.getProfileImage());
+//        user.setNickname(userDto.getNickname());
+//        user.setPassword(userDto.getPassword());
+//        user.setPhone(userDto.getPhone());
+//        user.setEmail(userDto.getEmail());
+//
+//        return userRepository.save(user);
+//    }
 
     private MyPageUserLectureResponseDTO entityToUserLectureResponseDTO(UserLecture userLecture){
 
@@ -88,25 +136,4 @@ public class MyPageService {
                 build();
     }
 
-//    private final MyPageRepository myPageRepository;
-//
-//    @Autowired
-//    public MyPageService(MyPageRepository myPageRepository) {
-//        this.myPageRepository = myPageRepository;
-//    }
-//
-//    public updateUser(MyPageRequestDTO){
-//        User user = MyPageRepository.findById(userDto.getId()).orElse(null);
-//        if (user == null) {
-//            throw new RuntimeException("User not found");
-//        }
-//
-//        user.setProfileImage(userDto.getProfileImage());
-//        user.setNickname(userDto.getNickname());
-//        user.setPassword(userDto.getPassword());
-//        user.setPhone(userDto.getPhone());
-//        user.setEmail(userDto.getEmail());
-//
-//        return userRepository.save(user);
-//    }
 }
