@@ -4,10 +4,18 @@ import Styles from "./MyPages.module.css";
 import MyPageWeeklyStudyChart from '../components/MyPageWeeklyStudyChart';
 import MyPageCalendar from "../components/MyPageCalendar";
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { useSelector } from 'react-redux';
+import MyPageLoginCheck from "../utils/MyPageLoginCheck";
 
 const MyPageDashBoard = () => {
+
+    const user = useSelector(state => state.user);
+    const navigate = useNavigate();
+
+    //로그인하지않은 상태면 login페이지로 즉시 이동
+    MyPageLoginCheck(user);
 
     // HH:MM:SS 시간 표시를 HH:MM으로 표시하는 함수
     function convertToHM(time) {
@@ -83,6 +91,7 @@ const MyPageDashBoard = () => {
 
         setPercentage(maxCnt != 0 ? Math.round(currCnt / maxCnt * 100) : 100);
     }
+    
 
     useEffect(() => {
         if (currentLectures.length != 0 || completedLectures.length != 0) {
@@ -285,7 +294,7 @@ const MyPageDashBoard = () => {
                                 get으로 강의리스트 가져오고 최신3개까지만 썸네일 가져와서
                                 좌측div에 강의썸네일 우측에는 강의제목, 강의예정 시간
                                 url링크 걸어서 강의 스튜디오로이동해야함 */}
-                                {currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post,idx) => (
+                                {currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post, idx) => (
 
                                     <div key={idx}>
                                         {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}

@@ -4,6 +4,7 @@ import Styles from './MyPages.module.css';
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import MyPageLoginCheck from "../utils/MyPageLoginCheck";
 
 const LOCAL_URL = "http://localhost:5000";
 const URL = LOCAL_URL;
@@ -21,10 +22,13 @@ function phoneLengthLimit(e) {
 
 const MyPageInfo = () => {
 
-    // 내 정보의 input상자 클래스를 한번에 관리하기 위한 inputClassName
-    const inputClassName = "rounded-[5px] pl-2 h-6 input-bordered w-full text-base " + Styles[`myPageInput`];
     //현재 로그인한 유저
     const user = useSelector(state => state.user);
+    MyPageLoginCheck(user);
+
+    // 내 정보의 input상자 클래스를 한번에 관리하기 위한 inputClassName
+    const inputClassName = "rounded-[5px] pl-2 h-6 input-bordered w-full text-base " + Styles[`myPageInput`];
+
     console.log("유저입니다.");
     console.log(user);
     const [profileImage, setProfileImage] = useState(user.userInfo.profileImage);

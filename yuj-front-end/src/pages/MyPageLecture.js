@@ -3,16 +3,21 @@ import MyPageSidebar from '../components/MyPageSidebar';
 import axios from "axios";
 import { useState, useEffect, } from "react";
 import LectureItemCard from "../components/LectureItemCard";
+import { useSelector } from 'react-redux';
+import MyPageLoginCheck from "../utils/MyPageLoginCheck";
 
 const LOCAL_URL = "http://localhost:5000";
 const URL = LOCAL_URL;
 
 const MyPageLecture = () => {
 
+    const user = useSelector(state=> state.user);
+    MyPageLoginCheck(user);
+
     useEffect(() => {
         axios({
             method: "GET",
-            url: `${URL}/mypage/dashboard/3`
+            url: `${URL}/mypage/dashboard/1` //임시로 1사용중. 뒤에 ${user.userId}로 수정
         }).then(res => {
             setLectures(res.data);
         })
@@ -44,7 +49,6 @@ const MyPageLecture = () => {
                         ))}
                         {lectures.map(lecture => (
                             <div key={lecture.lectureId}>
-                                {console.log("MyPageLecture lecture: ", lecture)}
                                 <LectureItemCard thisLecture={lecture} key={lecture.lectureId} />
                             </div>
                         ))}
