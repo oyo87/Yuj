@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +28,19 @@ public class UserLectureScheduleService {
     private final UserRepository userRepository;
     private final LectureRepository lectureRepository;
 
-    public UserLectureScheduleResponseDTO saveUserLectureSchedule(UserLectureScheduleRequestDTO requestDTO) throws Exception {
-        User user = userRepository.findById(requestDTO.getUserId()).orElseThrow(() -> new Exception("해당 유저가 존재하지 않습니다."));
-        Lecture lecture = lectureRepository.findById(requestDTO.getLectureId()).orElseThrow(() -> new Exception("해당 강의가 존재하지 않습니다."));
+    public UserLectureScheduleResponseDTO saveUserLectureSchedule(Long userId, Long LectureId) throws Exception {
+        Optional<List<UserLectureSchedule>> schedules = userLectureScheduleRepository.findByUser_UserIdAndLecture_LectureId(userId, LectureId);
+        if(schedules.isPresent()) {
+            LocalDate nowLocalDate = LocalDate.now();
+            for(UserLectureSchedule schedule : schedules.get()) {
+                if(schedule.getAttendanceDate().toLocalDate().isEqual(nowLocalDate)){
+                    return null;
+                }
+            }
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception("해당 유저가 존재하지 않습니다."));
+        Lecture lecture = lectureRepository.findById(LectureId).orElseThrow(() -> new Exception("해당 강의가 존재하지 않습니다."));
 
         UserLectureSchedule userLectureSchedule = UserLectureSchedule.builder()
                 .attendanceDate(LocalDateTime.now())

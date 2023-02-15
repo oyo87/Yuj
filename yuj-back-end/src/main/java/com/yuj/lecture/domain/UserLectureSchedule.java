@@ -26,11 +26,11 @@ public class UserLectureSchedule {
     private LocalDateTime attendanceDate;
     private boolean isAttendance;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 }
