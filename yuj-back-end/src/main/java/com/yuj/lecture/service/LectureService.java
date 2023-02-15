@@ -1,13 +1,26 @@
 package com.yuj.lecture.service;
 
+import java.awt.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import com.yuj.lectureimage.dto.LectureImageDto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.yuj.exception.CUserNotFoundException;
-import com.yuj.exception.controller.CYogaNotFoundException;
+import com.yuj.exception.CYogaNotFoundException;
 import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.LectureSchedule;
+import com.yuj.lecture.domain.UserLecture;
 import com.yuj.lecture.domain.Yoga;
-import com.yuj.lecture.dto.request.LectureScheduleRegistDto;
+import com.yuj.lecture.dto.request.LectureScheduleRegistDTO;
 import com.yuj.lecture.dto.request.LectureVO;
 import com.yuj.lecture.dto.response.LectureResponseDTO;
+import com.yuj.lecture.dto.response.LectureReviewResponseDTO;
 import com.yuj.lecture.repository.LectureRepository;
 import com.yuj.lecture.repository.LectureScheduleRepository;
 import com.yuj.lecture.repository.YogaRepository;
@@ -16,15 +29,9 @@ import com.yuj.lectureimage.handler.FileHandler;
 import com.yuj.lectureimage.repository.LectureImageRepository;
 import com.yuj.user.domain.User;
 import com.yuj.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +49,7 @@ public class LectureService {
     private final FileHandler fileHandler;
 
     @Transactional
-    public Long registLecture(List<MultipartFile> files, LectureVO lectureVO, List<LectureScheduleRegistDto> lsrDtos) {
+    public Long registLecture(List<MultipartFile> files, LectureVO lectureVO, List<LectureScheduleRegistDTO> lsrDtos) {
         //  강사 Entity 찾아내기
         log.info("in registLecture");
         User teacher = userRepository.findById(lectureVO.getUserId()).orElseThrow(CUserNotFoundException::new);
@@ -85,7 +92,7 @@ public class LectureService {
             }
 
             if(!lsrDtos.isEmpty()) {
-                for(LectureScheduleRegistDto dto : lsrDtos) {
+                for(LectureScheduleRegistDTO dto : lsrDtos) {
                     //  일정을 DB에 저장
                     LectureSchedule lectureSchedule = dto.toEntity(lecture);
                     log.info("lectureSchedule : " + lectureSchedule);
@@ -216,6 +223,53 @@ public class LectureService {
                 .profileImagePath(user.getProfileImagePath())
                 .yoga(lecture.getYoga())
                 .isActive(lecture.isActive())
+                .images(getLectureImageDTOsByLectureId(lecture.getLectureId()))
                 .build();
     }
+
+    private List<LectureImageDto> getLectureImageDTOsByLectureId(Long lectureId) {
+        Optional<List<ImageFile>> imageFiles = lectureImageRepository.findAllByLecture_LectureId(lectureId);
+        List<LectureImageDto> lectureImageDtoLists = new ArrayList<>();
+
+        if(imageFiles.isPresent()){
+            for(ImageFile imageFile : imageFiles.get()) {
+                lectureImageDtoLists.add(entityToLectureImageDTO(imageFile));
+            }
+        }
+
+        return lectureImageDtoLists;
+    }
+
+    private LectureImageDto entityToLectureImageDTO(ImageFile imageFile) {
+        return LectureImageDto.builder()
+                .fileSize(imageFile.getFileSize())
+                .origFileName(imageFile.getOrigFileName())
+                .filePath(imageFile.getFilePath())
+                .build();
+    }
+
+	public List<LectureReviewResponseDTO> getReviewByUserIdAndLectureId(long userId, long lectureId) {
+		List<LectureReviewResponseDTO> result = new ArrayList<>();
+		List<UserLecture> list = lectureRepository.getReviewByUserIdAndLectureId(userId, lectureId);
+		
+		for (UserLecture userLecture : list) {
+			result.add(entityToReviewDTO(userLecture));
+		}
+		return result;
+	}
+	
+	private LectureReviewResponseDTO entityToReviewDTO(UserLecture userLecture) {
+		User user = userLecture.getUser();
+		Lecture lecture = userLecture.getLecture();
+		
+		return LectureReviewResponseDTO.builder()
+				.reviewId(userLecture.getUserLectureId())
+				.userName(user.getName())
+				.date(userLecture.getRegistDate())
+				.rating(userLecture.getScore())
+				.lectureName(lecture.getName())
+				.review(userLecture.getReview())
+				.profileImage(user.getProfileImagePath())
+				.build();
+	}
 }
