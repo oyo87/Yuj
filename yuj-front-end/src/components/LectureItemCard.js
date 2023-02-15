@@ -13,7 +13,7 @@ const LectureItemCard = (props) => {
   console.log(props.thisLecture);
   const lecture = props.thisLecture;
 
-  const thumbnail = "/assets/Sample.jpg";
+  const thumbnail = "YujHomeImage.jpg";
 
   const teacherProfile = "/assets/YujMainLogo.svg";
 
@@ -77,7 +77,7 @@ const LectureItemCard = (props) => {
               </div>
               {complete()}
             </div>
-            <img src={thumbnail} alt="Card Image" />
+            <img src={`${process.env.REACT_APP_IMAGE_URL}/${lecture.images ? lecture.images[0].filePath : thumbnail}`} alt="Card Image" />
           </Link>
         </figure>
         <div className="card-body">
