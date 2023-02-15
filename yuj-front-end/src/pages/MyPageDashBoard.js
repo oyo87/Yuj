@@ -280,7 +280,7 @@ const MyPageDashBoard = () => {
                 <MyPageSidebar />
                 <main>
                     <div className="mx-28 mt-16 w-full">
-                        <div className="text-3xl font-bold ml-4">대시보드</div>
+                        <div className="text-3xl font-bold ml-4 ">대시보드</div>
                         <div className="w-full flex justify-between">
                             <div className={Styles[`dashboard-box`] + " flex flex-col"}>
                                 <div className="flex m-5 justify-between" >
@@ -291,17 +291,13 @@ const MyPageDashBoard = () => {
                                     {/* <Link to="/mypage/lecture">전체보기 &gt;</Link> */}
                                 </div>
                                 <div className="flex-auto">
-                                    {console.log("currentLectures 입니다")}
-                                    {console.log(currentLectures)}
-                                    {console.log("currentLectures 끝입니다")}
-
                                     {
 
                                         currentLectures.length === 0
-                                            ? <div class="h-full flex flex-col items-center justify-center pb-16">
-                                                <h1 class="text-3xl font-bold mb-4">진행중인</h1>
-                                                <h1 class="text-3xl font-bold mb-4">강의가 없습니다.</h1>
-                                                <a href="#" class="btn btn-primary">강의 둘러보기</a>
+                                            ? <div className="h-full flex flex-col items-center justify-center pb-16">
+                                                <h1 className="text-3xl font-bold mb-4">진행중인</h1>
+                                                <h1 className="text-3xl font-bold mb-4">강의가 없습니다.</h1>
+                                                <Link to="/searchLecture" className="btn btn-primary">강의 둘러보기</Link>
                                             </div>
                                             : <div>{currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post, idx) => (
 
@@ -323,7 +319,6 @@ const MyPageDashBoard = () => {
 
                                             ))}
                                             </div>
-
                                     }
                                 </div>
 
@@ -342,10 +337,10 @@ const MyPageDashBoard = () => {
                                     {
 
                                         completedLectures.length === 0
-                                            ? <div class="h-full flex flex-col items-center justify-center pb-16">
-                                                <h1 class="text-3xl font-bold mb-4">완료된</h1>
-                                                <h1 class="text-3xl font-bold mb-4">강의가 없습니다.</h1>
-                                                <a href="#" class="btn btn-primary">강의 목록 이동</a>
+                                            ? <div className="h-full flex flex-col items-center justify-center pb-16">
+                                                <h1 className="text-3xl font-bold mb-4">완료된</h1>
+                                                <h1 className="text-3xl font-bold mb-4">강의가 없습니다.</h1>
+                                                <Link to="/mypage/lecture" className="btn btn-primary">강의 목록 이동</Link>
                                             </div>
                                             : <div>{completedLectures
                                                 .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))  //가장 최근 수강완료된것부터 정렬
