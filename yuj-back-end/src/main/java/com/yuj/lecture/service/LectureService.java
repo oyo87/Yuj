@@ -1,9 +1,12 @@
 package com.yuj.lecture.service;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.yuj.lectureimage.dto.LectureImageDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -220,9 +223,30 @@ public class LectureService {
                 .profileImagePath(user.getProfileImagePath())
                 .yoga(lecture.getYoga())
                 .isActive(lecture.isActive())
+                .images(getLectureImageDTOsByLectureId(lecture.getLectureId()))
                 .build();
     }
 
+    private List<LectureImageDto> getLectureImageDTOsByLectureId(Long lectureId) {
+        Optional<List<ImageFile>> imageFiles = lectureImageRepository.findAllByLecture_LectureId(lectureId);
+        List<LectureImageDto> lectureImageDtoLists = new ArrayList<>();
+
+        if(imageFiles.isPresent()){
+            for(ImageFile imageFile : imageFiles.get()) {
+                lectureImageDtoLists.add(entityToLectureImageDTO(imageFile));
+            }
+        }
+
+        return lectureImageDtoLists;
+    }
+
+    private LectureImageDto entityToLectureImageDTO(ImageFile imageFile) {
+        return LectureImageDto.builder()
+                .fileSize(imageFile.getFileSize())
+                .origFileName(imageFile.getOrigFileName())
+                .filePath(imageFile.getFilePath())
+                .build();
+    }
 
 	public List<LectureReviewResponseDTO> getReviewByUserIdAndLectureId(long userId, long lectureId) {
 		List<LectureReviewResponseDTO> result = new ArrayList<>();

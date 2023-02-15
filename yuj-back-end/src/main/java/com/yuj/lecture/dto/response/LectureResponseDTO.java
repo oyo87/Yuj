@@ -1,11 +1,13 @@
 package com.yuj.lecture.dto.response;
 
 import com.yuj.lecture.domain.Yoga;
+import com.yuj.lectureimage.dto.LectureImageDto;
 import com.yuj.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,4 +29,5 @@ public class LectureResponseDTO {
     private String email;
     private String profileImagePath;
     private Yoga yoga;
+    private List<LectureImageDto> images;
 }
