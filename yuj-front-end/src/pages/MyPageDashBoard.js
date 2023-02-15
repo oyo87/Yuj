@@ -4,7 +4,7 @@ import Styles from "./MyPages.module.css";
 import MyPageWeeklyStudyChart from '../components/MyPageWeeklyStudyChart';
 import MyPageCalendar from "../components/MyPageCalendar";
 import axios from "axios";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import MyPageLoginCheck from "../utils/MyPageLoginCheck";
@@ -12,7 +12,6 @@ import MyPageLoginCheck from "../utils/MyPageLoginCheck";
 const MyPageDashBoard = () => {
 
     const user = useSelector(state => state.user);
-    const navigate = useNavigate();
 
     //로그인하지않은 상태면 login페이지로 즉시 이동
     MyPageLoginCheck(user);
@@ -27,12 +26,12 @@ const MyPageDashBoard = () => {
 
     const URL = LOCAL_URL;
 
-    const tempId = 1
+    const loginUserId = user.userId
     // backend URL
-    const GET_ALL_LECTURES_USERID = `${URL}/mypage/dashboard/${tempId}` //뒤에 유저Id입력
-    const GET_CURRENT_LECTURES = `${URL}/mypage/dashboard/currentlectures/${tempId}` //뒤에 유저Id입력
-    const GET_COMPLETED_LECTURES = `${URL}/mypage/dashboard/completedlectures/${tempId}` //뒤에 유저Id입력
-    const LECTURE_SCHEDULE_URL = `${URL}/mypage/dashboard/lectureSchedule/${tempId}` //이 뒤에 lectureId입력
+    const GET_ALL_LECTURES_USERID = `${URL}/mypage/dashboard/${loginUserId}` //뒤에 유저Id입력
+    const GET_CURRENT_LECTURES = `${URL}/mypage/dashboard/currentlectures/${loginUserId}` //뒤에 유저Id입력
+    const GET_COMPLETED_LECTURES = `${URL}/mypage/dashboard/completedlectures/${loginUserId}` //뒤에 유저Id입력
+    // const LECTURE_SCHEDULE_URL = `${URL}/mypage/dashboard/lectureSchedule/${loginUserId}` // 2/15 쓸필요없어보임 4:12 문제 없으면 삭제 예정
 
     //신청한 모든 강의
     const [allLectures, setAllLectures] = useState([]);
@@ -228,15 +227,16 @@ const MyPageDashBoard = () => {
             })
 
         // 강의 시작 정보 구하기 위한것
-        axios({
-            method: "GET",
-            url: LECTURE_SCHEDULE_URL
-        }).then(response => {
-            setLectureSchedule(response.data);
-        })
-            .catch(e => {
-                console.log(e.response);
-            })
+        // 2/15 16:12 useEffect에서 처리할것은 아닌것같아 주석처리  문제없으면 삭제 예정
+        // axios({
+        //     method: "GET",
+        //     url: LECTURE_SCHEDULE_URL
+        // }).then(response => {
+        //     setLectureSchedule(response.data);
+        // })
+        //     .catch(e => {
+        //         console.log(e.response);
+        //     })
 
         // 강의 몇번 수강했는지 내역 가져오기
         getUserLectureScheduleByUserId(0)
@@ -305,7 +305,7 @@ const MyPageDashBoard = () => {
                                         <Link to="/studio" className="h-20 my-2 flex">
                                             <div className="h-full w-32 mx-5">
                                                 {/* 강의 thumbnail_image */}
-                                                <img src={post.thumbnailImage}></img>
+                                                <img src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`}></img>
                                             </div>
                                             {/* 강의 name */}
                                             <div className="leading-loose truncate">{post.name}
@@ -338,7 +338,7 @@ const MyPageDashBoard = () => {
                                                     <Link to="/studio" className="h-20 my-2 flex">
                                                         <div className="h-full w-32 mx-5">
                                                             {/* src를 가져온 강의의 thumbnail_image로 */}
-                                                            <img src="/assets/Sample2.jpg" alt="Lecture thumbnail" />
+                                                            <img src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`} alt="Lecture thumbnail" />
                                                         </div>
                                                         {/* 강의 name */}
                                                         <div className="leading-loose truncate">

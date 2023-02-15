@@ -9,6 +9,8 @@ import com.yuj.lecture.repository.LectureScheduleRepository;
 
 import com.yuj.lecture.repository.UserLectureRepository;
 import com.yuj.lecture.repository.UserLectureScheduleRepository;
+import com.yuj.lectureimage.domain.ImageFile;
+import com.yuj.lectureimage.repository.LectureImageRepository;
 import com.yuj.mypage.dto.request.MyPageUserInfoRequestDTO;
 import com.yuj.mypage.dto.response.MyPageLectureScheduleResponseDTO;
 import com.yuj.mypage.dto.response.MyPageUserLectureResponseDTO;
@@ -39,7 +41,7 @@ public class MyPageService {
     private final MyPageUserLectureRepository myPageUserLectureRepository;
     private final LectureScheduleRepository lectureScheduleRepository;
     private final MyPageUserLectureScheduleRepository myPageUserLectureScheduleRepository;
-
+    private final LectureImageRepository lectureImageRepository;
     private final MyPageUserInfoRepository myPageUserInfoRepository;
 
     //    userId를 사용하여 수강하고있는 모든 강의정보 가져오기
@@ -161,6 +163,16 @@ public class MyPageService {
         User user = lecture.getUser();
         Yoga yoga = lecture.getYoga();
 
+        Optional<List<ImageFile>> imageFiles = lectureImageRepository.findAllByLecture_LectureId(lecture.getLectureId());
+        String filePath;
+        if(imageFiles.isPresent()){
+            filePath = imageFiles.get().get(0).getFilePath();
+        }
+        else{
+            filePath = "";
+        }
+
+//        lectureid가져오고 이미지repository에서 이미지 리스트 가져오고 0번인덱스의 filepath를 thumbnailimage값으로 넣어준다.
         return MyPageUserLectureResponseDTO.builder().
                 userLectureId(userLecture.getUserLectureId()).
                 userRegistDate(userLecture.getRegistDate()).
@@ -171,7 +183,7 @@ public class MyPageService {
                 profileImagePath(user.getProfileImagePath()).
                 lectureId(lecture.getLectureId()).
                 name(lecture.getName()).
-                thumbnailImage(lecture.getThumbnailImage()).
+                thumbnailImage(filePath).
                 lectureRegistDate(lecture.getRegistDate()).
                 startDate(lecture.getStartDate()).
                 endDate(lecture.getEndDate()).
