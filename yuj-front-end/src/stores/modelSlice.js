@@ -10,7 +10,7 @@ const initModel = createAsyncThunk("SET_INITIAL_MODEL", async()=>{
 
 const inferenceTarget = createAsyncThunk("INFERENCE_TARGET", async({model, target, videoTag})=>{
     // console.log('in async check params', model, videoTag, target);
-    let pose = estimate(model, videoTag);
+    let pose = await estimate(model, videoTag);
     console.log('inf result ', pose);
     // await model.dispose();
     //결과 안나오면 여기 await 걸어 줘야 하는거 잊지마라

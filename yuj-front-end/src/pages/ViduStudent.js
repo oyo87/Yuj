@@ -11,8 +11,6 @@ import { SignalCellularNull } from "@mui/icons-material";
 
 import { Navigate } from 'react-router-dom';
 
-import { ModelParams } from '../utils/ModelParams';
-
 import { connect } from 'react-redux';
 import { returnToInitState, toggleInferenceMode, toggleSkeletonMode, initModel } from '../stores/modelSlice';
 
