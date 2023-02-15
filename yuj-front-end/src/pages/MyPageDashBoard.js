@@ -7,9 +7,6 @@ import axios from "axios";
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 
-const LOCAL_URL = "http://localhost:5000";
-const URL = LOCAL_URL;
-
 const MyPageDashBoard = () => {
 
     // HH:MM:SS 시간 표시를 HH:MM으로 표시하는 함수
@@ -17,7 +14,12 @@ const MyPageDashBoard = () => {
         let [hours, minutes, _] = time.split(":");
         return `${hours}:${minutes}`;
     }
-    const tempId=3
+
+    const LOCAL_URL = "http://localhost:5000";
+
+    const URL = LOCAL_URL;
+
+    const tempId = 1
     // backend URL
     const GET_ALL_LECTURES_USERID = `${URL}/mypage/dashboard/${tempId}` //뒤에 유저Id입력
     const GET_CURRENT_LECTURES = `${URL}/mypage/dashboard/currentlectures/${tempId}` //뒤에 유저Id입력
@@ -49,7 +51,7 @@ const MyPageDashBoard = () => {
         const weekStart = dayjs().startOf('week');
         const weekEnd = dayjs().endOf('week');
 
-        console.log("week start & end : ",weekStart.format(),weekEnd.format());
+        console.log("week start & end : ", weekStart.format(), weekEnd.format());
 
         let maxCnt = 0;
         let currCnt = 0;
@@ -58,8 +60,8 @@ const MyPageDashBoard = () => {
             const classDate = dayjs(event.date);
             const isAfter = classDate.isSame(weekStart) || classDate.isAfter(weekStart);
             const isBefore = classDate.isSame(weekEnd) || classDate.isBefore(weekEnd);
-            
-            if(isAfter && isBefore){
+
+            if (isAfter && isBefore) {
                 maxCnt++;
             }
         })
@@ -69,7 +71,7 @@ const MyPageDashBoard = () => {
             const isAfter = classDate.isSame(weekStart) || classDate.isAfter(weekStart);
             const isBefore = classDate.isSame(weekEnd) || classDate.isBefore(weekEnd);
 
-            if(isAfter && isBefore){
+            if (isAfter && isBefore) {
                 currCnt++;
             }
         })
@@ -79,18 +81,18 @@ const MyPageDashBoard = () => {
 
         console.log('maxcnt, currcnt : ', maxCnt, currCnt)
 
-        setPercentage(maxCnt != 0 ? Math.round(currCnt/maxCnt*100) : 100);
+        setPercentage(maxCnt != 0 ? Math.round(currCnt / maxCnt * 100) : 100);
     }
 
     useEffect(() => {
-        if(currentLectures.length != 0 || completedLectures.length != 0) {
+        if (currentLectures.length != 0 || completedLectures.length != 0) {
             //강의 일정 만들기
             makeLectureEvents();
         }
     }, [currentLectures, completedLectures])
 
     useEffect(() => {
-        if(lectureEvents.length != 0 && userLectureSchedules.length != 0) {
+        if (lectureEvents.length != 0 && userLectureSchedules.length != 0) {
             //그래프 퍼센트 계산하기
             calcPercentage();
         }
@@ -98,21 +100,21 @@ const MyPageDashBoard = () => {
 
 
     //현재 수강중인 모든 강의 일정을 계산해 합치는 함수
-    const makeLectureEvents = async() => {
+    const makeLectureEvents = async () => {
         let events = [];
-        for(const lecture of [...currentLectures, ...completedLectures]){
+        for (const lecture of [...currentLectures, ...completedLectures]) {
             const schedules = await getLectureScheduleByLectureId(lecture.lectureId);
             const { calcEvents, calcEventCloseTime } = calcEventsWithUserLectureAndSchedules(lecture, schedules);
             events = events.concat(calcEvents);
             lecture.closeTime = calcEventCloseTime;
-            console.log("foreach lecture res: ",lecture)
+            console.log("foreach lecture res: ", lecture)
         }
         setLectureEvents(events);
     }
 
     //특정 강의와 스케줄을 가지고 일정을 생성하는 함수
     const calcEventsWithUserLectureAndSchedules = (userLecture, schedules) => {
-        console.log("calcEventsWithUserLectureAndSchedules : ",userLecture, schedules)
+        console.log("calcEventsWithUserLectureAndSchedules : ", userLecture, schedules)
         const calcEvents = [];
         let calcEventCloseTime = '';
 
@@ -120,23 +122,23 @@ const MyPageDashBoard = () => {
         //시작날, 끝날, 수업요일 저장하기
         let { endDate, startDate, name } = userLecture;
         const days = schedules.map(schedule => schedule.day - 1);
-        console.log('days : ',days)
+        console.log('days : ', days)
 
         endDate = dayjs(endDate);
         startDate = dayjs(startDate);
 
         //시작날부터 끝날까지 날짜를 1씩 추가하며 해당날짜가 수업하는 요일일 경우 배열에 집어넣기
-        while(!startDate.isAfter(endDate)) {
+        while (!startDate.isAfter(endDate)) {
             startDate = startDate.add(1, "d");
             schedules.map(schedule => {
 
-                if(schedule.day-1 == startDate.get("day")){
+                if (schedule.day - 1 == startDate.get("day")) {
                     calcEvents.push({
                         title: name,
                         date: startDate.format("YYYY-MM-DD"),
                     })
 
-                    if(!calcEventCloseTime) {
+                    if (!calcEventCloseTime) {
                         let getEventDateTime = startDate.format("YYYY-MM-DD") + schedule.startTime;
                         calcEventCloseTime = elapsedTime(getEventDateTime);
                     }
@@ -150,26 +152,26 @@ const MyPageDashBoard = () => {
     function elapsedTime(date) {
         const start = dayjs();
         const end = dayjs(date);
-        
+
         const diff = end.diff(start) / 1000;
-        
+
         const times = [
-          { name: '년', milliSeconds: 60 * 60 * 24 * 365 },
-          { name: '개월', milliSeconds: 60 * 60 * 24 * 30 },
-          { name: '일', milliSeconds: 60 * 60 * 24 },
-          { name: '시간', milliSeconds: 60 * 60 },
-          { name: '분', milliSeconds: 60 },
+            { name: '년', milliSeconds: 60 * 60 * 24 * 365 },
+            { name: '개월', milliSeconds: 60 * 60 * 24 * 30 },
+            { name: '일', milliSeconds: 60 * 60 * 24 },
+            { name: '시간', milliSeconds: 60 * 60 },
+            { name: '분', milliSeconds: 60 },
         ];
-      
+
         for (const value of times) {
-          const betweenTime = Math.floor(diff / value.milliSeconds);
-      
-          if (betweenTime > 0) {
-            return `${betweenTime}${value.name} 후`;
-          }
+            const betweenTime = Math.floor(diff / value.milliSeconds);
+
+            if (betweenTime > 0) {
+                return `${betweenTime}${value.name} 후`;
+            }
         }
         return '잠시 후';
-      }
+    }
 
 
     useEffect(() => {
@@ -179,8 +181,8 @@ const MyPageDashBoard = () => {
             url: GET_ALL_LECTURES_USERID
         }).then(response => {
             setAllLectures(response.data)
-            console.log("모든 강의입니다")
-            console.log(allLectures);
+            console.log("1 수강했던 모든 강의입니다.")
+            console.log(response.data)
         })
             .catch(error => {
                 console.log(error.response);
@@ -192,8 +194,8 @@ const MyPageDashBoard = () => {
             url: GET_CURRENT_LECTURES
         }).then(response => {
             setCurrentLectures(response.data)
-            console.log("수강중인강의입니다")
-            console.log(currentLectures)
+            console.log("2 수강중인강의입니다")
+            console.log(response.data)
         })
             .catch(error => {
                 console.log(error.response);
@@ -205,8 +207,8 @@ const MyPageDashBoard = () => {
             url: GET_COMPLETED_LECTURES
         }).then(response => {
             setCompletedLectures(response.data)
-            console.log("수강완료한강의입니다")
-            console.log(completedLectures)
+            console.log("3 수강완료한강의입니다")
+            console.log(response.data)
         })
             .catch(error => {
                 console.log(error.response);
@@ -233,9 +235,9 @@ const MyPageDashBoard = () => {
     //강의id로 해당 스케줄 목록 가져오는 api 함수
     const getLectureScheduleByLectureId = (lectureId) => {
         return axios({
-                method: "GET",
-                url: `${process.env.REACT_APP_API_URL}/mypage/dashboard/lectureSchedule/${lectureId}`
-            })
+            method: "GET",
+            url: `${process.env.REACT_APP_API_URL}/mypage/dashboard/lectureSchedule/${lectureId}`
+        })
             .then(response => {
                 return response.data;
             })
@@ -247,12 +249,12 @@ const MyPageDashBoard = () => {
     //유저id로 강의 참여 내역을 가져오는 api 함수
     const getUserLectureScheduleByUserId = (userId) => {
         return axios({
-                method: "GET",
-                // url: `${process.env.REACT_APP_API_URL}/mypage/dashboard/userlectureSchedule/${userId}`
-                url: `http://localhost:5000/mypage/dashboard/userLectureSchedule/${userId}`
-            })
+            method: "GET",
+            // url: `${process.env.REACT_APP_API_URL}/mypage/dashboard/userlectureSchedule/${userId}`
+            url: `http://localhost:5000/mypage/dashboard/userLectureSchedule/${userId}`
+        })
             .then(response => {
-                console.log('getUserLectureScheduleByUserId : ',response.data)
+                console.log('getUserLectureScheduleByUserId : ', response.data)
                 return response.data;
             })
             .catch(e => {
@@ -262,11 +264,11 @@ const MyPageDashBoard = () => {
 
     return (
         <>
-            <container className="flex ml-100 w-full">
+            <div className="flex ml-100 w-full">
                 <MyPageSidebar />
                 <main>
                     <div className="mx-28 mt-16 w-full">
-                        <div className="text-3xl font-bold">마이 페이지 - 대시보드</div>
+                        <div className="text-3xl font-bold ml-4">대시보드</div>
                         <div className="w-full flex ">
                             <div className={Styles[`dashboard-box`]}>
                                 <div className="flex m-5 justify-between" >
@@ -279,15 +281,15 @@ const MyPageDashBoard = () => {
                                 get으로 강의리스트 가져오고 최신3개까지만 썸네일 가져와서
                                 좌측div에 강의썸네일 우측에는 강의제목, 강의예정 시간
                                 url링크 걸어서 강의 스튜디오로이동해야함 */}
-                                {currentLectures.slice(0, 3).map(post => (
-
-                                    <>
+                                {currentLectures.slice(0, 3).map((post, idx) => (
+                                    
+                                    <div key={idx}>
                                         {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
                                         {/* post 내부에 있는 post.lecture.lectureId를 이용해서 lectureSchdule 데이터 findby해오고
                                         그안의 Day, startTime 이용해야함  */}
                                         {/* {console.log("현재 수강중인강의 ")} */}
                                         {/* {console.log(post)} */}
-                                        <Link to="/studio" className="h-20 my-2 flex">
+                                        <Link to="/studio" className="h-20 my-2 flex" >
                                             <div className="h-full w-32 mx-5">
                                                 {/* 강의 thumbnail_image */}
                                                 <img src={post.thumbnailImage}></img>
@@ -297,10 +299,10 @@ const MyPageDashBoard = () => {
                                                 {console.log(lectureSchedule)}
                                                 {/* lecture의 start_date, end_date , lectureschedule의 start_time, day를 활용 다음 수업시작날짜, 시간 연산 필요 */}
                                                 {/* <div className="break-keep">예정 : {post.startDate} {convertToHM(lectureSchedule[0].startTime)} </div> */}
-                                                <div className="break-keep">예정 : {post.closeTime? post.closeTime: null} </div>
+                                                <div className="break-keep">예정 : {post.closeTime ? post.closeTime : null} </div>
                                             </div>
                                         </Link>
-                                    </>
+                                    </div>
                                 ))}
 
 
@@ -317,10 +319,8 @@ const MyPageDashBoard = () => {
                                         completedLectures
                                             .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))  //가장 최근 수강완료된것부터 정렬
                                             .slice(0, 3)
-                                            .map(post => (
-                                                <>
-                                                    {console.log("수강완료한강의 post ")}
-                                                    {console.log(post)}
+                                            .map((post, idx) => (
+                                                <div key={idx}>
                                                     {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
                                                     <Link to="/studio" className="h-20 my-2 flex">
                                                         <div className="h-full w-32 mx-5">
@@ -334,7 +334,7 @@ const MyPageDashBoard = () => {
                                                             <div>완료일 : {post.endDate}</div>
                                                         </div>
                                                     </Link>
-                                                </>
+                                                </div>
                                             ))
                                     }
                                 </div>
@@ -346,7 +346,7 @@ const MyPageDashBoard = () => {
                             <div className={Styles[`dashboard-box`]}>
                                 <div className={"pl-5 pt-5 " + Styles[`box-font`]}>주간 학습 달성률</div>
                                 <div>
-                                    <MyPageWeeklyStudyChart percentage={percentage}/>
+                                    <MyPageWeeklyStudyChart percentage={percentage} />
                                 </div>
                                 <div className="pl-5">
                                     {currAttandance} / {maxAttandance}회 참여하였습니다.
@@ -361,7 +361,7 @@ const MyPageDashBoard = () => {
                         </div>
                     </div>
                 </main>
-            </container>
+            </div>
         </>
     );
 }

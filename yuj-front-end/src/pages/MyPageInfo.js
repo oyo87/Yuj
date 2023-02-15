@@ -136,7 +136,7 @@ const MyPageInfo = () => {
                                     <span className="label-text-alt"></span>
                                 </label>
                             </div>
-                            <div class='flex justify-end'>
+                            <div className='flex justify-end'>
                                 <button className={"btn btn-accent " + Styles[`mypage-save-button`]}>변경하기</button>
                             </div>
                         </form>

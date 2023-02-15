@@ -111,11 +111,10 @@ public class LectureController {
             }
             Long ret = lectureService.registLecture(files, lectureVO, lsrDtos);
             return new ResponseEntity<>("강의 개설 성공\n강의 번호 : " + ret, HttpStatus.OK);
-        } }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("강의 개설 오류", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return null; //임시로 널 추가
     }
 
     @GetMapping
@@ -154,3 +153,4 @@ public class LectureController {
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 }
+
