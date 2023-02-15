@@ -11,13 +11,15 @@ const URL = LOCAL_URL;
 
 const MyPageLecture = () => {
 
-    const user = useSelector(state=> state.user);
+    const user = useSelector(state => state.user);
     MyPageLoginCheck(user);
+
+    const [lectures, setLectures] = useState([]);
 
     useEffect(() => {
         axios({
             method: "GET",
-            url: `${URL}/mypage/dashboard/1` //임시로 1사용중. 뒤에 ${user.userId}로 수정
+            url: `${URL}/mypage/dashboard/${user.userId}` //u
         }).then(res => {
             setLectures(res.data);
         })
@@ -25,8 +27,6 @@ const MyPageLecture = () => {
                 console.log(e);
             });
     }, []);
-
-    const [lectures, setLectures] = useState([]);
 
     return (
         <>
@@ -41,17 +41,7 @@ const MyPageLecture = () => {
                                 <LectureItemCard thisLecture={lecture} key={lecture.lectureId} />
                             </div>
                         ))}
-                        {/* 임시로 복사해둔 것입니다. */}
-                        {lectures.map(lecture => (
-                            <div key={lecture.lectureId}>
-                                <LectureItemCard thisLecture={lecture} key={lecture.lectureId} />
-                            </div>
-                        ))}
-                        {lectures.map(lecture => (
-                            <div key={lecture.lectureId}>
-                                <LectureItemCard thisLecture={lecture} key={lecture.lectureId} />
-                            </div>
-                        ))}
+
                     </div>
                 </div>
             </div>

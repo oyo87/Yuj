@@ -51,9 +51,11 @@ const MyPageInfo = () => {
         };
         console.log("url")
         console.log(myPageUserInfoRequestDTO)
-
+        const headers = user.tokenInfo
+        console.log('헤더입니다.')
+        console.log(headers)
         console.log(`${LOCAL_URL}/mypage/info/${userId}`)
-        axios.patch(`${LOCAL_URL}/mypage/info/${userId}`, myPageUserInfoRequestDTO)
+        axios.patch(`${LOCAL_URL}/mypage/info/${userId}`, myPageUserInfoRequestDTO, headers)
             .then((res) => console.log(res))
             .catch((err) => console.error(err));
     };
@@ -85,10 +87,10 @@ const MyPageInfo = () => {
                                 <label className="label">
                                     <span className="label-text">닉네임</span>
                                 </label>
-                                <input type="text" name="nickname" placeholder="닉네임을 입력하세요." defaultValue={nickname} className={inputClassName} maxLength={8} onChange={(e) => setNickname(e.target.value)} />
+                                <input type="text" name="nickname" placeholder="닉네임을 입력하세요." defaultValue={nickname} className={inputClassName} maxLength={12} onChange={(e) => setNickname(e.target.value)} />
                                 <label className="label">
                                     <span className="label-text-alt"></span>
-                                    <span className="label-text-alt">(8글자 이하로 입력하세요)</span>
+                                    <span className="label-text-alt">(12글자 이하로 입력하세요)</span>
                                 </label>
                             </div>
 
