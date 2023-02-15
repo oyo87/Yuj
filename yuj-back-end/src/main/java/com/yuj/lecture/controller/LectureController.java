@@ -89,8 +89,8 @@ public class LectureController {
 //            }
 
             List<LectureScheduleRegistDTO> lsrDtos = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray(scheduleArr);
-            log.info("jsonArray = " + jsonArray);
+//            JSONArray jsonArray = new JSONArray(scheduleArr);
+//            log.info("jsonArray = " + jsonArray);
 
             if (scheduleArr != null) {
                 JSONArray jsonArray = new JSONArray(scheduleArr);
@@ -111,10 +111,11 @@ public class LectureController {
 
             Long ret = lectureService.registLecture(files, lectureVO, lsrDtos);
             return new ResponseEntity<>("강의 개설 성공\n강의 번호 : " + ret, HttpStatus.OK);
-        } catch (Exception e) {
+        }} catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("강의 개설 오류", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return null;
     }
 
     @GetMapping
