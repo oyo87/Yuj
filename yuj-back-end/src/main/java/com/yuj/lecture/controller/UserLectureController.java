@@ -6,6 +6,7 @@ import com.yuj.lecture.dto.response.LectureResponseDTO;
 import com.yuj.lecture.service.LectureService;
 import com.yuj.lecture.service.UserLectureService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/lectures/userLectures")
 @RequiredArgsConstructor
+@Slf4j
 public class UserLectureController {
 
     private final UserLectureService userLectureService;
@@ -27,11 +29,12 @@ public class UserLectureController {
 
     // 유저 수강 신청 혹은 재수강
     @PostMapping
-    public ResponseEntity<?> registUserLecture(@RequestParam("userId") Long userId, @RequestParam("lectureId") Long lectureId) throws Exception {
-
+    public ResponseEntity<?> registUserLecture(@RequestParam("userId") Long userId, @RequestParam("lectureId") Long lectureId) throws Exception{
+        log.info("In registUserLecture");
+        log.info("userId = " + userId);
+        log.info("lectureId = " + lectureId);
         Long ret = -1L;
         ret = userLectureService.registUserLecture(userId, lectureId);
-
         return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 
