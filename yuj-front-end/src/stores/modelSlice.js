@@ -1,21 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { calSimilarity, convertToCalculateFormat, setModelBackend, loadModel, estimate } from "../utils/ModelFunction";
+import { calSimilarity, setModelBackend, loadModel } from "../utils/ModelFunction";
 import { ModelParams } from "../utils/ModelParams";
 
 const initModel = createAsyncThunk("SET_INITIAL_MODEL", async()=>{
     await setModelBackend();
     const model = await loadModel(ModelParams.Config, ModelParams.imageShape);
     return model;
-})
-
-const inferenceTarget = createAsyncThunk("INFERENCE_TARGET", async({model, target, videoTag})=>{
-    // console.log('in async check params', model, videoTag, target);
-    let pose = await estimate(model, videoTag);
-    console.log(target, ' inf result :', pose);
-    // await model.dispose();
-    //결과 안나오면 여기 await 걸어 줘야 하는거 잊지마라
-    pose = convertToCalculateFormat(pose);
-    return {target: target, result: pose};
 })
 
 const calculateSimilarity = createAsyncThunk("CALCULATE_DISTANCE", async({user, teacher})=>{
@@ -46,7 +36,6 @@ const modelSlice = createSlice({
             targetCanvasRef : '',
             targetCanvasContext: '',
             inferenceState : false,
-            inferenceResult : {}
         },
     
         teacherSkeletonState : {
@@ -56,7 +45,6 @@ const modelSlice = createSlice({
             targetCanvasRef : '',
             targetCanvasContext: '',
             skeletonState : false,
-            skeletonResult : {},
             color : "Green"
         },
     },
@@ -140,14 +128,6 @@ const modelSlice = createSlice({
             console.log('redux set model? ', payload);
             state.model = payload;
         },
-        [inferenceTarget.fulfilled]:(state, {payload}) => {
-            console.log('fulfilled? ',payload);
-            if(payload.target !== "강사"){
-                state.userInferenceState.inferenceResult = {...payload.result};
-            }else {
-                state.teacherSkeletonState.skeletonResult = {...payload.result};
-            }
-        },
         [calculateSimilarity.fulfilled]:(state, payload) => {
             let color = payload <= ModelParams.SIMILARITY_THRESHHOLD ? "Green" : "White";
             state.color = color;
@@ -163,4 +143,4 @@ export const {
     setTeacherVideoRef, setTeacherCanvasRef, setTeacherCanvasContext,
     toggleInferenceMode, toggleSkeletonMode, returnToInitState } = modelSlice.actions;
 
-export { inferenceTarget, initModel };
+export { initModel };
