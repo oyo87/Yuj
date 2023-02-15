@@ -11,7 +11,7 @@ const initModel = createAsyncThunk("SET_INITIAL_MODEL", async()=>{
 const inferenceTarget = createAsyncThunk("INFERENCE_TARGET", async({model, target, videoTag})=>{
     // console.log('in async check params', model, videoTag, target);
     let pose = await estimate(model, videoTag);
-    console.log('inf result ', pose);
+    console.log(target, ' inf result :', pose);
     // await model.dispose();
     //결과 안나오면 여기 await 걸어 줘야 하는거 잊지마라
     pose = convertToCalculateFormat(pose);
@@ -38,11 +38,12 @@ const modelSlice = createSlice({
     initialState : {
         similarity : 0,
         color : '',
-    
         model : '',
     
         userInferenceState : {
             cameraState : true,
+            targetVideoRef : '',
+            targetCanvasRef : '',
             targetCanvasContext: '',
             inferenceState : false,
             inferenceResult : {}
@@ -51,6 +52,8 @@ const modelSlice = createSlice({
         teacherSkeletonState : {
             isAttend : false,
             cameraState : true,
+            targetVideoRef : '',
+            targetCanvasRef : '',
             targetCanvasContext: '',
             skeletonState : false,
             skeletonResult : {},
@@ -60,6 +63,36 @@ const modelSlice = createSlice({
     
 
     reducers : {
+
+        setUserVideoRef:(state, action) => {
+            if(state.userInferenceState.targetVideoRef ==='')
+                state.userInferenceState.targetVideoRef = action.payload.current;
+        },
+
+        setUserCanvasRef:(state, action) =>{
+            if(state.userInferenceState.targetCanvasRef === '')
+                state.userInferenceState.targetCanvasRef = action.payload.current;
+        },
+
+        setUserCanvasContext:(state, action) =>{
+            if(state.userInferenceState.targetCanvasContext === '')
+                state.userInferenceState.targetCanvasContext = action.payload;
+        },
+
+        setTeacherVideoRef:(state, action) => {
+            if(state.teacherSkeletonState.targetVideoRef === '')
+                state.teacherSkeletonState.targetVideoRef = action.payload.current;
+        },
+
+        setTeacherCanvasRef:(state, action) =>{
+            if(state.teacherSkeletonState.targetCanvasRef === '')
+                state.teacherSkeletonState.targetCanvasRef = action.payload.current;
+        },
+
+        setTeacherCanvasContext:(state, action) =>{
+            if(state.teacherSkeletonState.targetCanvasContext === '')
+                state.teacherSkeletonState.targetCanvasContext = action.payload;
+        },
 
         teacherIsAttend:(state) => {
             state.teacherSkeletonState.isAttend =!state.teacherSkeletonState.isAttend;
@@ -82,29 +115,34 @@ const modelSlice = createSlice({
             state.color = '';
             state.userInferenceState = {
                 cameraState : true,
+                targetVideoRef : '',
+                targetCanvasRef : '',
                 targetCanvasContext: '',
-                inferenceState: false,
-                inferenceResult: {}
+                inferenceState : false,
+                inferenceResult : {}
             };
             //강사가 내 화면에 들어왔을 때 status 갱신해줘서 context 접근 가능하게 하자
             state.teacherSkeletonState = {
-                isOnline: false,
+                isAttend : false,
                 cameraState : true,
+                targetVideoRef : '',
+                targetCanvasRef : '',
                 targetCanvasContext: '',
-                skeletonState : false, 
-                skeletonResult : {}
+                skeletonState : false,
+                skeletonResult : {},
+                color : "Green"
             }; 
         },
     },
 
     extraReducers : {
-        [initModel.fulfilled]:(state, payload) => {
+        [initModel.fulfilled]:(state, {payload}) => {
             console.log('redux set model? ', payload);
             state.model = payload;
         },
-        [inferenceTarget.fulfilled]:(state, payload) => {
+        [inferenceTarget.fulfilled]:(state, {payload}) => {
             console.log('fulfilled? ',payload);
-            if(payload.target === "수강생"){
+            if(payload.target !== "강사"){
                 state.userInferenceState.inferenceResult = {...payload.result};
             }else {
                 state.teacherSkeletonState.skeletonResult = {...payload.result};
@@ -120,6 +158,9 @@ const modelSlice = createSlice({
 
 export default modelSlice;
 
-export const {toggleInferenceMode, toggleSkeletonMode, returnToInitState} = modelSlice.actions;
+export const {
+    setUserVideoRef, setUserCanvasRef, setUserCanvasContext,
+    setTeacherVideoRef, setTeacherCanvasRef, setTeacherCanvasContext,
+    toggleInferenceMode, toggleSkeletonMode, returnToInitState } = modelSlice.actions;
 
 export { inferenceTarget, initModel };

@@ -86,12 +86,12 @@ class Vidu extends Component {
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
         this.props.initModel();
-        console.log(this.props.model);
+        console.log('%c1.init model : ',this.props.model, `color: ${"#FF0000"}`);
         console.log('did mount done');
     }
 
     componentDidUpdate(prevProps, prevState){
-        console.log('hi!!!');
+        console.log('update root Vidu Student!!!');
     }
 
     componentWillUnmount() {
@@ -264,7 +264,7 @@ class Vidu extends Component {
                                 publishAudio: true, // 최초 입장 시 오디오 설정 여부
                                 publishVideo: true, // 최초 입장 시 비디오 설정 여부
                                 resolution: '640x480', // 영상 해상도 "320x240", "640x480", "1280x720"
-                                frameRate: 60, // 초당 프레임 수
+                                frameRate: 20, // 초당 프레임 수
                                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                                 mirror: true, // 미러 버전
                             });
@@ -435,6 +435,7 @@ class Vidu extends Component {
 
     async aiInferenceToggle() {
         this.props.toggleInferenceMode();
+        console.log('2. toggle inference event activate. value : ', this.props.model.userInferenceState.inferenceState);
         let message = this.props.model.userInferenceState.inferenceState ? 'AI 피드백 끄기' : 'AI 피드백 켜기';
         this.setState({ aiMessage: message })
     }

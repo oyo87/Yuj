@@ -26,6 +26,7 @@ async function loadModel(modelConfig, imageShape){
 
 async function estimate(detector, imageElement){
     console.log('estimate function access');
+    console.log('estimate params : ',detector,imageElement);
     var infStartTime = Date.now();
     const pose = await detector.estimatePoses(imageElement, {flipHorizontal: false});
     console.log('inf time : ', Math.floor((Date.now() - infStartTime)/1000), tf.getBackend());

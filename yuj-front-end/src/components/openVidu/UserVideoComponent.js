@@ -18,7 +18,6 @@ export default class UserVideoComponent extends Component {
         console.log('update comp');
     }
 
-
     getNicknameTag() {
         // Gets the nickName of the user
         return JSON.parse(this.props.streamManager.stream.connection.data).clientData;
