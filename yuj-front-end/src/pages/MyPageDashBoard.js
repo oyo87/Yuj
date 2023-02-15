@@ -108,7 +108,7 @@ const MyPageDashBoard = () => {
             events = events.concat(calcEvents);
             lecture.closeTime = calcEventCloseTime;
             lecture.timeDiff = timeDiff;
-            console.log("foreach lecture res: ",lecture)
+            console.log("foreach lecture res: ", lecture)
         }
         setLectureEvents(events);
     }
@@ -143,8 +143,8 @@ const MyPageDashBoard = () => {
                     if (!calcEventCloseTime) {
                         let getEventDateTime = startDate.format("YYYY-MM-DD") + schedule.startTime;
                         let calcRes = elapsedTime(getEventDateTime);
-                        calcEventCloseTime  = calcRes.calcEventCloseTime;
-                        timeDiff  = calcRes.timeDiff;
+                        calcEventCloseTime = calcRes.calcEventCloseTime;
+                        timeDiff = calcRes.timeDiff;
                     }
                 }
             })
@@ -168,14 +168,14 @@ const MyPageDashBoard = () => {
         ];
 
         for (const value of times) {
-          const betweenTime = Math.floor(diff / value.milliSeconds);
-      
-          if (betweenTime > 0) {
-            return {calcEventCloseTime:`${betweenTime}${value.name} 후`, timeDiff: diff};
-          }
+            const betweenTime = Math.floor(diff / value.milliSeconds);
+
+            if (betweenTime > 0) {
+                return { calcEventCloseTime: `${betweenTime}${value.name} 후`, timeDiff: diff };
+            }
         }
-        return {calcEventCloseTime : '잠시 후', timeDiff: diff};
-      }
+        return { calcEventCloseTime: '잠시 후', timeDiff: diff };
+    }
 
 
     useEffect(() => {
@@ -285,15 +285,15 @@ const MyPageDashBoard = () => {
                                 get으로 강의리스트 가져오고 최신3개까지만 썸네일 가져와서
                                 좌측div에 강의썸네일 우측에는 강의제목, 강의예정 시간
                                 url링크 걸어서 강의 스튜디오로이동해야함 */}
-                                {currentLectures.slice(0, 3).sort((a,b) => a.timeDiff - b.timeDiff).map(post => (
+                                {currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post,idx) => (
 
-                                    <>
+                                    <div key={idx}>
                                         {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
                                         {/* post 내부에 있는 post.lecture.lectureId를 이용해서 lectureSchdule 데이터 findby해오고
                                         그안의 Day, startTime 이용해야함  */}
                                         {/* {console.log("현재 수강중인강의 ")} */}
                                         {/* {console.log(post)} */}
-                                        <Link to="/studio" className="h-20 my-2 flex" >
+                                        <Link to="/studio" className="h-20 my-2 flex">
                                             <div className="h-full w-32 mx-5">
                                                 {/* 강의 thumbnail_image */}
                                                 <img src={post.thumbnailImage}></img>
@@ -306,7 +306,7 @@ const MyPageDashBoard = () => {
                                                 <div className="break-keep">예정 : {post.closeTime ? post.closeTime : null} </div>
                                             </div>
                                         </Link>
-                                    </div>
+                                    </div >
                                 ))}
 
 
