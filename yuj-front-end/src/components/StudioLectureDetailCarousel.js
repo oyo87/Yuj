@@ -96,11 +96,11 @@ const StyledSlider = styled(Slider)`
 
   .slick-prev {
     z-index: 1;
-    left: 7px;
+    left: 30px;
   }
 
   .slick-next {
-    right: 17px;
+    right: 40px;
   }
 
   .slick-prev:before,
@@ -113,14 +113,14 @@ const StyledSlider = styled(Slider)`
   .slick-dots {
     display: flex;
     justify-content: center;
-    color: lightgray;
+    color: gray;
 
     li button:before {
-      color: lightgray;
+      color: gray;
     }
 
     li.slick-active button:before {
-      color: lightgray;
+      color: gray;
     }
   }
 `;
