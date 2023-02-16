@@ -13,7 +13,7 @@ const LoginBox = () => {
   return (
     <ul className="menu menu-horizontal px-1">
       {
-        user.userId?
+        user.userId != -1?
         
         /**
          * 로그인 한 상태일 때
