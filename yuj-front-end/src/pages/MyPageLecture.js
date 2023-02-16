@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState, useEffect, } from "react";
 import LectureItemCard from "../components/LectureItemCard";
 import { useSelector } from 'react-redux';
-import MyPageLoginCheck from "../utils/MyPageLoginCheck";
+import { useNavigate } from 'react-router-dom';
 
 const LOCAL_URL = "http://localhost:5000";
 const URL = LOCAL_URL;
@@ -12,7 +12,13 @@ const URL = LOCAL_URL;
 const MyPageLecture = () => {
 
     const user = useSelector(state => state.user);
-    MyPageLoginCheck(user);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(user.userId === ''){
+            navigate('/login');
+        }
+    },[])
 
     const [lectures, setLectures] = useState([]);
 

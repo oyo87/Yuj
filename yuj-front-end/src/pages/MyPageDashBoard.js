@@ -8,12 +8,17 @@ import { Link, } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import MyPageLoginCheck from "../utils/MyPageLoginCheck";
+import { useNavigate } from 'react-router-dom';
 const MyPageDashBoard = () => {
 
     const user = useSelector(state => state.user);
+    const navigate = useNavigate();
 
-    //로그인하지않은 상태면 login페이지로 즉시 이동
-    MyPageLoginCheck(user);
+    useEffect(() => {
+        if(user.userId === ''){
+            navigate('/login');
+        }
+    },[])
 
     // HH:MM:SS 시간 표시를 HH:MM으로 표시하는 함수
     function convertToHM(time) {
