@@ -285,7 +285,7 @@ const MyPageDashBoard = () => {
                 <main>
                     <div className="mx-28 mt-16 w-full">
                         <div className="text-3xl font-bold ml-4 text-accent">대시보드</div>
-                        <div className="w-full flex justify-between">
+                        <div className="max-w-5xl flex justify-between">
                             <div className={Styles[`dashboard-box`] + " flex flex-col"}>
                                 <div className="flex m-5 " >
 
