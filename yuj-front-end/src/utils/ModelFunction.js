@@ -26,6 +26,7 @@ async function loadModel(modelConfig, imageShape){
 
 async function estimate(detector, imageElement){
     console.log('estimate function access');
+    console.log('estimate detector : ', detector);
     console.log('estimate params : ',detector,imageElement);
     var infStartTime = Date.now();
     const pose = await detector.estimatePoses(imageElement, {flipHorizontal: false});

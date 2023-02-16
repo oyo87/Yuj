@@ -26,6 +26,11 @@ class Vidu extends Component {
     constructor(props) {
         super(props);
 
+        this.studentVideoRef = React.createRef();
+        this.studentCanvasRef = React.createRef();
+        this.teacherVideoRef = React.createRef();
+        this.teacherCanvasRef = React.createRef();
+
         this.state = {
             mySessionId: props.navigationState.mySessionId,
             myUserName: props.navigationState.myUserName + Math.floor(Math.random() * 100),
@@ -508,23 +513,25 @@ class Vidu extends Component {
                         </div>
 
                         <VideoContainer>
-                            <div>
+                            {/* <div>
                                 {this.state.mainStreamManager !== undefined && this.state.isActive === true ? (
                                     <div style={{ position: 'relative', width: 'auto' }} onClick={() => {this.handleMainVideoStream(this.state.mainStreamManager) }}>
                                         <UserVideoComponent type={this.state.myUserType} isActive={ this.state.isActive} streamManager={this.state.mainStreamManager} />
                                     </div>
                                 ) : null}
-                            </div>
+                            </div> */}
                             <VideoGrid>
                                 {this.state.publisher !== undefined ? (
                                     <div style={{ position: 'relative', width: '50%' }} onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                        <UserVideoComponent type={this.state.myUserType} streamManager={this.state.publisher} />
+                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} 
+                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
+                                            type={this.state.myUserType} streamManager={this.state.publisher} />
                                     </div>
                                 ): null}
                                 {this.state.subscribers.map((sub, i) => (
                                     ( JSON.parse(sub.stream.connection.data).clientType === '강사' ? (
                                         <div key={i} style={{ width: '50%' }} onClick={() => this.handleMainVideoStream(sub)}>
-                                            <UserVideoComponent type={'강사'} streamManager={sub} />
+                                            <UserVideoComponent teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} type={'강사'} streamManager={sub} />
                                         </div>
                                     ) : null)
                                 ))}

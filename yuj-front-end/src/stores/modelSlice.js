@@ -54,12 +54,12 @@ const modelSlice = createSlice({
 
         setUserVideoRef:(state, action) => {
             if(state.userInferenceState.targetVideoRef ==='')
-                state.userInferenceState.targetVideoRef = action.payload.current;
+                state.userInferenceState.targetVideoRef = action.payload;
         },
 
         setUserCanvasRef:(state, action) =>{
             if(state.userInferenceState.targetCanvasRef === '')
-                state.userInferenceState.targetCanvasRef = action.payload.current;
+                state.userInferenceState.targetCanvasRef = action.payload;
         },
 
         setUserCanvasContext:(state, action) =>{
@@ -69,12 +69,12 @@ const modelSlice = createSlice({
 
         setTeacherVideoRef:(state, action) => {
             if(state.teacherSkeletonState.targetVideoRef === '')
-                state.teacherSkeletonState.targetVideoRef = action.payload.current;
+                state.teacherSkeletonState.targetVideoRef = action.payload;
         },
 
         setTeacherCanvasRef:(state, action) =>{
             if(state.teacherSkeletonState.targetCanvasRef === '')
-                state.teacherSkeletonState.targetCanvasRef = action.payload.current;
+                state.teacherSkeletonState.targetCanvasRef = action.payload;
         },
 
         setTeacherCanvasContext:(state, action) =>{
