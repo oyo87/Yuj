@@ -295,7 +295,7 @@ const MyPageDashBoard = () => {
                                         currentLectures.length === 0
                                             ? <div className="h-full flex flex-col items-center justify-center pb-16">
                                                 <h1 className="text-3xl font-bold mb-4">진행중인</h1>
-                                                <h1 className="text-3xl font-bold mb-4">강의가 없습니다.</h1>
+                                                <h1 className="text-3xl font-bold mb-4">강의가 없습니다</h1>
                                                 <Link to="/searchLecture" className="btn btn-primary">강의 둘러보기</Link>
                                             </div>
                                             : <div>{currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post, idx) => (
@@ -336,7 +336,7 @@ const MyPageDashBoard = () => {
                                         completedLectures.length === 0
                                             ? <div className="h-full flex flex-col items-center justify-center pb-16">
                                                 <h1 className="text-3xl font-bold mb-4">완료된</h1>
-                                                <h1 className="text-3xl font-bold mb-4">강의가 없습니다.</h1>
+                                                <h1 className="text-3xl font-bold mb-4">강의가 없습니다</h1>
                                                 <Link to="/searchLecture" className="btn btn-primary">강의 둘러보기</Link>
                                             </div>
                                             : <div>{completedLectures

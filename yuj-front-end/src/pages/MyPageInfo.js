@@ -1,7 +1,7 @@
 import React from "react";
 import MyPageSidebar from './../components/MyPageSidebar';
 import Styles from './MyPages.module.css';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import MyPageLoginCheck from "../utils/MyPageLoginCheck";
