@@ -407,8 +407,8 @@ class Vidu extends Component {
         if (this.state.liston === false) {
             this.setState({ listMessage: '참가자 끄기' });
             let Sessions = await axios.get(
-                '/openvidu/api/sessions',
-                // APPLICATION_SERVER_URL + '/openvidu/api/sessions',
+                // '/openvidu/api/sessions',
+                APPLICATION_SERVER_URL + '/openvidu/api/sessions',
                 {
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -584,8 +584,8 @@ class Vidu extends Component {
         let response = undefined;
         try {
             response = await axios.post(
-                // APPLICATION_SERVER_URL + '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
-                '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
+                APPLICATION_SERVER_URL + '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
+                // '/api/openvidu/sessions/' + sessionId + '/connections', {}, {
                 headers: { 'Content-Type': 'application/json', },
             });
         } catch (e) { 
