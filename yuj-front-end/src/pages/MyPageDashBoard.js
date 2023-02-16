@@ -124,6 +124,8 @@ const MyPageDashBoard = () => {
             lecture.closeTime = calcEventCloseTime;
             lecture.timeDiff = timeDiff;
             console.log("foreach lecture res: ", lecture)
+            events['lectureId']=lecture.lectureId;
+            events[`userId`]=lecture.userId;
         }
         setLectureEvents(events);
     }

@@ -75,8 +75,6 @@ const StudioLectureDetailPage = () => {
       <></>
     )
   } else if (userRole() === "user" && !endCheck()) {
-    console.log("유저렉쳐라고한다")
-    console.log(userLecture)
     if(userLecture === {} || !userLecture.state ) {
     lectureDetailButtons = (
       <div>
