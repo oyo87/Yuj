@@ -337,7 +337,7 @@ const MyPageDashBoard = () => {
                                             ? <div className="h-full flex flex-col items-center justify-center pb-16">
                                                 <h1 className="text-3xl font-bold mb-4">완료된</h1>
                                                 <h1 className="text-3xl font-bold mb-4">강의가 없습니다.</h1>
-                                                <Link to="/mypage/lecture" className="btn btn-primary">강의 목록 이동</Link>
+                                                <Link to="/searchLecture" className="btn btn-primary">강의 둘러보기</Link>
                                             </div>
                                             : <div>{completedLectures
                                                 .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))  //가장 최근 수강완료된것부터 정렬
@@ -368,7 +368,7 @@ const MyPageDashBoard = () => {
                             <div className={Styles[`dashboard-box`]}>
                                 <div className={"pl-5 pt-5 text-accent " + Styles[`box-font`]}>주간 학습 달성률</div>
                                 <div>
-                                    <MyPageWeeklyStudyChart percentage={percentage} />
+                                    <MyPageWeeklyStudyChart centerImage={`${process.env.REACT_APP_IMAGE_URL}/${user.userInfo.profileImage}`} percentage={percentage} />
                                 </div>
                                 <div className="pl-5">
                                     {currAttandance} / {maxAttandance}회 참여하였습니다.

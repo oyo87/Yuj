@@ -21,8 +21,22 @@ const MyPageLecture = () => {
             method: "GET",
             url: `${URL}/mypage/dashboard/${user.userId}` //u
         }).then(res => {
-            console.log(res.data)
-            setLectures(res.data);
+            // 가져온 강의들을 강의 완료된것들은 뒤쪽으로 정렬, 등록일을 기준으로 최신 등록한 강의를 앞으로 정렬
+            // Sort the lectures array based on endDate and userRegistDate
+            const sortedLectures = res.data.sort((a, b) => {
+                // Compare the endDate of the two lectures
+                const endDateComparison = new Date(b.endDate) - new Date(a.endDate);
+                if (endDateComparison !== 0) {
+                    // If the endDate is different, return the comparison result
+                    return endDateComparison;
+                } else {
+                    // If the endDate is the same, compare userRegistDate
+                    const userRegistDateComparison = new Date(a.userRegistDate) - new Date(b.userRegistDate);
+                    return userRegistDateComparison;
+                }
+            });
+
+            setLectures(sortedLectures);
         })
             .catch(e => {
                 console.log(e);
