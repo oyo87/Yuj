@@ -13,7 +13,7 @@ const LoginBox = () => {
   return (
     <ul className="menu menu-horizontal px-1">
       {
-        user.userId?
+        user.userId != -1?
         
         /**
          * 로그인 한 상태일 때
@@ -26,7 +26,7 @@ const LoginBox = () => {
             </Link>
           </li>
           <li  className=''><Link to="/mypage/dashboard" className={styles.menu + ""}><div className='font-extrabold text-accent'>{user.userInfo.nickname}</div>님 환영합니다.</Link></li>
-          <li className='mr-6'><a onClick={() => {dispatch(clearUserState()); }} className={styles.menu + ""}>로그아웃</a></li>
+          <li className='mr-6'><a onClick={() => {dispatch(clearUserState()); window.location.replace("/")}} className={styles.menu + ""}>로그아웃</a></li>
         </>
 
         :
