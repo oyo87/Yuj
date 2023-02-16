@@ -7,7 +7,6 @@ import axios from "axios";
 import { Link, } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
-import MyPageLoginCheck from "../utils/MyPageLoginCheck";
 import { useNavigate } from 'react-router-dom';
 const MyPageDashBoard = () => {
 
