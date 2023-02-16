@@ -115,7 +115,7 @@ const SignUp = () => {
         }
       >
         <form onSubmit={handleSubmit}>
-          <div className="flex">
+          <div className="flex flex-wrap justify-start gap-100">
             <span
               className={
                 "py-8 px-8 rounded-xl card bg-base-200 max-w-sm " +
@@ -361,28 +361,6 @@ const SignUp = () => {
                   onChange={(event) => setPhone(event.target.value)}
                 />
               </div>
-
-              {/* <label htmlFor="profileImg">Profile Image:</label>
-              <input
-                type="file"
-                id="profileImg"
-                hidden
-                onChange={(event) => setProfileImg(event.target.files[0])}
-              /> */}
-
-              {/* <label htmlFor="profileImg">
-                <div className={Styles.btnUpload}>
-                  <AddCircleOutlineIcon style={{ fontSize: "xx-large" }} />
-                </div>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={(event) => setProfileImg(event.target.files[0])}
-                className="hidden"
-                id="profileImg"
-              /> */}
 
               <div className="flex flex-wrap justify-center items-center gap-3">
                 <label htmlFor="file">
