@@ -48,14 +48,14 @@ const studioSlice = createSlice({
 	initialState:{
 		studioDetail: {
 			studioId: 0,
-			bannerImage: './assets/infoBackground.png',
+			bannerImage: 'sampleBanner.jpg',
 			description: 
 			`※ 구독자분들과 함께 요가수련하는 요가 안내자입니다.※ 비즈니스 문의 | yogaboyofficial@gmail.com※ 하루10분, 요가로 찾은 내 몸의 선 | 클래스101 | https://101creator.page.link/eW3k※ 건강한 다이어트, 하루 30분 요가 챌린지 | 클래스유 | https://me2.do/GRAbFITs`,
 			userId: 0,
 			username: "edward1234",
 			nickname: "요가소년",
 			email: "edward777@naver.com",
-			profileImagePath: "./profile1.jpg"
+			profileImagePath: "sampleProfile.jpg"
 		},
 		studioLectureList: [],
 		studioLiveLecture: {},
@@ -95,6 +95,10 @@ const studioSlice = createSlice({
 		},
 		[getStudioLiveLecture.fulfilled]: (state, {payload}) => {
 			state.studioLiveLecture = payload;
+		},
+		[getStudioLiveLecture.rejected]: (state, {payload}) => {
+			console.log("getStudioFailed!");
+			state.studioLiveLecture = {};
 		},
 		[getStudioSelectedLectureList.fulfilled]: (state, {payload}) => {
 			state.studioLectureList = payload;

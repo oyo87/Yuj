@@ -1,27 +1,41 @@
 package com.yuj.lecture.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yuj.lecture.dto.request.LectureVO;
-import com.yuj.lecture.dto.request.LectureUpdateActiveRequestDTO;
-import com.yuj.lecture.dto.response.LectureResponseDTO;
-import com.yuj.lecture.service.LectureService;
-import com.yuj.lectureimage.handler.FileHandler;
-import com.yuj.lectureimage.service.LectureImageService;
-
-import com.yuj.user.service.UserService;
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yuj.lecture.dto.request.LectureReviewRequestDTO;
+import com.yuj.lecture.dto.request.LectureScheduleRegistDTO;
+import com.yuj.lecture.dto.request.LectureUpdateActiveRequestDTO;
+import com.yuj.lecture.dto.request.LectureVO;
+import com.yuj.lecture.dto.response.LectureResponseDTO;
+import com.yuj.lecture.dto.response.LectureReviewResponseDTO;
+import com.yuj.lecture.service.LectureService;
+import com.yuj.lectureimage.handler.FileHandler;
+import com.yuj.lectureimage.service.LectureImageService;
+import com.yuj.user.service.UserService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/lectures")
@@ -37,12 +51,14 @@ public class LectureController {
 
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<?> registLecture(
-            @RequestPart(value="files", required = false) List<MultipartFile> files,
-            @RequestParam(value = "vo")String lectureVOString
-          ) {
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @RequestParam(value = "vo") String lectureVOString,
+            @RequestParam(value = "scheduleArr", required = false) String scheduleArr
+    ) {
         log.info("registLecture in Lecture Controller");
         log.info("files = " + files);
         log.info("lectureVOString = " + lectureVOString);
+        log.info("scheduleArr = " + scheduleArr);
 
         try {
             JSONParser jsonParser = new JSONParser(lectureVOString);
@@ -58,6 +74,7 @@ public class LectureController {
                     .description(String.valueOf(map.get("description")))
                     .startDate(LocalDate.parse(String.valueOf(map.get("startDate")), DateTimeFormatter.ISO_DATE))
                     .endDate(LocalDate.parse(String.valueOf(map.get("endDate")), DateTimeFormatter.ISO_DATE))
+                    .registDate(LocalDate.parse(String.valueOf(map.get("registDate")), DateTimeFormatter.ISO_DATE))
                     .limitStudents(Integer.parseInt(String.valueOf(map.get("limitStudents"))))
                     .fee(Integer.parseInt(String.valueOf(map.get("fee"))))
                     .totalCount(Integer.parseInt(String.valueOf(map.get("totalCount"))))
@@ -65,20 +82,58 @@ public class LectureController {
 
             log.info("VO = " + lectureVO);
 
-            Long ret = lectureService.registLecture(files, lectureVO);
+//            List<LectureScheduleRegistDto> lsrDtos = new ArrayList<>();
+//            for(String schedulVOString :scheduleArr) {
+//                jsonParser = new JSONParser(schedulVOString);
+//                obj = jsonParser.parse();
+//                mapper = new ObjectMapper();
+//                map = mapper.convertValue(obj, Map.class);
+//
+//                LectureScheduleRegistDto dto = LectureScheduleRegistDto.builder()
+//                        .startTime(LocalTime.parse(String.valueOf(map.get("startTime")), DateTimeFormatter.ISO_DATE))
+//                        .endTime(LocalTime.parse(String.valueOf(map.get("endTime")), DateTimeFormatter.ISO_DATE_TIME))
+//                        .day(Integer.parseInt(String.valueOf(map.get("day"))))
+//                        .build();
+//
+//                lsrDtos.add(dto);
+//            }
+
+            List<LectureScheduleRegistDTO> lsrDtos = new ArrayList<>();
+//            JSONArray jsonArray = new JSONArray(scheduleArr);
+//            log.info("jsonArray = " + jsonArray);
+
+            if (scheduleArr != null) {
+                JSONArray jsonArray = new JSONArray(scheduleArr);
+                log.info("jsonArray = " + jsonArray);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObj = jsonArray.getJSONObject(i);
+//                log.info("jsonObj : " + jsonObj);
+                LectureScheduleRegistDTO dto = LectureScheduleRegistDTO.builder()
+                        .startTime(LocalTime.parse(String.valueOf(jsonObj.get("startTime"))))
+                        .endTime(LocalTime.parse(String.valueOf(jsonObj.get("endTime"))))
+                        .day(Integer.parseInt(String.valueOf(jsonObj.get("day"))))
+                        .build();
+
+                log.info("dto : " + dto);
+                lsrDtos.add(dto);
+            }
+
+            Long ret = lectureService.registLecture(files, lectureVO, lsrDtos);
             return new ResponseEntity<>("강의 개설 성공\n강의 번호 : " + ret, HttpStatus.OK);
-        } catch(Exception e) {
+        }} catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("강의 개설 오류", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return null;
     }
 
     @GetMapping
-    public ResponseEntity<?> searchLectureByName(@RequestParam("search") String name) throws Exception{
-    	List<LectureResponseDTO> resultList = lectureService.searchLectureByName(name);
-    	return new ResponseEntity<>(resultList, HttpStatus.OK);
+    public ResponseEntity<?> searchLectureByName(@RequestParam("search") String name) throws Exception {
+        List<LectureResponseDTO> resultList = lectureService.searchLectureByName(name);
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
-    
+
     @GetMapping("/{lectureId}")
     public ResponseEntity<LectureResponseDTO> getLectureById(@PathVariable long lectureId) throws Exception {
         LectureResponseDTO lectureResponseDTO = lectureService.getLectureById(lectureId);
@@ -96,4 +151,28 @@ public class LectureController {
 
         return ResponseEntity.status(HttpStatus.OK).body(lectureResponseDTO);
     }
+    
+    @GetMapping("/yoga/{yogaId}")
+    public ResponseEntity<?> searchLectureByNameAndYoga(@PathVariable long yogaId, @RequestParam("search") String name) throws Exception{
+    	List<LectureResponseDTO> resultList = lectureService.searchLectureByNameAndYoga(name, yogaId);
+    	return new ResponseEntity<>(resultList, HttpStatus.OK);
+    }
+    
+    @GetMapping("/review")
+    public ResponseEntity<?> getReviewByUserIdAndLectureId(@RequestParam("userId") long userId){
+    	List<LectureReviewResponseDTO> resultList = lectureService.getReviewsByUserId(userId);
+    	return new ResponseEntity<>(resultList, HttpStatus.OK);
+    }
+    
+    @PostMapping("/review")
+    public ResponseEntity<?> registReview(@RequestBody LectureReviewRequestDTO userRequestDto) throws Exception{
+    	try {
+            lectureService.registReview(userRequestDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+    	} catch (Exception e) {
+    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+    	
+    }
 }
+

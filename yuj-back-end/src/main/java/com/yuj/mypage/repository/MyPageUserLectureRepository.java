@@ -2,6 +2,7 @@ package com.yuj.mypage.repository;
 
 import com.yuj.lecture.domain.Lecture;
 import com.yuj.lecture.domain.UserLecture;
+import com.yuj.lecture.domain.UserLectureSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

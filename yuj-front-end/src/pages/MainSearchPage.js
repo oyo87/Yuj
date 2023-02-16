@@ -35,13 +35,10 @@ const MainSearchPage = (props) => {
   useEffect(() => {
     if(location.state != null){
       setKeyword(location.state.keyword);
+      window.history.replaceState({},document.title);
     }
     dispatch(getYogaList());
-  }, [location.state.keyword])
-
-  // useEffect(() => {
-  //   doSearch();
-  // }, [keyword])
+  }, [])
 
   
 
@@ -60,7 +57,7 @@ const MainSearchPage = (props) => {
 
       <div className={'mb-20'}>
         <div className={'flex mb-3'}>
-          <ListTitle className={'text-xl'} titleText={'강사 목록'} onClickEvent={() => navigate('/')}/>
+          <ListTitle className={'text-xl'} titleText={'강사 목록'} onClickEvent={() => navigate('/searchTeacher')}/>
         </div>
         <div>
           { studio.teachersSearched.map((teacher, idx) => 
@@ -72,7 +69,7 @@ const MainSearchPage = (props) => {
 
       <div className={'mb-20'}>
         <div className={'flex mb-5'}>
-          <ListTitle className={'text-xl'} titleText={'강의 목록'} onClickEvent={() => navigate('/')}/>
+          <ListTitle className={'text-xl'} titleText={'강의 목록'} onClickEvent={() => navigate('/searchLecture')}/>
         </div>
         <div className={'flex justify-evenly'}>
           { lecture.lecturesSearched.map((lecture, idx) => 

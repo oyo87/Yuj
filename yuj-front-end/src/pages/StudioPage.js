@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudioDetail, getStudioLectureList, getStudioLiveLecture } from '../stores/studioSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
 import StudioSidebar from '../components/StudioSidebar';
-import MainHeader from './../components/mainHeader/MainHeader';
-import MainFooter from "../components/mainFooter/MainFooter";
 import StudioMainBanner from '../components/StudioMainBanner';
 import StudioMainDescription from '../components/StudioMainDescription';
 import ListTitle from '../components/ListTitle';
@@ -26,7 +24,7 @@ const StudioPage = () => {
         }else if(studio.studioDetail.studioId == null) {
             navigate(-1);
         }
-    },[])
+    },[location.state]) //추적이 안되고 있어 location.state 추가
 
     const getStudioData = (teacherId) => {
         dispatch(getStudioDetail(teacherId));
@@ -43,7 +41,7 @@ const StudioPage = () => {
                     <div className={'px-40'}>
                         <StudioMainDescription studioDetail={studio.studioDetail}/>
                         <ListTitle className={'text-2xl font-bold'} titleText={'강의 목록'} onClickEvent={() => { navigate("/studioLectureListPage")}}/>
-                        <div className={'mt-20 my-48  flex justify-evenly'}>
+                        <div className={'mt-12 my-48  flex justify-evenly'}>
                             {studio.studioLectureList.map((lecture, index) => 
                                 index < 3 ? <LectureItemCard key={lecture.lectureId} thisLecture={lecture}/> : null
                             )}

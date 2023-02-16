@@ -22,11 +22,11 @@ const LoginBox = () => {
           <li>
             <Link to="/mypage/dashboard" className={styles.menu}>
               {/* <img src={'https://i8a504.p.ssafy.io/'+user.userInfo.profileImage}/> */}
-              <img src={user.userInfo.profileImage} style={{width:"24px", height:"24px"}}/>
+              <img src={`${process.env.REACT_APP_IMAGE_URL}/${user.userInfo.profileImage}`} style={{width:"24px", height:"24px", borderRadius:"100%"}}/>
             </Link>
           </li>
-          <li><Link to="/mypage/dashboard" className={styles.menu + ""}>{user.userInfo.nickname}님 환영합니다.</Link></li>
-          <li><a onClick={() => dispatch(clearUserState())} className={styles.menu + ""}>로그아웃</a></li>
+          <li  className=''><Link to="/mypage/dashboard" className={styles.menu + ""}><div className='font-extrabold text-accent'>{user.userInfo.nickname}</div>님 환영합니다.</Link></li>
+          <li className='mr-6'><a onClick={() => {dispatch(clearUserState()); window.location.replace("/")}} className={styles.menu + ""}>로그아웃</a></li>
         </>
 
         :
@@ -36,7 +36,7 @@ const LoginBox = () => {
          */
         <>
           <li>
-            <Link to="/" className={styles.menu}>
+            <Link to="/login" className={styles.menu}>
               <AccountBoxIcon />
             </Link>
           </li>

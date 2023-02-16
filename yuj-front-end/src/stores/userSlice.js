@@ -1,5 +1,4 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import { useNavigate } from 'react-router';
 import { Buffer } from 'buffer'
 import axios from 'axios';
 
@@ -59,24 +58,24 @@ const userSlice = createSlice({
 			refreshToken: "",
 			accessTokenExpireDate: 0
 		},
-		userId: '',
+		userId: -1,
 		userInfo: {
-			id: "",
-			name: "",
-			nickname: "",
-			phone: "",
-			email: "",
-			birthDate: "",
-			gender: "",
-			profileImage: "",
-			isTeacher: "",
+			// id: "",
+			// name: "",
+			// nickname: "",
+			// phone: "",
+			// email: "",
+			// birthDate: "",
+			// gender: "",
+			// profileImage: "",
+			// isTeacher: "",
 		}
 	},
 
 	reducers: {
 		clearUserState:(state, action) => {
 			state.tokenInfo = {};
-			state.userId = '';
+			state.userId = -1;
 			state.userInfo = {};
 		}
 	},
@@ -89,6 +88,7 @@ const userSlice = createSlice({
 			state.userId = decodeJwtToken(tokenInfo.accessToken);
 		},
 		[getUserInfo.fulfilled]: (state, {payload}) => {
+			console.log(payload);
 			state.userInfo = payload;
 		},
 	}

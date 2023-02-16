@@ -3,13 +3,28 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Styles from "./StudioLectureCreateImagesInput.module.css";
 
 
-const StudioLectureCreateImagesInput = () => {
+const StudioLectureCreateImagesInput = (props) => {
 
-  const [imgFiles, setImgFiles] = useState([]);
+  //미리보기, 데이터 전송
+  let imgFiles = props.imgFiles;
+  const setImgFiles = props.setImgFiles;
+
+  let imgTransfer = props.imgTransfer;
+  const setImgTransfer = props.setImgTransfer;
 
   //이미지 업로드 input의 onChange 메소드
   const handleImageUpload = (e) => {
     const fileArr = e.target.files;
+    const fileArrFrom = Array.from(e.target.files);
+
+    console.log(fileArrFrom);
+    setImgTransfer(fileArrFrom);
+    
+    // console.log("In StudioLectureCreateImagesInput");
+    // console.log("fileArr = " + fileArr);
+    // console.log("e.target.files[0] = " + JSON.stringify(e.target.files[0]));
+    // console.log("fileArr[0] = " + fileArr[0]);
+    // setImgTransfer(fileArr);
 
     let fileURLs = [];
 
@@ -23,7 +38,7 @@ const StudioLectureCreateImagesInput = () => {
       reader.onload = () => {
         fileURLs[i] = reader.result;
         setImgFiles([...fileURLs]);
-        console.log(imgFiles);
+        // console.log(imgFiles);
       };
       reader.readAsDataURL(file);
     }
@@ -43,7 +58,7 @@ const StudioLectureCreateImagesInput = () => {
           <label htmlFor="file">
             <div className={Styles.btnUpload}><AddCircleOutlineIcon style={{ fontSize: "xx-large" }} /></div>
           </label>
-          <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" id="file" />
+          <input name="images" type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" id="file" />
         </div>
       </div>
     </>
