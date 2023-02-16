@@ -31,7 +31,7 @@ export default class UserVideoComponent extends Component {
                         <OpenViduVideoComponent type={this.props.type} isActive={ this.props.isActive} streamManager={this.props.streamManager}
                         studentVideoRef={this.props.studentVideoRef} studentCanvasRef={this.props.studentCanvasRef} 
                         teacherVideoRef={this.props.teacherVideoRef} teacherCanvasRef={this.props.teacherCanvasRef}/>
-                        <div><NameTag>{this.getNicknameTag() + this.props.type} 님</NameTag></div>
+                        <div><NameTag>{this.getNicknameTag() + (this.props.type??'')} 님</NameTag></div>
                     </div>
                 ) : null}
             </div>
