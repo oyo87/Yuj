@@ -46,9 +46,9 @@ const StudioLectureListPage = () => {
 
   //사이드바
   useEffect(() => {
-    dispatch(getStudioDetail(studio.userId));
-    // dispatch(getStudioLectureList(studio.userId));
-    dispatch(getStudioLiveLecture(studio.userId));
+    dispatch(getStudioDetail(teacher.userId));
+    dispatch(getStudioLectureList(teacher.userId));
+    dispatch(getStudioLiveLecture(teacher.userId));
   }, [])
 
   return (
