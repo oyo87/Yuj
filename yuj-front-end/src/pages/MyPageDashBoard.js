@@ -38,7 +38,7 @@ const MyPageDashBoard = () => {
     const [completedLecturesLoading, setCompletedLecturesLoading] = useState(false);
 
     useEffect(() => {
-        if(user.userId === ''){
+        if(user.userId === -1){
             navigate('/login');
         }
     },[])
@@ -297,6 +297,8 @@ const MyPageDashBoard = () => {
                                     {/* <Link to="/mypage/lecture">전체보기 &gt;</Link> */}
                                 </div>
                                 <div className="flex-auto">
+                                    {console.log("커렌트으으으으")}
+                                        {console.log(currentLectures)}
                                     {
                                         completedLecturesLoading === true ?
                                         completedLectures.length === 0
