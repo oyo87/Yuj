@@ -1,23 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { calSimilarity, setModelBackend, loadModel } from "../utils/ModelFunction";
+import { setModelBackend, loadModel } from "../utils/ModelFunction";
 import { ModelParams } from "../utils/ModelParams";
 
 const initModel = createAsyncThunk("SET_INITIAL_MODEL", async()=>{
     await setModelBackend();
     const model = await loadModel(ModelParams.Config, ModelParams.imageShape);
     return model;
-})
-
-const calculateSimilarity = createAsyncThunk("CALCULATE_DISTANCE", async({user, teacher})=>{
-    let similarity = calSimilarity(ModelParams.strategy, teacher, user);
-    return similarity;
-})
-
-const drawTargetCanvasResults = createAsyncThunk("DRAW_RESULT_TO_TARGET", async({videoTag, canvasTag, result, color})=>{
-    let context = canvasTag.getContext('2d');
-    //draw background
-    context.drawImage(videoTag, 0, 0, canvasTag.width, canvasTag.height);
-
 })
 
 
@@ -129,10 +117,6 @@ const modelSlice = createSlice({
         [initModel.fulfilled]:(state, {payload}) => {
             console.log('redux set model? ', payload);
             state.model = payload;
-        },
-        [calculateSimilarity.fulfilled]:(state, payload) => {
-            let color = payload <= ModelParams.SIMILARITY_THRESHHOLD ? "Green" : "White";
-            state.color = color;
         }
     }
 

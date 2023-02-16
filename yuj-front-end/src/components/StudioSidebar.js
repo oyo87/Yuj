@@ -14,7 +14,7 @@ const StudioSidebar = (props) => {
   //강사
   const startLiveClicked = () => {
     console.log('Start Live!');
-    navigate('/viduTeacher', { state: { mySessionId: '20', myUserName: '황아영', myUserType: '강사' } }) 
+    navigate('/viduTeacher', { state: { mySessionId: '200', myUserName: '황아영', myUserType: '강사' } }) 
   }
 
   //수강생
@@ -22,7 +22,7 @@ const StudioSidebar = (props) => {
     console.log('Go Live!');
     // <Link to='/vidu' state={{mySessionId : '20', myUserName : '황아영', myUserType : '강사'}}/>
     // navigate('/viduStudent', { state: { mySessionId: '20', myUserName: '황아영', myUserType: '강사' } })
-    navigate('/viduStudent', { state: { mySessionId: '20', myUserName: '황아영', myUserType: '수강생' } }) 
+    navigate('/viduStudent', { state: { mySessionId: '200', myUserName: '황아영', myUserType: '수강생' } }) 
   }
 
 

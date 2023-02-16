@@ -27,7 +27,7 @@ async function loadModel(modelConfig, imageShape){
 async function estimate(detector, imageElement){
     console.log('estimate function access');
     console.log('estimate detector : ', detector);
-    console.log('estimate params : ',detector,imageElement);
+    console.log('estimate params : ',detector, imageElement);
     var infStartTime = Date.now();
     const pose = await detector.estimatePoses(imageElement, {flipHorizontal: false});
     console.log('inf time : ', Math.floor((Date.now() - infStartTime)/1000), tf.getBackend());
@@ -35,19 +35,20 @@ async function estimate(detector, imageElement){
 
     if(!pose.length)
         // throw new Error("Cannot find poses. try again or check your state");
-        return null;
+        return {keypoints:[]};
     return pose[0];
 }
 
 async function calSimilarity(config, origin, target){
 
-    var calStartTime = Date.now();
+    // var calStartTime = Date.now();
     const similarity = await poseSimilarity(origin, target, config);
-    var calEndTime = Date.now();
+    // var calEndTime = Date.now();
     let strategy = config.strategy;
     console.log(similarity);
 
-    return {strategy : strategy, result : similarity, time : Math.floor((calEndTime - calStartTime)/1000)};
+    // return {strategy : strategy, result : similarity, time : Math.floor((calEndTime - calStartTime)/1000)};
+    return similarity;
 }
 
 function convertToCalculateFormat(pose){
@@ -67,6 +68,7 @@ function convertToCalculateFormat(pose){
 
     //deep copy
     pose.keypoints = [...formatObjectList];
+    console.log('converting done');
     return pose;
 }
 

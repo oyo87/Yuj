@@ -90,8 +90,6 @@ class Vidu extends Component {
 
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
-        this.props.initModel();
-        console.log('%c1.init model : ',this.props.model, `color: ${"#FF0000"}`);
         console.log('did mount done');
     }
 
@@ -455,6 +453,7 @@ class Vidu extends Component {
     render() {
         if(this.state.session === undefined && this.state.isVisited === false){
             this.joinSession();
+            this.props.initModel();
             this.setState({ isVisited: true });
         }
 
@@ -521,13 +520,6 @@ class Vidu extends Component {
                                 ) : null}
                             </div> */}
                             <VideoGrid>
-                                {this.state.publisher !== undefined ? (
-                                    <div style={{ position: 'relative', width: '50%' }} onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} 
-                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
-                                            type={this.state.myUserType} streamManager={this.state.publisher} />
-                                    </div>
-                                ): null}
                                 {this.state.subscribers.map((sub, i) => (
                                     ( JSON.parse(sub.stream.connection.data).clientType === '강사' ? (
                                         <div key={i} style={{ width: '50%' }} onClick={() => this.handleMainVideoStream(sub)}>
@@ -535,6 +527,13 @@ class Vidu extends Component {
                                         </div>
                                     ) : null)
                                 ))}
+                                {this.state.publisher !== undefined ? (
+                                    <div style={{ position: 'relative', width: '50%' }} onClick={() => this.handleMainVideoStream(this.state.publisher)}>
+                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} 
+                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
+                                            type={this.state.myUserType} streamManager={this.state.publisher} />
+                                    </div>
+                                ): null}
                             </VideoGrid>
                         </VideoContainer>
 

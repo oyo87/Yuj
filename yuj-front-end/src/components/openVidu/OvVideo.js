@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import modelSlice, { setUserVideoRef, setUserCanvasRef, setUserCanvasContext, 
-    setTeacherVideoRef, setTeacherCanvasRef, setTeacherCanvasContext } from '../../stores/modelSlice';
-import { drawPoints } from '../../utils/DrawFunction';
-import { convertToCalculateFormat, estimate } from '../../utils/ModelFunction';
+import { drawPoints, drawSkeleton } from '../../utils/DrawFunction';
+import { calSimilarity, convertToCalculateFormat, estimate } from '../../utils/ModelFunction';
+import { ModelParams } from '../../utils/ModelParams';
 
 class OpenViduVideoComponent extends Component {
 
@@ -15,8 +14,8 @@ class OpenViduVideoComponent extends Component {
     */
     constructor(props) {
         super(props);
-        this.videoRef = React.createRef();
-        this.canvasRef = React.createRef();
+        this.videoRef = null;
+        this.canvasRef = null;
         this.context = null;
         this.width = null;
         this.height = null;
@@ -31,29 +30,8 @@ class OpenViduVideoComponent extends Component {
 
     componentDidMount() {
         this.context = this.canvasRef.current.getContext('2d');
-        console.log('did mount ref check!', this.props.studentVideoRef, this.props.studentCanvasRef, this.props.teacherVideoRef, this.props.teacherCanvasRef);
-
-        // if(this.props.type === '수강생'){
-        //     this.canvasRef.current.id = 'student-canvas';
-        //     this.videoRef.current.id = 'student-video';
-        //     this.props.setUserVideoRef(this.videoRef);
-        //     this.props.setUserCanvasRef(this.canvasRef);
-        //     this.props.setUserCanvasContext(this.canvasRef.current.getContext('2d'));
-        // }
-        // else if(this.props.type === '강사'){
-        //     this.canvasRef.current.id = 'teacher-canvas';
-        //     this.videoRef.current.id = 'teacher-video';
-        //     // const prevState = this.props.model.teacherSkeletonState;
-        //     // console.log('mount? ', prevState);
-        //     // console.log(prevState.targetVideoRef ===this.videoRef.current);
-        //     this.props.setTeacherVideoRef(this.videoRef);
-        //     this.props.setTeacherCanvasRef(this.canvasRef);
-        //     this.props.setTeacherCanvasContext(this.canvasRef.current.getContext('2d'));
-        // }
-
-        console.log('video mount')
-        console.log(this.props.type, " : ",this.props.model);
-        console.log(typeof this.videoRef.current, this.videoRef.current);
+        console.log(this.props.type,' : did mount ref check!', this.props.studentVideoRef, this.props.studentCanvasRef, this.props.teacherVideoRef, this.props.teacherCanvasRef);
+        // console.log(this.props.type !== "강사" ? this.props.studentVideoRef : this.props.teacherVideoRef);
         this.navigateDefaultOrAIDrawing(this.props);
     }
 
@@ -75,76 +53,76 @@ class OpenViduVideoComponent extends Component {
             this.props.streamManager.addVideoElement(this.videoRef.current);
 
             const inferenceFlag = this.props.model.userInferenceState.inferenceState;
-            if(inferenceFlag && this.props.type !== "강사"){ this.drawVideoWithInferenceInfo() }
+            if(inferenceFlag && this.props.type !== "강사" && this.props.type !== undefined){ this.drawVideoWithInferenceInfo() }
             else { this.drawVideoToCanvas() }
         }
     }
 
     async drawVideoWithInferenceInfo(){
         console.log('inference ready');
-        // this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
-        
-        
-        
-        // await this.renderResult();
-        
-
-
-        // const modelSliceState = this.props.model;
-        // let userVideoRef = modelSliceState.userInferenceState.targetVideoRef;
-        // let userCanvasRef = modelSliceState.userInferenceState.targetCanvasRef;
-        
-        // // userContextRef.current.getContext('2D').beginPath();
-        // let userContext = userCanvasRef.current.getContext('2D');
-        // userContext.drawImage(userVideoRef.current, 0, 0, this.width, this.height);
-
-        // if(this.rafId) {cancelAnimationFrame(this.rafId)}
-        // this.context.beginPath();
-        // console.log('in default animation ', this.props.model.userInferenceState.inferenceState, "type : ", this.props.type);
-        // this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
-        
-        
+        await this.renderResult();    
         if(this.props.model.userInferenceState.inferenceState){
             this.rafId = requestAnimationFrame(this.drawVideoWithInferenceInfo.bind(this));
         }
-
-        // requestAnimationFrame(this.drawVideoWithInferenceInfo.bind(this));
     }
     
     drawVideoToCanvas() {
-        // if(this.rafId) {cancelAnimationFrame(this.rafId)}
+        if(this.rafId) {cancelAnimationFrame(this.rafId)}
         // this.context.beginPath();
-        console.log('in default animation ', this.props.model.userInferenceState.inferenceState, "type : ", this.props.type);
-        // this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
-        // requestAnimationFrame(this.drawVideoToCanvas.bind(this));
+        // console.log('in default animation ', this.props.model.userInferenceState.inferenceState, "type : ", this.props.type);
+        this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
+        // console.log(this.videoRef.current);
+        requestAnimationFrame(this.drawVideoToCanvas.bind(this));
     }
 
     async renderResult(){
-        // console.log(this.props.model)
-        // const modelSliceState = this.props.model;
 
-        // let userVideo = modelSliceState.userInferenceState.targetVideoRef;
-        // let teacherVideo = modelSliceState.teacherSkeletonState.targetVideoRef;
-        
-        // let teacherContext = modelSliceState.teacherSkeletonState.targetCanvasContext;
-        // let userContext = modelSliceState.userInferenceState.targetCanvasContext;
-        
-        // userContext.drawImage(userVideo, 0, 0, this.width, this.height);
-        // teacherContext.drawImage(teacherVideo, 0,0, this.width, this.height);
-        
-        // let userPose = await estimate(modelSliceState.model, userVideo);
-        // let teacherPose = await estimate(modelSliceState.model, teacherVideo);
-        // console.log('user pose ', userPose);
-        // console.log('teacher pose ', teacherPose);
+        // console.log(this.videoRef.current);
 
-        // if(userPose){
-        //     userPose = convertToCalculateFormat(userPose);
-        //     drawPoints(userContext, userPose);
-        // }
-        // if(teacherPose){
-        //     teacherPose = convertToCalculateFormat(teacherPose);
-        //     drawPoints(teacherContext, teacherPose);
-        // }
+        let teacherVideo = this.props.teacherVideoRef;
+        let teacherCanvas = this.props.teacherCanvasRef;
+        console.log(this.props.type, ' : 85line',teacherVideo, teacherCanvas);
+        console.log(this.props.type, ' : 86line',teacherVideo.current, teacherCanvas.current);
+        let teacherCanvasContext = teacherCanvas.current.getContext('2d');
+
+
+        this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
+        teacherCanvasContext.drawImage(teacherVideo.current, 0,0, this.canvasRef.current.width, this.canvasRef.current.height);
+        
+        let userPose = await estimate(this.props.model.model, this.canvasRef.current);
+        let teacherPose = await estimate(this.props.model.model, teacherCanvas.current);
+
+        console.log('user pose ', userPose);
+        console.log('teacher pose ', teacherPose);
+
+
+        let result = await Promise.all([
+            // convertToCalculateFormat(userPose),
+            // convertToCalculateFormat(teacherPose)
+            userPose, teacherPose
+        ]).then((poses) => {
+            console.log(poses);
+            userPose = convertToCalculateFormat(poses[0]);
+            teacherPose = convertToCalculateFormat(poses[1]);
+            return userPose.keypoints.length >0 && teacherPose.keypoints.length >0 ? calSimilarity(ModelParams.strategy, ...poses):100;
+        }).then(point=> point);
+
+
+        // let similarity = (userPose.keypoints.length>0) && (teacherPose.keypoints.length>0) ? (await calSimilarity(ModelParams.strategy, userPose, teacherPose)) : 100;
+        // console.log('similarity : ', similarity);
+        console.log('****************************similarity result: ', result);
+        let userColor = result <= ModelParams.SCORE_THRESHHOLD ? "Green" : "White";
+
+        if(userPose.keypoints.length>0){
+            // userPose = convertToCalculateFormat(userPose);
+            drawPoints(this.context, userPose.keypoints, userColor);
+            drawSkeleton(this.context, userPose.keypoints, userColor);
+        }
+        if(teacherPose.keypoints.length>0){
+            // teacherPose = convertToCalculateFormat(teacherPose);
+            drawPoints(teacherCanvasContext, teacherPose.keypoints, userColor);
+            drawSkeleton(teacherCanvasContext, teacherPose.keypoints, userColor);
+        }
 
         return;
 
@@ -152,34 +130,26 @@ class OpenViduVideoComponent extends Component {
 
     render() {
         console.log("render start!");
+        console.log("누구세요? ", this.props.type);
 
-        let ref = this.props.type ==="강사" ? this.props.studentVideoRef : this.props.teacherVideoRef;
+        this.videoRef = this.props.type !== "강사" ? this.props.studentVideoRef : this.props.teacherVideoRef;
+        this.canvasRef = this.props.type !== "강사" ? this.props.studentCanvasRef : this.props.teacherCanvasRef; 
+
+        this.videoRef = this.props.type === undefined ? React.createRef() : this.videoRef;
+        this.canvasRef = this.props.type === undefined ? React.createRef() : this.canvasRef;
+
         return (this.props.isActive === true ? 
             (<>
                 <canvas width={1920} height={1080} style={{ border:'solid', width:'auto', height:'90vh' }} ref={this.canvasRef}/>
-                <video width={"0px"} height={"0px"} autoPlay = { true} ref = { this.videoRef } />
+                <video width={'0px'} height={'0px'} autoPlay = { true} ref = { this.videoRef } style={{visibility : "hidden"}}/>
             </>) 
         :   (<>
                 <canvas width={1920} height={1080} style={{ border:'solid', width:'100%', height:'100%' }} ref={this.canvasRef}/>
-                <video width={"0px"} height={"0px"} autoPlay = { true} ref = { this.videoRef } />
+                <video width={'0px'} height={'0px'} autoPlay = { true} ref = { this.videoRef } style={{visibility : "hidden"}}/>
             </>))
     }
 
 }
 
 const mapStateToProps = (state) => {return{ model : state.model }}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        
-        setUserVideoRef : (video) => {dispatch(setUserVideoRef(video))},
-        setUserCanvasRef : (canvas)=>{dispatch(setUserCanvasRef(canvas))},
-        setUserCanvasContext : (context)=>{dispatch(setUserCanvasContext(context))},
-
-        setTeacherVideoRef : (video) => {dispatch(setTeacherVideoRef(video))},
-        setTeacherCanvasRef : (canvas)=>{dispatch(setTeacherCanvasRef(canvas))},
-        setTeacherCanvasContext : (context)=>{dispatch(setTeacherCanvasContext(context))}
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(OpenViduVideoComponent);
+export default connect(mapStateToProps)(OpenViduVideoComponent);
