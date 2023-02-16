@@ -107,7 +107,7 @@ const MyPageDashBoard = () => {
     }, [currentLectures, completedLectures])
 
     useEffect(() => {
-        if (lectureEvents.length != 0 && userLectureSchedules.length != 0) {
+        if (lectureEvents.length != 0) {
             //그래프 퍼센트 계산하기
             calcPercentage();
         }
@@ -244,7 +244,7 @@ const MyPageDashBoard = () => {
         //     })
 
         // 강의 몇번 수강했는지 내역 가져오기
-        getUserLectureScheduleByUserId(0)
+        getUserLectureScheduleByUserId(user.userId)
             .then(res => setUserLectureSchedules(res));
         // setUserLectureSchedules(getUserLectureScheduleByUserId(0));
     }, [])
