@@ -297,7 +297,7 @@ const MyPageDashBoard = () => {
                                     {/* <Link to="/mypage/lecture">전체보기 &gt;</Link> */}
                                 </div>
                                 <div className="flex-auto">
-                                    {console.log("커렌트으으으으")}
+                                    {console.log("대시보드 커렌트렉쳐")}
                                         {console.log(currentLectures)}
                                     {
                                         completedLecturesLoading === true ?
@@ -309,7 +309,7 @@ const MyPageDashBoard = () => {
                                             </div>
                                             : <div>{currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post, idx) => (
                                                 <div key={idx}>
-                                                    <Link to="/studio" className="h-20 my-2 flex">
+                                                    <Link to="/studio" state={post.userId} className="h-20 my-2 flex">
                                                         <div className="h-1/2 w-1/2 mx-5 mt-2">
                                                             {/* 강의 thumbnail_image */}
                                                             <img className="rounded" src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`}></img>
@@ -351,7 +351,7 @@ const MyPageDashBoard = () => {
                                                 .map((post, idx) => (
                                                     <div key={idx}>
                                                         {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
-                                                        <Link to="/studio" className="h-20 my-2 flex">
+                                                        <Link to="/studio" state={post.userId} className="h-20 my-2 flex">
                                                             <div className="h-1/2 w-1/2 mx-5 mt-2">
                                                                 {/* src를 가져온 강의의 thumbnail_image로 */}
                                                                 <img className="rounded" src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`} alt="Lecture thumbnail" />
