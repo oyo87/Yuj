@@ -13,6 +13,30 @@ const MyPageDashBoard = () => {
     const user = useSelector(state => state.user);
     const navigate = useNavigate();
 
+    
+    //신청한 모든 강의
+    const [allLectures, setAllLectures] = useState([]);
+    //현재 수강중인 강의
+    const [currentLectures, setCurrentLectures] = useState([]);
+    //수강 완료한 강의
+    const [completedLectures, setCompletedLectures] = useState([]);
+    //강의 시간 정보
+    const [lectureSchedule, setLectureSchedule] = useState([]);
+    //강의 일정 배열(1일 단위)
+    const [lectureEvents, setLectureEvents] = useState([]);
+    //수강 참여 내역
+    const [userLectureSchedules, setUserLectureSchedules] = useState([]);
+    //이번주 강의 수강 퍼센트
+    const [percentage, setPercentage] = useState(50);
+    //이번주 강의 참여 횟수
+    const [maxAttandance, setMaxAttandance] = useState(0);
+    //이번주 강의 참여 횟수 최대치
+    const [currAttandance, setCurrAttandance] = useState(0);
+    // 현재 수강중인 강의 가져왔는지 확인
+    const [currentLecturesLoading, setCurrentLecturesLoading] = useState(false);
+    // 수강 완료한 강의 잘 가져왔는지 확인
+    const [completedLecturesLoading, setCompletedLecturesLoading] = useState(false);
+
     useEffect(() => {
         if(user.userId === ''){
             navigate('/login');
@@ -35,26 +59,6 @@ const MyPageDashBoard = () => {
     const GET_CURRENT_LECTURES = `${URL}/mypage/dashboard/currentlectures/${loginUserId}` //뒤에 유저Id입력
     const GET_COMPLETED_LECTURES = `${URL}/mypage/dashboard/completedlectures/${loginUserId}` //뒤에 유저Id입력
     // const LECTURE_SCHEDULE_URL = `${URL}/mypage/dashboard/lectureSchedule/${loginUserId}` // 2/15 쓸필요없어보임 4:12 문제 없으면 삭제 예정
-
-    //신청한 모든 강의
-    const [allLectures, setAllLectures] = useState([]);
-    //현재 수강중인 강의
-    const [currentLectures, setCurrentLectures] = useState([]);
-    //수강 완료한 강의
-    const [completedLectures, setCompletedLectures] = useState([]);
-    //강의 시간 정보
-    const [lectureSchedule, setLectureSchedule] = useState([]);
-    //강의 일정 배열(1일 단위)
-    const [lectureEvents, setLectureEvents] = useState([]);
-    //수강 참여 내역
-    const [userLectureSchedules, setUserLectureSchedules] = useState([]);
-    //이번주 강의 수강 퍼센트
-    const [percentage, setPercentage] = useState(50);
-    //이번주 강의 참여 횟수
-    const [maxAttandance, setMaxAttandance] = useState(0);
-    //이번주 강의 참여 횟수 최대치
-    const [currAttandance, setCurrAttandance] = useState(0);
-
 
     //이번주 수강 퍼센트 계산하는 함수
     const calcPercentage = () => {
@@ -196,8 +200,6 @@ const MyPageDashBoard = () => {
             url: GET_ALL_LECTURES_USERID
         }).then(response => {
             setAllLectures(response.data)
-            console.log("1 수강했던 모든 강의입니다.")
-            console.log(response.data)
         })
             .catch(error => {
                 console.log(error.response);
@@ -209,11 +211,11 @@ const MyPageDashBoard = () => {
             url: GET_CURRENT_LECTURES
         }).then(response => {
             setCurrentLectures(response.data)
-            console.log("2 수강중인강의입니다")
-            console.log(response.data)
         })
             .catch(error => {
                 console.log(error.response);
+            }).finally(() =>{
+                setCurrentLecturesLoading(true);
             })
 
         //수강 완료한 강의 가져와야하는부분 현재 임시데이터
@@ -222,11 +224,11 @@ const MyPageDashBoard = () => {
             url: GET_COMPLETED_LECTURES
         }).then(response => {
             setCompletedLectures(response.data)
-            console.log("3 수강완료한강의입니다")
-            console.log(response.data)
         })
             .catch(error => {
                 console.log(error.response);
+            }).finally(() =>{
+                setCompletedLecturesLoading(true);
             })
 
         // 강의 시작 정보 구하기 위한것
@@ -296,6 +298,7 @@ const MyPageDashBoard = () => {
                                 </div>
                                 <div className="flex-auto">
                                     {
+                                        currentLecturesLoading === true ?
                                         currentLectures.length === 0
                                             ? <div className="h-full flex flex-col items-center justify-center pb-16">
                                                 <h1 className="text-3xl font-bold mb-4">진행중인</h1>
@@ -303,8 +306,6 @@ const MyPageDashBoard = () => {
                                                 <Link to="/searchLecture" className="btn btn-primary">강의 둘러보기</Link>
                                             </div>
                                             : <div>{currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post, idx) => (
-                                                console.log("post입니다"),
-                                                console.log(post),
                                                 <div key={idx}>
                                                     <Link to="/studio" className="h-20 my-2 flex">
                                                         <div className="h-1/2 w-1/2 mx-5 mt-2">
@@ -314,14 +315,13 @@ const MyPageDashBoard = () => {
                                                         {/* 강의 name */}
                                                         <div className="leading-loose truncate">{post.name}
                                                             {console.log(lectureSchedule)}
-                                                            {/* lecture의 start_date, end_date , lectureschedule의 start_time, day를 활용 다음 수업시작날짜, 시간 연산 필요 */}
-                                                            {/* <div className="break-keep">예정 : {post.startDate} {convertToHM(lectureSchedule[0].startTime)} </div> */}
                                                             <div className="break-keep">예정 : {post.closeTime ? post.closeTime : null} </div>
                                                         </div>
                                                     </Link>
                                                 </div >
                                             ))}
                                             </div>
+                                            : null
                                     }
                                 </div>
 
@@ -336,7 +336,7 @@ const MyPageDashBoard = () => {
                                 </div>
                                 <div className="flex-auto">
                                     {
-
+                                        completedLecturesLoading === true ?
                                         completedLectures.length === 0
                                             ? <div className="h-full flex flex-col items-center justify-center pb-16">
                                                 <h1 className="text-3xl font-bold mb-4">완료된</h1>
@@ -365,6 +365,7 @@ const MyPageDashBoard = () => {
                                                 ))
                                             }
                                             </div>
+                                            : null
                                     }
                                 </div>
 
