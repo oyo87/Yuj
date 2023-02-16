@@ -27,15 +27,16 @@ const LoginPage = () => {
   }, [user.userId])
 
   return (
-    <div className={'px-60 w-full'}>
-      <div className={Styles[`info-background-image`] + ' w-full flex items-center justify-center'}>
+    <div className={'px-52 w-full'}>
+      <div className={Styles[`info-background-image`] + ' w-full flex items-center justify-center overflow-hidden'} 
+        style={{ height: 'calc(100vh - 125px)' }}>
         <form className={"py-8 px-8 rounded-xl card bg-base-200 max-w-sm " + Styles[`info-container`]} onSubmit={handleSubmit}>
           <p className={'text-2xl mb-3 text-black font-bold'}>로그인</p>
           <div className="form-control w-full">
               <label className="label">
                   <span className="label-text text-xs text-black font-bold">아이디 : </span>
               </label>
-              <input type="text" name="id" placeholder="" className={" input rounded-xl input-sm"} maxLength={16} onChange={(e) => setId(e.target.value)} />
+              <input type="text" name="id" placeholder="" className={"bg-opacity-50 input rounded-xl input-sm"} maxLength={16} onChange={(e) => setId(e.target.value)} />
               <label className="label">
                   <span className="label-text-alt"></span>
                   <span className="label-text-alt"></span>
@@ -46,7 +47,7 @@ const LoginPage = () => {
               <label className="label">
                   <span className="label-text text-xs text-black font-bold">비밀번호 : </span>
               </label>
-              <input type="password" placeholder="" className={" input rounded-xl input-sm"} minLength={6} maxLength={16} onChange={(e) => setPassword(e.target.value)} />
+              <input type="password" placeholder="" className={"bg-opacity-50 input rounded-xl input-sm"} minLength={6} maxLength={16} onChange={(e) => setPassword(e.target.value)} />
               <label className="label">
                   <span className="label-text-alt"></span>
                   <span className="label-text-alt"></span>
