@@ -25,7 +25,7 @@ const StudioLectureCreatePage = () => {
     const [addScheduleCnt, setAddSchduleCnt] = useState(1);
 
     const plusAddSchdulecnt = (e) => {
-        if(addScheduleCnt === schedules.length) {
+        if (addScheduleCnt === schedules.length) {
             setAddSchduleCnt(addScheduleCnt + 1);
         } else {
             alert("일정을 확인해 주세요.");
@@ -36,8 +36,8 @@ const StudioLectureCreatePage = () => {
             setAddSchduleCnt(addScheduleCnt - 1);
             let tmpSchedules = [];
             const id = e.target.id;
-            for(let i = 0; i < schedules.length; i++) {
-                if(id != i) {
+            for (let i = 0; i < schedules.length; i++) {
+                if (id != i) {
                     tmpSchedules.push(schedules[i]);
                 };
             }
@@ -52,19 +52,19 @@ const StudioLectureCreatePage = () => {
                 addScheduleArr.push(
                     <div className='flex items-center gap-3 mb-5' key={i}>
                         <div className='w-full'>
-                            <StudioLectureCreateScheduleInput schedules={schedules} setSchedules={setSchedules}/>
+                            <StudioLectureCreateScheduleInput schedules={schedules} setSchedules={setSchedules} />
                         </div>
-                        <CheckIcon id={i} className='text-accent' style={{fontSize: "xx-large"}} />
+                        <CheckIcon id={i} className='text-accent' style={{ fontSize: "xx-large" }} />
                     </div>
                 )
             } else {
                 addScheduleArr.push(
                     <div className='flex items-center gap-3 mb-5' key={i}>
                         <div className='w-full'>
-                            <StudioLectureCreateScheduleInput schedules={schedules} setSchedules={setSchedules}/>
+                            <StudioLectureCreateScheduleInput schedules={schedules} setSchedules={setSchedules} />
                         </div>
                         <DeleteForeverIcon
-                            id={i} 
+                            id={i}
                             className="text-accent hover:cursor-pointer hover:text-success"
                             style={{ fontSize: "xx-large" }}
                             onClick={minusAddSchdulecnt}
@@ -86,20 +86,43 @@ const StudioLectureCreatePage = () => {
         dispatch(getStudioLectureList(user.userId));
         dispatch(getStudioLiveLecture(user.userId));
     }, [])
-    
+
     //데이터 전송
     const [imgFiles, setImgFiles] = useState([]); //미리보기, 이미지 데이터 전송
     const [schedules, setSchedules] = useState([]); //스케줄 데이터 전송
+    const [imgTransfer, setImgTransfer] = useState([]);//이미지 데이터 전송 전용
+    
+    console.log("In StudioLectureCreatePage");
+    console.log("imgTransfer = " + imgTransfer);
+
+
     const handleSubmit = async e => {
         e.preventDefault();
         e.persist();
-        const date = new Date();
+
+        console.log("In StudioLectureCreatePage handleSubmit");
+        console.log("imgTransfer = " + imgTransfer);
+
+        // const date = new Date();
+        // console.log("date!!!!!!!!!!! = " + date);
+
+        const today = new Date();
+
+        const year = today.getFullYear();
+        const month = ('0' + (today.getMonth() + 1)).slice(-2);
+        const day = ('0' + today.getDate()).slice(-2);
+
+        const dateString = year + '-' + month + '-' + day;
 
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
+        console.log("data = " + data);
+        // let fileArr = imgFiles;
 
-        let files = imgFiles;
+        // console.log("fileArr = " + fileArr);
+
         let scheduleList = schedules;
+
         let VO = {
             userId: user.userId,
             yogaId: data.category,
@@ -107,32 +130,66 @@ const StudioLectureCreatePage = () => {
             description: data.description,
             startDate: data.startDate,
             endDate: data.endDate,
-            registDate: date,
+            registDate: dateString,
             limitStudents: data.limitStudents,
-            fee: 0,
-            totalConunt: 0,
+            fee: "0",
+            totalConunt: "0"
         }
+
+        console.log("VO = " + VO);
 
         // for(let i = 0; i < files.length; i++) {
         //     formData.append("files", files[i]);
         // }
-        formData.append("files", JSON.stringify(imgFiles));
-        formData.append("scheduleArr", JSON.stringify(scheduleList));
-        formData.append("vo", JSON.stringify(VO));
+        // formData.append("files", JSON.stringify(imgFiles));
+        // formData.append("scheduleArr", JSON.stringify(scheduleList));
+        // formData.append("vo", JSON.stringify(VO));
 
-        console.log(VO);
+        let sendData = {
+            // files: fileArr,
+            files: imgTransfer,
+            vo: JSON.stringify(VO),
+            scheduleArr: null
+        };
 
-        const postSurvey = await axios({
-            method: "POST",
-            url: `http://localhost:5000/lectures`,
-            mode: "cors",
+        console.log("sendData = " + sendData);
+        console.log("sendData = " + sendData.files);
+        console.log("sendData = " + sendData.vo);
+        console.log("sendData = " + sendData.scheduleArr);
+
+        const config = {
             headers: {
-              "Content-Type": "multipart/form-data", 
+                "content-type": "multipart/form-data",
             },
-            data: formData,
-          });
+        };
 
-          console.log(postSurvey);
+
+
+        axios
+            .post(`${process.env.REACT_APP_API_URL}/lectures`, sendData, config)
+            .then((response) => {
+                console.log("OK!!!!");
+                console.log(response.data);
+                // window.location.replace("/"); //  로그인 성공 시 화면 이동
+            })
+            .catch((error) => {
+                console.log("Error!!!!!!!!!!!!!");
+                console.error(error);
+            });
+
+
+        // const postSurvey = await axios({
+        //     method: "POST",
+        //     url: `http://localhost:5000/lectures`,
+        //     mode: "cors",
+        //     // headers: {
+        //     //   "Content-Type": "multipart/form-data", 
+        //     // },
+        //     data: sendData,
+        //     config
+        //   });
+
+        //   console.log(postSurvey);
     }
 
     return (
@@ -163,9 +220,9 @@ const StudioLectureCreatePage = () => {
                             {addSchedules(addScheduleCnt)}
                         </div>
                         <div className='flex w-full justify-end'>
-                        <div className='text-accent text-base mb-7'>
-                        개설 기간 : &nbsp; <input name='startDate' type='date' className='input input-primary border-2 w-40' min={currentDate} onChange={(e) => setStartDateValue(e.target.value) } placeholder='' />&nbsp;&nbsp;-&nbsp;&nbsp;<input name='endDate' min={startDateValue} type='date' className='input input-primary border-2 w-40' placeholder='' />
-                        </div>
+                            <div className='text-accent text-base mb-7'>
+                                개설 기간 : &nbsp; <input name='startDate' type='date' className='input input-primary border-2 w-40' min={currentDate} onChange={(e) => setStartDateValue(e.target.value)} placeholder='' />&nbsp;&nbsp;-&nbsp;&nbsp;<input name='endDate' min={startDateValue} type='date' className='input input-primary border-2 w-40' placeholder='' />
+                            </div>
                         </div>
                         <hr />
 
@@ -177,7 +234,7 @@ const StudioLectureCreatePage = () => {
 
                         {/* 이미지 파일 업로드 */}
                         <div className='my-7'>
-                            <StudioLectureCreateImagesInput imgFiles={imgFiles} setImgFiles={setImgFiles} />
+                            <StudioLectureCreateImagesInput imgFiles={imgFiles} setImgFiles={setImgFiles} imgTransfer={imgTransfer} setImgTransfer={setImgTransfer} />
                         </div>
 
                         <div className="flex justify-end gap-2 pb-8">

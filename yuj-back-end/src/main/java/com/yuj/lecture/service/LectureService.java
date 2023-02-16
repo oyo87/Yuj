@@ -1,16 +1,5 @@
 package com.yuj.lecture.service;
 
-import java.awt.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import com.yuj.lectureimage.dto.LectureImageDto;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.yuj.exception.CUserNotFoundException;
 import com.yuj.exception.CYogaNotFoundException;
 import com.yuj.lecture.domain.Lecture;
@@ -25,13 +14,21 @@ import com.yuj.lecture.repository.LectureRepository;
 import com.yuj.lecture.repository.LectureScheduleRepository;
 import com.yuj.lecture.repository.YogaRepository;
 import com.yuj.lectureimage.domain.ImageFile;
+import com.yuj.lectureimage.dto.LectureImageDto;
 import com.yuj.lectureimage.handler.FileHandler;
 import com.yuj.lectureimage.repository.LectureImageRepository;
 import com.yuj.user.domain.User;
 import com.yuj.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -217,7 +214,8 @@ public class LectureService {
                 .startDate(lecture.getStartDate())
                 .thumbnailImage(lecture.getThumbnailImage())
                 .totalCount(lecture.getTotalCount())
-                .username(user.getUsername())
+                .userId(user.getUserId())
+                .username(user.getName())
                 .nickname(user.getNickname())
                 .email(user.getEmail())
                 .profileImagePath(user.getProfileImagePath())
