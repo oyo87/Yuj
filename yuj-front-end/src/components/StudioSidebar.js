@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateLectureActive, registUserLectureSchedule } from '../stores/lectureSlice';
+import { updateLectureActive, registUserLectureSchedule, getLecture } from '../stores/lectureSlice';
 import Styles from './StudioSidebar.module.css';
 import { Link, Route } from 'react-router-dom';
 import { CommonModal, CommonModalBtn } from '../components/CommonModal';
 import { useNavigate, Navigate } from 'react-router-dom';
+import { changeStudioLectureDetailItem } from '../stores/studioSlice';
 
 const StudioSidebar = (props) => {
 
@@ -13,6 +15,7 @@ const StudioSidebar = (props) => {
 
   const user = useSelector(state => state.user);
   const studio = useSelector(state => state.studio);
+  const rating = Math.round(studio.studioDetail.rating);
 
 
   const navigate = useNavigate();
@@ -26,12 +29,28 @@ const StudioSidebar = (props) => {
   }
 
   //수강생
-  const goLiveClicked = () => {
+  const goLiveClicked = async() => {
+    if(userId == -1) {
+      alert("로그인 후 이용해주세요");
+      return navigate('/login');
+    }
+    const userLecture = await checkUserRegistedLecture().catch(err => null);
+    if(!userLecture) {
+      alert("수강신청 후 이용해주세요");
+      return;
+    }
     console.log('Go Live! : ', { mySessionId: studioLiveLecture.lectureId, myUserName: user.userInfo.nickname, myUserType: '수강생' });
     dispatch(registUserLectureSchedule({lectureId: studioLiveLecture.lectureId, userId: user.userId}));
     navigate('/viduStudent', { state: { mySessionId: studioLiveLecture.lectureId, myUserName: user.userInfo.nickname, myUserType: '수강생' } }) 
   }
   
+  const checkUserRegistedLecture = async() => {
+    // const response = await axios.get(`${process.env.REACT_APP_API_URL}/lectures/userLectures?userId=${userId}&lectureId=${studioLiveLecture.lectureId}`);
+    const response = await axios.get(`http://localhost:5000/lectures/userLectures?userId=${userId}&lectureId=${studioLiveLecture.lectureId}`);
+    console.log("checkUserRegistedLecture", response);
+    return response.data;
+  }
+
   // 사이드바 메뉴 추가하려면 아래 입력
   const sidebarMenu = [
     {
@@ -116,14 +135,14 @@ const StudioSidebar = (props) => {
             <p className={Styles.teacherNickname+' mt-6'}>{studioDetail.nickname}</p>
             <p className={Styles.teacherEmail+' mt-3'}>{studioDetail.email}</p>
             <div className="rating mt-6 rating-sm flex justify-evenly w-24">
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
-              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" disabled/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 1}/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 2}/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 3}/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 4}/>
+              <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 5}/>
             </div>
             {
-              userId == '' || studioDetail.userId != userId ?
+              studioDetail.userId != userId ?
               <CommonModalBtn text={'Go Live'} className={Styles.liveBtn +' border-none btn-accent mt-12 '+(!studioLiveLecture.name ? 'btn-disabled':'')} modalId={'studio-go-live'}/>
               :
               // <button className={Styles.liveBtn+' btn border-none mt-12 btn-accent'} onClick={() => startLiveClicked()}>Start Live</button>
