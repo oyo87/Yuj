@@ -5,8 +5,8 @@ export const ModelParams = {
         SIMILARITY_THRESHHOLD : 0.5,
         SCORE_THRESHHOLD : 0.4,
         //const value for draw skeleton
-        LINE_WIDTH : 15,
-        RADIUS : 10,
+        LINE_WIDTH : 5,
+        RADIUS : 3,
         INFERENCE : false,
         VIDEO_WIDTH : 640,
         VIDEO_HEIGHT : 380,
