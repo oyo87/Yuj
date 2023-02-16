@@ -135,7 +135,7 @@ public class UserService {
         		.email(user.getEmail())
         		.birthDate(user.getBirthDate())
         		.gender(user.getGender())
-        		.profileImage(user.getProfileImagePath())
+        		.profileImage("null".equals(user.getProfileImagePath()) ? "logo192.png" : user.getProfileImagePath())
         		.isTeacher(user.isTeacher())
         		.rating((float)user.getRatingSum() /user.getRatingCnt())
         		.build();
@@ -143,7 +143,6 @@ public class UserService {
     private TeacherResponseDTO entityToTeacherResponseDTO(User user) {
         Studio studio = user.getStudio();
         float rating = user.getRatingCnt() == 0 ? 3 : (float) user.getRatingSum() / user.getRatingCnt();
-
         return TeacherResponseDTO.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -152,7 +151,7 @@ public class UserService {
                 .email(user.getEmail())
                 .birthDate(user.getBirthDate())
                 .gender(user.getGender())
-                .profileImage(user.getProfileImagePath())
+                .profileImage("null".equals(user.getProfileImagePath()) ? "logo192.png" : user.getProfileImagePath())
                 .isTeacher(user.isTeacher())
                 .rating(rating)
                 .description(studio.getDescription())
