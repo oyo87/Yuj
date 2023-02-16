@@ -298,8 +298,7 @@ const MyPageDashBoard = () => {
                                 </div>
                                 <div className="flex-auto">
                                     {
-                                        currentLecturesLoading === true ?
-                                        currentLectures.length === 0
+                                        currentLectures.length === "init"
                                             ? <div className="h-full flex flex-col items-center justify-center pb-16">
                                                 <h1 className="text-3xl font-bold mb-4">진행중인</h1>
                                                 <h1 className="text-3xl font-bold mb-4">강의가 없습니다</h1>
@@ -321,7 +320,6 @@ const MyPageDashBoard = () => {
                                                 </div >
                                             ))}
                                             </div>
-                                            : null
                                     }
                                 </div>
 
