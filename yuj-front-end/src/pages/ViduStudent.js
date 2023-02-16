@@ -433,14 +433,15 @@ class Vidu extends Component {
         }
     }
 
-    async aiInferenceToggle() {
+    aiInferenceToggle() {
+        const beforeState = this.props.model.userInferenceState.inferenceState;
         this.props.toggleInferenceMode();
-        console.log('2. toggle inference event activate. value : ', this.props.model.userInferenceState.inferenceState);
-        let message = this.props.model.userInferenceState.inferenceState ? 'AI 피드백 끄기' : 'AI 피드백 켜기';
+        console.log('2. toggle inference event activate. value : ', beforeState,'-> ',this.props.model.userInferenceState.inferenceState);
+        let message = !beforeState ? 'AI 피드백 끄기' : 'AI 피드백 켜기';
         this.setState({ aiMessage: message })
     }
 
-    async teacherSkeletonToggle() {
+    teacherSkeletonToggle() {
         this.props.toggleSkeletonMode();
         let message = this.props.model.teacherSkeletonState.skeletonState ? '강사 스켈레톤 끄기' : '강사 스켈레톤 켜기';
         this.setState({teacherSkeletonMessage: message});

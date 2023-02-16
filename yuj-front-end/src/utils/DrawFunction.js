@@ -1,6 +1,9 @@
 import * as poseDetection from '@tensorflow-models/pose-detection';
+import { ModelParams } from './ModelParams';
 
-function drawPoints(context, points, color){
+
+
+function drawPoints(context, points, color='White'){
     
     context.fillStyle = color;
     context.beginPath();
@@ -8,7 +11,7 @@ function drawPoints(context, points, color){
 
     for(const [key, value] of points.entries()){
         const circle = new Path2D();
-        circle.arc(value.position.x, value.position.y, RADIUS, 0 , 2 * Math.PI);
+        circle.arc(value.position.x, value.position.y, ModelParams.RADIUS, 0 , 2 * Math.PI);
         context.fill(circle);
         context.fillText(value.part, value.position.x-10, value.position.y-10);
         context.stroke(circle);

@@ -92,7 +92,9 @@ const modelSlice = createSlice({
             state.teacherSkeletonState.cameraState =!state.teacherSkeletonState.cameraState;
         },
         toggleInferenceMode:(state)=>{
-            state.userInferenceState.inferenceState =!state.userInferenceState.inferenceState;
+            const beforeState = state.userInferenceState.inferenceState;
+            state.userInferenceState.inferenceState =!beforeState;
+            console.log('user slice : ', beforeState, " ->" ,state.userInferenceState.inferenceState);
         },
 
         toggleSkeletonMode:(state)=>{

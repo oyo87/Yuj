@@ -33,7 +33,8 @@ async function estimate(detector, imageElement){
     console.log(pose);
 
     if(!pose.length)
-        throw new Error("Cannot find poses. try again or check your state");
+        // throw new Error("Cannot find poses. try again or check your state");
+        return null;
     return pose[0];
 }
 

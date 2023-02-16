@@ -1,18 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import modelSlice, { setUserVideoRef, setUserCanvasRef, setUserCanvasContext, 
+import { setUserVideoRef, setUserCanvasRef, setUserCanvasContext, 
     setTeacherVideoRef, setTeacherCanvasRef, setTeacherCanvasContext } from '../../stores/modelSlice';
-import { drawPoints } from '../../utils/DrawFunction';
+
 import { convertToCalculateFormat, estimate } from '../../utils/ModelFunction';
 
 class OpenViduVideoComponent extends Component {
 
-    /*
-    props에 담겨 오는 streamManager 를
-    하위 컴포넌트에 넘겨주고
-    update & mount cycle에 
-    video element를 제어해야 할 것 같다.
-    */
     constructor(props) {
         super(props);
         this.videoRef = React.createRef();
@@ -20,7 +14,6 @@ class OpenViduVideoComponent extends Component {
         this.context = null;
         this.width = null;
         this.height = null;
-        this.rafId = null;
     }
 
     componentDidUpdate(props) {
@@ -29,6 +22,10 @@ class OpenViduVideoComponent extends Component {
 
     componentDidMount() {
         this.context = this.canvasRef.current.getContext('2d');
+        this.width = this.canvasRef.current.widht;
+        this.height = this.canvasRef.current.height;
+        console.log('my type? : ', this.props.type);
+        console.log(this.videoRef.current, this.canvasRef.current.getContext('2d'));
 
         if(this.props.type === '수강생'){
             this.canvasRef.current.id = 'student-canvas';
@@ -37,7 +34,7 @@ class OpenViduVideoComponent extends Component {
             this.props.setUserCanvasRef(this.canvasRef);
             this.props.setUserCanvasContext(this.canvasRef.current.getContext('2d'));
         }
-        else if(this.props.type === '강사'){
+        else if(this.props.type === undefined || this.props.type === '강사'){
             this.canvasRef.current.id = 'teacher-canvas';
             this.videoRef.current.id = 'teacher-video';
             const prevState = this.props.model.teacherSkeletonState;
@@ -64,9 +61,6 @@ class OpenViduVideoComponent extends Component {
     */
 
     navigateDefaultOrAIDrawing(state){
-        this.width = this.canvasRef.current.widht;
-        this.height = this.canvasRef.current.height;
-        console.log('in navigateDefaultOrAIDrawing', this.props.model.userInferenceState.inferenceState);
 
         if(state && !!this.videoRef){
             this.props.streamManager.addVideoElement(this.videoRef.current);
@@ -81,19 +75,14 @@ class OpenViduVideoComponent extends Component {
         console.log('inference ready');
         // this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
         await this.renderResult();
-
-        if(this.props.model.userInferenceState.inferenceState){
-            this.rafId = requestAnimationFrame(this.drawVideoWithInferenceInfo.bind(this));
-        }
-
-        // requestAnimationFrame(this.drawVideoWithInferenceInfo.bind(this));
+        requestAnimationFrame(this.drawVideoWithInferenceInfo.bind(this));
     }
     
     drawVideoToCanvas() {
-        if(this.rafId) {cancelAnimationFrame(this.rafId)}
         this.context.beginPath();
-        console.log('in default animation ', this.props.model.userInferenceState.inferenceState, "type : ", this.props.type);
-        this.context.drawImage(this.videoRef.current, 0, 0, this.canvasRef.current.width, this.canvasRef.current.height);
+        console.log('!!!', this.videoRef.current);
+        console.log('!!!', this.context);
+        this.context.drawImage(this.videoRef.current, 0, 0, this.width, this.height);
         requestAnimationFrame(this.drawVideoToCanvas.bind(this));
     }
 
@@ -101,35 +90,22 @@ class OpenViduVideoComponent extends Component {
         // console.log(this.props.model)
         const modelSliceState = this.props.model;
 
-        let userVideo = modelSliceState.userInferenceState.targetVideoRef;
-        let teacherVideo = modelSliceState.teacherSkeletonState.targetVideoRef;
+        let teacherVideo = modelSliceState.userInferenceState.targetVideoRef;
+        let userVideo = modelSliceState.teacherSkeletonState.targetVideoRef;
         
         let teacherContext = modelSliceState.teacherSkeletonState.targetCanvasContext;
         let userContext = modelSliceState.userInferenceState.targetCanvasContext;
-        
+
         userContext.drawImage(userVideo, 0, 0, this.width, this.height);
-        // teacherContext.drawImage(teacherVideo, 0,0, this.width, this.height);
+        teacherContext.drawImage(teacherVideo, 0,0, this.width, this.height);
         
         let userPose = await estimate(modelSliceState.model, userVideo);
         let teacherPose = await estimate(modelSliceState.model, teacherVideo);
         console.log('user pose ', userPose);
-        console.log('teacher pose ', teacherPose);
-
-        if(userPose){
-            userPose = convertToCalculateFormat(userPose);
-            drawPoints(userContext, userPose);
-        }
-        // if(teacherPose){
-        //     teacherPose = convertToCalculateFormat(teacherPose);
-        //     drawPoints(teacherContext, teacherPose);
-        // }
-
-        return;
-
+        // console.log('teacher pose ', teacherPose);
     }
 
     render() {
-        console.log("render start!");
         return (this.props.isActive === true ? 
             (<>
                 <canvas width={1920} height={1080} style={{ border:'solid', width:'auto', height:'90vh' }} ref={this.canvasRef}/>
