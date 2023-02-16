@@ -276,14 +276,14 @@ const MyPageDashBoard = () => {
 
     return (
         <>
-            <div className="flex ml-100 w-full">
+            <div className="flex w-full">
                 <MyPageSidebar />
                 <main>
                     <div className="mx-28 mt-16 w-full">
                         <div className="text-3xl font-bold ml-4 text-accent">대시보드</div>
                         <div className="w-full flex justify-between">
                             <div className={Styles[`dashboard-box`] + " flex flex-col"}>
-                                <div className="flex m-5 justify-between" >
+                                <div className="flex m-5 " >
 
                                     <div className={Styles[`box-font`]}>
                                         <div className="text-accent">수강중</div>
@@ -303,9 +303,9 @@ const MyPageDashBoard = () => {
                                                 console.log(post),
                                                 <div key={idx}>
                                                     <Link to="/studio" className="h-20 my-2 flex">
-                                                        <div className="h-full w-32 mx-5 ">
+                                                        <div className="h-1/2 w-1/2 mx-5 mt-2">
                                                             {/* 강의 thumbnail_image */}
-                                                            <img src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`}></img>
+                                                            <img className="rounded" src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`}></img>
                                                         </div>
                                                         {/* 강의 name */}
                                                         <div className="leading-loose truncate">{post.name}
@@ -316,20 +316,14 @@ const MyPageDashBoard = () => {
                                                         </div>
                                                     </Link>
                                                 </div >
-
-
                                             ))}
-
                                             </div>
-
                                     }
                                 </div>
 
-
-
                             </div>
                             <div className={Styles[`dashboard-box`] + " flex flex-col"}>
-                                <div className="flex m-5 justify-between" >
+                                <div className="flex m-5 " >
                                     <div className={Styles[`box-font`]}>
                                         <div className="text-accent">수강 완료</div>
                                     </div>
@@ -352,9 +346,9 @@ const MyPageDashBoard = () => {
                                                     <div key={idx}>
                                                         {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
                                                         <Link to="/studio" className="h-20 my-2 flex">
-                                                            <div className="h-full w-32 mx-5">
+                                                            <div className="h-1/2 w-1/2 mx-5 mt-2">
                                                                 {/* src를 가져온 강의의 thumbnail_image로 */}
-                                                                <img src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`} alt="Lecture thumbnail" />
+                                                                <img className="rounded" src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`} alt="Lecture thumbnail" />
                                                             </div>
                                                             {/* 강의 name */}
                                                             <div className="leading-loose truncate">
@@ -369,10 +363,7 @@ const MyPageDashBoard = () => {
                                             </div>
                                     }
                                 </div>
-                                {/* 만약 1개도 존재하지 않으면 수강완료한 강의가 없습니다.
-                                get으로 강의리스트 가져오고 최신 완료한 3개까지만 썸네일 가져와서
-                                좌측div에 강의썸네일 우측에는 강의제목, 강의완료 날짜
-                                url링크 걸어서 강의 스튜디오로이동해야함 */}
+
                             </div>
                             <div className={Styles[`dashboard-box`]}>
                                 <div className={"pl-5 pt-5 text-accent " + Styles[`box-font`]}>주간 학습 달성률</div>
