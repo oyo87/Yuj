@@ -4,8 +4,17 @@ import LectureItemCard from "./LectureItemCard";
 import { searchLectures } from "../stores/lectureSlice";
 import SearchIcon from "@mui/icons-material/Search";
 import MainSearchLectureListCategorySelectBox from "./MainSearchLectureListCategorySelectBox";
+import { getYogaList } from "../stores/commonSlice";
 
-const MainSearchTeacher = () => {
+const MainSearchLecture = () => {
+  //컴포넌트가 마운트 될 때 yoga category를 데이터베이스에서 불러와 셀렉트 박스에 띄우기
+  //아래의 빈 [] 배열을 넣어주어야 화면이 첫 렌더링 될 때 한번만 실행됨.
+  useEffect(() => {
+    dispatch(getYogaList());
+    return () =>{
+    };
+  }, []);
+
   const [keyword, setKeyword] = useState("");
   let lectures = useSelector((state) => state.lecture.lecturesSearched);
   const dispatch = useDispatch();
@@ -88,4 +97,4 @@ const MainSearchTeacher = () => {
   );
 };
 
-export default MainSearchTeacher;
+export default MainSearchLecture;
