@@ -252,7 +252,7 @@ class Vidu extends Component {
                                 publishAudio: true, // 최초 입장 시 오디오 설정 여부
                                 publishVideo: true, // 최초 입장 시 비디오 설정 여부
                                 resolution: '640x480', // 영상 해상도 "320x240", "640x480", "1280x720"
-                                frameRate: 20, // 초당 프레임 수
+                                frameRate: 40, // 초당 프레임 수
                                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                                 mirror: true, // 미러 버전
                             });
