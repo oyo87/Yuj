@@ -120,8 +120,8 @@ class OpenViduVideoComponent extends Component {
         }
         if(teacherPose.keypoints.length>0){
             // teacherPose = convertToCalculateFormat(teacherPose);
-            drawPoints(teacherCanvasContext, teacherPose.keypoints, userColor);
-            drawSkeleton(teacherCanvasContext, teacherPose.keypoints, userColor);
+            drawPoints(teacherCanvasContext, teacherPose.keypoints, ModelParams.TEACHER_COLOR);
+            drawSkeleton(teacherCanvasContext, teacherPose.keypoints, ModelParams.TEACHER_COLOR);
         }
 
         return;

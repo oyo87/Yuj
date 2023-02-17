@@ -13,5 +13,6 @@ export const ModelParams = {
         imageShape : [192, 192, 3],
         modelArch : 'MoveNet',
         Config : {modelType : poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING},
-        strategy : 'weightedDistance'
+        strategy : 'weightedDistance',
+        TEACHER_COLOR : "Green"
 };
