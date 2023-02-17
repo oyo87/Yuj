@@ -73,7 +73,8 @@
 #### 요구사항 정의
 ![](./image/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD.png)
 #### 데이터 베이스 설계
-![](./image/yuj-erd.png)
+<!-- ![](./image/yuj-erd.png) -->
+<img src="./image/yuj-erd.png  width="50" height="50"/>
 #### 깃 브랜치 전략
 ![](./image/%EB%B8%8C%EB%9E%9C%EC%B9%98%EC%A0%84%EB%9E%B5.png)
 ####
