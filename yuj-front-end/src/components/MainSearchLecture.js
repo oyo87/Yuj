@@ -9,15 +9,13 @@ import { getYogaList } from "../stores/commonSlice";
 const MainSearchLecture = () => {
   //컴포넌트가 마운트 될 때 yoga category를 데이터베이스에서 불러와 셀렉트 박스에 띄우기
   //아래의 빈 [] 배열을 넣어주어야 화면이 첫 렌더링 될 때 한번만 실행됨.
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getYogaList());
-    return () =>{
-    };
   }, []);
 
   const [keyword, setKeyword] = useState("");
   let lectures = useSelector((state) => state.lecture.lecturesSearched);
-  const dispatch = useDispatch();
 
   const doSearch = () => {
     dispatch(searchLectures(keyword));
@@ -31,7 +29,7 @@ const MainSearchLecture = () => {
   };
 
   useEffect(() => {
-    if (lectures.length == 0) {
+    if (lectures.length === 0) {
       doSearch();
     }
   }, []);
@@ -43,7 +41,7 @@ const MainSearchLecture = () => {
           <div className="flex justify-between items-center">
             <p className="text-3xl font-bold text-accent mr-3">강의 목록</p>
             <div className="flex">
-              <div className="flex items-center">
+              <div className="flex items-center mr-3">
                 <MainSearchLectureListCategorySelectBox keyword={keyword} />
               </div>
               <div
@@ -79,8 +77,6 @@ const MainSearchLecture = () => {
             <div className="flex flex-wrap justify-start gap-9">
               {lectures?.map(
                 (lecture) => (
-                  console.log("lecture는"),
-                  console.log(lecture),
                   (
                     <LectureItemCard
                       key={lecture.lectureId}

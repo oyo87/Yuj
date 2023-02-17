@@ -51,11 +51,11 @@ const StudioReview = (props) => {
             <StudioSidebar studioDetail={studio.studioDetail} userId={studio.userId} studioLiveLecture={studio.studioLiveLecture}/>
             <div className="flex-auto px-40 pt-20">
                 <PageHeadPTag content="강의 후기"/>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between mb-3">
                         <div><span className="text-success">총 {reviewList.length}개의 후기</span></div> 
                         {
-                            studio.studioDetail.studioId == user.userId || user.userId === ""
-                                ?<button className="border-none btn-accent btn text-white gap-2 px-4 btn-sm " style={{'background-color': '#cccccc'}}><CreateIcon />후기 작성</button>
+                            studio.studioDetail.studioId === user.userId || user.userId === -1
+                                ?<button className="border-none btn-accent btn text-white gap-2 px-4 btn-sm " disabled style={{'background-color': '#cccccc'}}><CreateIcon />후기 작성</button>
                                 :<button className="border-none btn-accent btn text-white gap-2 px-4 btn-sm" onClick={addReview}><CreateIcon />후기 작성</button>
                         }
                     </div>
