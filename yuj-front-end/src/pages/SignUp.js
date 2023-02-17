@@ -94,7 +94,11 @@ const SignUp = () => {
       .then((response) => {
         console.log("OK!!!!");
         console.log(response.data);
-        // window.location.replace("/"); //  로그인 성공 시 화면 이동
+
+        if (response.data.code === -123) alert("로그인 실패!");
+        else {
+          window.location.replace("/"); //  로그인 성공 시 화면 이동
+        }
       })
       .catch((error) => {
         console.log("Error!!!!!!!!!!!!!");
@@ -403,7 +407,10 @@ const SignUp = () => {
               <div className="flex flex-wrap justify-center items-center gap-3 mt-8">
                 <label htmlFor="file" className="hover:cursor-pointer">
                   <div className={Styles.btnUpload}>
-                    <AddCircleOutlineIcon className="text-success hover:text-accent" style={{ fontSize: "xx-large" }} />
+                    <AddCircleOutlineIcon
+                      className="text-success hover:text-accent"
+                      style={{ fontSize: "xx-large" }}
+                    />
                   </div>
                 </label>
                 <input
