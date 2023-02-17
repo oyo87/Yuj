@@ -212,6 +212,7 @@ const StudioLectureCreatePage = () => {
         console.log("OK!!!!");
         console.log(response.data);
         // window.location.replace("/"); //  로그인 성공 시 화면 이동
+        navigate("/studio");
       })
       .catch((error) => {
         console.log("Error!!!!!!!!!!!!!");
@@ -220,7 +221,7 @@ const StudioLectureCreatePage = () => {
 
     // const postSurvey = await axios({
     //     method: "POST",
-    //     url: `http://localhost:5000/lectures`,
+    //     url: `https://i8a504.p.ssafy.io/api/lectures`,
     //     mode: "cors",
     //     // headers: {
     //     //   "Content-Type": "multipart/form-data",

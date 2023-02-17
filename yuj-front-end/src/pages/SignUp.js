@@ -94,10 +94,11 @@ const SignUp = () => {
       .then((response) => {
         console.log("OK!!!!");
         console.log(response.data);
-        // window.location.replace("/"); //  로그인 성공 시 화면 이동
+        window.location.replace("/"); //  로그인 성공 시 화면 이동
       })
       .catch((error) => {
         console.log("Error!!!!!!!!!!!!!");
+        alert('회원 가입 정보를 다시 확인해 주세요.');
         console.error(error);
       });
   };
@@ -403,7 +404,10 @@ const SignUp = () => {
               <div className="flex flex-wrap justify-center items-center gap-3 mt-8">
                 <label htmlFor="file" className="hover:cursor-pointer">
                   <div className={Styles.btnUpload}>
-                    <AddCircleOutlineIcon className="text-success hover:text-accent" style={{ fontSize: "xx-large" }} />
+                    <AddCircleOutlineIcon
+                      className="text-success hover:text-accent"
+                      style={{ fontSize: "xx-large" }}
+                    />
                   </div>
                 </label>
                 <input
@@ -422,6 +426,7 @@ const SignUp = () => {
                   className={
                     "btn btn-xs btn-accent " + Styles[`mypage-save-button`]
                   }
+
                 >
                   회원등록
                 </button>
