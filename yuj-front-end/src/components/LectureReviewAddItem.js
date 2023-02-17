@@ -23,7 +23,7 @@ const StudioReview = (props) => {
         getLectures();
         console.log(lectureList);
         console.log('현재 유저', user);
-        console.log('스튜디오 주인', studio.studioDetail.studioId);
+        console.log('스튜디오 주인', studio.studioDetail.userId);
     }, []);
 
     // change axios, add async
@@ -31,7 +31,7 @@ const StudioReview = (props) => {
         // const url = process.env.REACT_APP_API_URL + '/';
         const response = await axios.get(
             // `http://localhost:5000/studio/${studio.studioDetail.studioId}/lectures`
-            `${process.env.REACT_APP_API_URL}/studio/${studio.studioDetail.studioId}/lectures`
+            `${process.env.REACT_APP_API_URL}/studio/${studio.studioDetail.userId}/lectures`
         );
         setLectureList(response.data);
         setLoading(false);
