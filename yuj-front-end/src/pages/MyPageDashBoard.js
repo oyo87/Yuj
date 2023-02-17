@@ -49,7 +49,7 @@ const MyPageDashBoard = () => {
         return `${hours}:${minutes}`;
     }
 
-    const LOCAL_URL = "http://localhost:5000";
+    const LOCAL_URL = "https://i8a504.p.ssafy.io/api";
 
     const URL = LOCAL_URL;
 
@@ -271,7 +271,7 @@ const MyPageDashBoard = () => {
         return axios({
             method: "GET",
             // url: `${process.env.REACT_APP_API_URL}/mypage/dashboard/userlectureSchedule/${userId}`
-            url: `http://localhost:5000/mypage/dashboard/userLectureSchedule/${userId}`
+            url: `https://i8a504.p.ssafy.io/api/mypage/dashboard/userLectureSchedule/${userId}`
         })
             .then(response => {
                 console.log('getUserLectureScheduleByUserId : ', response.data)
@@ -312,12 +312,12 @@ const MyPageDashBoard = () => {
                                             : <div>{currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post, idx) => (
                                                 <div key={idx}>
                                                     <Link to="/studio" state={post.userId} className="h-20 my-2 flex">
-                                                        <div className="h-1/2 w-1/2 mx-5 mt-2">
+                                                        <div className="flex-none ml-5 mr-3 mt-2">
                                                             {/* 강의 thumbnail_image */}
-                                                            <img className="rounded" src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`}></img>
+                                                            <img className="rounded object-cover overflow-hidden" style={{width: "75px", height: "48px"}} src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`}></img>
                                                         </div>
                                                         {/* 강의 name */}
-                                                        <div className="leading-loose truncate">{post.name}
+                                                        <div className="flex-1 mr-2 leading-loose truncate">{post.name}
                                                             {console.log(lectureSchedule)}
                                                             <div className="break-keep">예정 : {post.closeTime ? post.closeTime : null} </div>
                                                         </div>
@@ -354,12 +354,12 @@ const MyPageDashBoard = () => {
                                                     <div key={idx}>
                                                         {/* 실제로는 studio링크가 아닌 해당 강의 스튜디오로 이동하게 짜야함. */}
                                                         <Link to="/studio" state={post.userId} className="h-20 my-2 flex">
-                                                            <div className="h-1/2 w-1/2 mx-5 mt-2">
+                                                            <div className="flex-none ml-5 mr-3 mt-2">
                                                                 {/* src를 가져온 강의의 thumbnail_image로 */}
-                                                                <img className="rounded" src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`} alt="Lecture thumbnail" />
+                                                                <img className="rounded object-cover overflow-hidden" style={{width: "75px", height: "48px"}} src={`${process.env.REACT_APP_IMAGE_URL}/${post.thumbnailImage}`} alt="Lecture thumbnail" />
                                                             </div>
                                                             {/* 강의 name */}
-                                                            <div className="leading-loose truncate">
+                                                            <div className="flex-1 mr-2 leading-loose truncate">
                                                                 {post.name}
                                                                 {/* 강의 end_date */}
                                                                 <div>완료일 : {post.endDate}</div>
