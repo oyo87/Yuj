@@ -1,6 +1,6 @@
 # Yuj : Enhance your Yoga Experience
 ![](./image/yuj.png)
-:man_technologist: 노트북만 있다면 어디서나 즐길 수 있는 온라인 요가 화상수업 플랫폼 :woman_technologist:
+노트북만 있다면 어디서나 즐길 수 있는 온라인 요가 화상수업 플랫폼 :woman_technologist:
 
 ## Table of Contents
 
