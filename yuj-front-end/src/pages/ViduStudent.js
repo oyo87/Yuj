@@ -30,6 +30,9 @@ class Vidu extends Component {
         this.teacherVideoRef = React.createRef();
         this.teacherCanvasRef = React.createRef();
 
+        this.studentAnimationFrame = React.createRef();
+        this.teacherAnimationFrame = React.createRef();
+
         this.state = {
             mySessionId: props.navigationState.mySessionId,
             myUserName: props.navigationState.myUserName,
@@ -447,6 +450,8 @@ class Vidu extends Component {
         this.props.toggleInferenceMode();
         console.log('2. toggle inference event activate. value : ', beforeState,'-> ',this.props.model.userInferenceState.inferenceState);
         let message = !beforeState ? 'AI 피드백 끄기' : 'AI 피드백 켜기';
+        cancelAnimationFrame(this.studentAnimationFrame.current);
+        cancelAnimationFrame(this.teacherAnimationFrame.current);
         this.setState({ aiMessage: message })
     }
 
@@ -529,14 +534,15 @@ class Vidu extends Component {
                                 {this.state.subscribers.map((sub, i) => (
                                     ( JSON.parse(sub.stream.connection.data).clientType === '강사' ? (
                                         <div key={i} style={{ width: '50%' }} onClick={() => this.handleMainVideoStream(sub)}>
-                                            <UserVideoComponent teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} type={'강사'} streamManager={sub} />
+                                            <UserVideoComponent teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
+                                                teacherAnimationFrame={this.teacherAnimationFrame} type={'강사'} streamManager={sub} />
                                         </div>
                                     ) : null)
                                 ))}
                                 {this.state.publisher !== undefined ? (
                                     <div style={{ position: 'relative', width: '50%' }} onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} 
-                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
+                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} studentAnimationFrame={this.studentAnimationFrame}
+                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} teacherAnimationFrame={this.teacherAnimationFrame}
                                             type={this.state.myUserType} streamManager={this.state.publisher} />
                                     </div>
                                 ): null}
