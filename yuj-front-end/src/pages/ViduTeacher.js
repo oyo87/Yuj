@@ -467,7 +467,7 @@ class Vidu extends Component {
 
         const VideoContainer = styled.div`
            
-            background: linear-gradient(to top left, #F8F6F3, #B7AFBD);
+            background: #F8F6F3;
             justify-content: center;
             top:0px;
             width: 100vw;
@@ -478,15 +478,18 @@ class Vidu extends Component {
         const VideoGrid = styled.div`
             display: flex !important;
             flex-wrap: wrap !important;
+            align-items: center;
+            margin-top: 10%;
+
             width: 100%;
             height: 100%;
         `;
 
         const ButtonContainer = styled.div`
             width: 100%;
-            height: 5vh;
+            height: full;
             position: fixed;
-            bottom: 1%;
+            bottom: 2%;
 
             display: flex !important;
             clear: both;
@@ -541,20 +544,20 @@ class Vidu extends Component {
                         </VideoContainer>
                         {this.state.mainStreamManager !== undefined ? (
                             <ButtonContainer>
-                                <img className='yuj-logo' alt='No Image' src='/assets/YujMainLogo.svg' style={{ marginBottom: '10px' }}></img>
-                                <button className="clickControl " onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
+                                <img className='yuj-logo h-8' alt='No Image' src='/assets/YujMainLogo.svg' style={{  }}></img>
+                                <button className="clickControl " style={{margin: '0'}} onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
                                     <span className="material-symbols-outlined">videocam</span> : <span className="material-symbols-outlined">videocam_off</span>}  &nbsp;&nbsp;  {this.state.videoMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
+                                <button className="clickControl" style={{margin: '0'}} onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
                                     <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>} &nbsp;&nbsp; {this.state.voiceMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
+                                <button className="clickControl" style={{margin: '0'}} onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
                                     <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>} &nbsp;&nbsp; {this.state.listMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
+                                <button className="clickControl" style={{margin: '0'}} onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
                                     <span className="material-symbols-outlined">chat</span> : <span className="material-symbols-outlined">speaker_notes_off</span>} &nbsp;&nbsp; {this.state.chatMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span> &nbsp;&nbsp; 종료</div></button>
+                                <button className="clickControl" style={{margin: '0'}} onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span> &nbsp;&nbsp; 종료</div></button>
                             </ButtonContainer>
                         ) : null}
                     </div>
