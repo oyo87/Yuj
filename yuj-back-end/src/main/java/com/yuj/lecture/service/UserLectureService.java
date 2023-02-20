@@ -140,19 +140,16 @@ public class UserLectureService {
     
     // 유저 수강 후기 등록
     public void registReview(LectureReviewRequestDTO userRequestDto) {
-		User user = userRepository.findById(userRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
-		
-		Lecture lecture = lectureRepository.findById(userRequestDto.getLectureId()).orElseThrow(CLectureNotFoundException::new);
-		
-		UserLecture userLecture = UserLecture.builder()
-				.registDate(LocalDate.now())
-				.review(userRequestDto.getReview())
-				.reviewUpdateDate(LocalDateTime.now())
-				.score(userRequestDto.getScore())
-				.lecture(lecture)
-				.user(user)
-				.build();
-		userLectureRepository.save(userLecture);
+//		User user = userRepository.findById(userRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
+//		Lecture lecture = lectureRepository.findById(userRequestDto.getLectureId()).orElseThrow(CLectureNotFoundException::new);
+
+        UserLecture selectedUserLecture = userLectureRepository.findByUser_UserIdAndLecture_LectureId(userRequestDto.getUserId(), userRequestDto.getLectureId()).orElseThrow(CUserLectureNotFoundException::new);
+
+        selectedUserLecture.setReview(userRequestDto.getReview());
+        selectedUserLecture.setReviewUpdateDate(LocalDateTime.now());
+        selectedUserLecture.setState(true);
+
+//		userLectureRepository.save(selectedUserLecture);
 		
 		// 후기에 따른 강사 댓글 개수, 점수 합계 update
 		User teacher = userRepository.findById(userRequestDto.getTeacherId()).orElseThrow(CUserNotFoundException::new);
@@ -164,8 +161,10 @@ public class UserLectureService {
 	
     // 유저 수강 후기 삭제
     public void deleteReview(Long userLectureId) throws Exception {
-    	UserLecture userLecture = userLectureRepository.findById(userLectureId).orElseThrow(Exception::new);
+    	UserLecture userLecture = userLectureRepository.findById(userLectureId).orElseThrow(CUserLectureNotFoundException::new);
     	userLecture.setState(!userLecture.isState());
+
+//        userLectureRepository.save(userLecture);
     }
     
     private LectureReviewResponseDTO entityToReviewDTO(UserLecture userLecture) {
