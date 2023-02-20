@@ -120,6 +120,37 @@ public class LectureService {
         }
     }
 
+//    @Transactional
+//    public Long updateLecture(Long lectureId, List<MultipartFile> files, LectureVO lectureVO, List<LectureScheduleRegistDTO> lsrDtos) {
+//        //  변경된 요가 찾아내기
+//        Yoga yoga = yogaRepository.findById(lectureVO.getYogaId()).orElseThrow(CYogaNotFoundException::new);
+//
+//        //  강의 찾아내기
+//        Lecture lecture = lectureRepository.findById(lectureId).orElseThrow(CLectureNotFoundException::new);
+//
+////        Lecture lecture = Lecture.builder()
+////                .user(teacher)
+////                .yoga(yoga)
+////                .name(lectureVO.getName())
+////                .description(lectureVO.getDescription())
+////                .registDate(lectureVO.getRegistDate())
+////                .startDate(lectureVO.getStartDate())
+////                .endDate(lectureVO.getEndDate())
+////                .registDate(lectureVO.getRegistDate())
+////                .limitStudents(lectureVO.getLimitStudents())
+////                .fee(lectureVO.getFee())
+////                .totalCount(lectureVO.getTotalCount())
+////                .build();
+//
+//        lecture.setYoga(yoga);  //  요가 변경
+//        lecture.setName(lectureVO.getName());   //  이름 변경
+//        lecture.setDescription(lectureVO.getDescription()); //  상세정보 변경
+//        lecture.setStartDate(lectureVO.getStartDate());
+//        lecture.setEndDate(lectureVO.getEndDate());
+//
+//
+//    }
+
     @Transactional
     public Long deleteLectureByLectureId(Long lectureId) {
         lectureRepository.deleteById(lectureId);
