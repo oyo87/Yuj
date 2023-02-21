@@ -489,7 +489,7 @@ class Vidu extends Component {
             width: 100%;
             height: full;
             position: fixed;
-            bottom: 2%;
+            bottom: 1.3%;
 
             display: flex !important;
             clear: both;
@@ -544,20 +544,20 @@ class Vidu extends Component {
                         </VideoContainer>
                         {this.state.mainStreamManager !== undefined ? (
                             <ButtonContainer>
-                                <img className='yuj-logo h-8' alt='No Image' src='/assets/YujMainLogo.svg' style={{  }}></img>
-                                <button className="clickControl " style={{margin: '0'}} onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
+                                <img className='yuj-logo h-10' alt='No Image' src='/assets/YujMainLogo.svg' style={{  }}></img>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
                                     <span className="material-symbols-outlined">videocam</span> : <span className="material-symbols-outlined">videocam_off</span>}  &nbsp;&nbsp;  {this.state.videoMessage}</div>
                                 </button>
-                                <button className="clickControl" style={{margin: '0'}} onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
                                     <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>} &nbsp;&nbsp; {this.state.voiceMessage}</div>
                                 </button>
-                                <button className="clickControl" style={{margin: '0'}} onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
                                     <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>} &nbsp;&nbsp; {this.state.listMessage}</div>
                                 </button>
-                                <button className="clickControl" style={{margin: '0'}} onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
                                     <span className="material-symbols-outlined">chat</span> : <span className="material-symbols-outlined">speaker_notes_off</span>} &nbsp;&nbsp; {this.state.chatMessage}</div>
                                 </button>
-                                <button className="clickControl" style={{margin: '0'}} onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span> &nbsp;&nbsp; 종료</div></button>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span> &nbsp;&nbsp; 종료</div></button>
                             </ButtonContainer>
                         ) : null}
                     </div>

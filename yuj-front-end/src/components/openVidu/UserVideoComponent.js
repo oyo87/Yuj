@@ -5,7 +5,7 @@ import './UserVideo.css';
 
 const NameTag = styled.p`
     /* width: 150px; */
-    color: #323131;
+    color: #90859A;
     font-weight: bold;
 `;
 export default class UserVideoComponent extends Component {
