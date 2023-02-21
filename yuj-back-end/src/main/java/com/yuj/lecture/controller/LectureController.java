@@ -210,7 +210,7 @@ public class LectureController {
                 .append("삭제된 수강 신청 내역 개수 : ").append(deletedUserLectures).append("\n")
                 .append("삭제된 수강 내역 개수 : ").append(deletedUserLectureSchedules).append("\n")
                 .append("삭제된 강의 관련 이미지 개수 : ").append(deletedImages).append("\n")
-                .append("삭제된 강의 번호 : ").append("\n");
+                .append("삭제된 강의 번호 : ").append(deletedLectureId).append("\n");
 
         ret = new ResponseEntity<>(sb.toString(), HttpStatus.OK);
 
