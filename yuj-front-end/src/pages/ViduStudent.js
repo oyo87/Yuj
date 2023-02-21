@@ -19,7 +19,6 @@ const OPENVIDU_SERVER_URL = "https://i8a504.p.ssafy.io";
 // const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io/api";
 // const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
-const OPENVIDU_PRO_SPEECH_TO_TEXT = 'vosk';
 
 class Vidu extends Component {
     constructor(props) {
@@ -29,6 +28,9 @@ class Vidu extends Component {
         this.studentCanvasRef = React.createRef();
         this.teacherVideoRef = React.createRef();
         this.teacherCanvasRef = React.createRef();
+
+        this.studentAnimationFrame = React.createRef();
+        this.teacherAnimationFrame = React.createRef();
 
         this.state = {
             mySessionId: props.navigationState.mySessionId,
@@ -89,11 +91,11 @@ class Vidu extends Component {
 
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
-        console.log('did mount done');
+        // console.log('did mount done');
     }
 
     componentDidUpdate(prevProps, prevState){
-        console.log('update root Vidu Student!!!');
+        // console.log('update root Vidu Student!!!');
     }
 
     componentWillUnmount() {
@@ -199,24 +201,24 @@ class Vidu extends Component {
             });
         }
     }
-    async getSessions() {
-        let Sessions = await axios.get(
-            OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
-            {
-                headers: {
-                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-                },
-            }
-        );
-        Sessions.data.content.forEach((content) => { 
-            console.log(content);
-        })
-    }
+    // async getSessions() {
+    //     let Sessions = await axios.get(
+    //         OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
+    //         {
+    //             headers: {
+    //                 'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+    //             },
+    //         }
+    //     );
+    //     Sessions.data.content.forEach((content) => { 
+    //         console.log(content);
+    //     })
+    // }
 
     // 세션 생성하는 과정
     async joinSession() {
         this.OV = new OpenVidu();
-        console.log('join session')
+        // console.log('join session')
         this.setState(
             {
                 session: this.OV.initSession(),
@@ -295,7 +297,7 @@ class Vidu extends Component {
                             console.log('There was an error connecting to the session:', error.code, error.message);
                         });
                 });
-                console.log('mySession : ', mySession);
+                // console.log('mySession : ', mySession);
             },
         );
     }
@@ -315,7 +317,7 @@ class Vidu extends Component {
         // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
         const mySession = this.state.session;
         
-        console.log('학생 세션 : ', this.state.session);
+        // console.log('학생 세션 : ', this.state.session);
         if (mySession) {
             mySession.disconnect();
         }
@@ -407,19 +409,20 @@ class Vidu extends Component {
         if (this.state.liston === false) {
             this.setState({ listMessage: '참가자 끄기' });
             let Sessions = await axios.get(
-                // '/openvidu/api/sessions',
-                APPLICATION_SERVER_URL + '/openvidu/api/sessions',
+                OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
                 {
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
                     },
                 }
             );
-
+            // console.log(Sessions);
+            
+            
             // 현재 세션에 참가하고 있는 사람들의 세션 아이디, 비디오, 오디오 상태 확인
             let listMembersDemo = [];
             Sessions.data.content.forEach((content) => {
-                if (this.state.mySessionId === content.id) {
+                if (this.state.mySessionId === parseInt(content.id)) {
                     content.connections.content.map((c) => {
                         // console.log(c.id); // 세션 아이디
                         // console.log(JSON.parse(c.clientData).clientType); // 커스텀 한 데이터 값 : 강사/수강생 여부
@@ -447,6 +450,8 @@ class Vidu extends Component {
         this.props.toggleInferenceMode();
         console.log('2. toggle inference event activate. value : ', beforeState,'-> ',this.props.model.userInferenceState.inferenceState);
         let message = !beforeState ? 'AI 피드백 끄기' : 'AI 피드백 켜기';
+        cancelAnimationFrame(this.studentAnimationFrame.current);
+        cancelAnimationFrame(this.teacherAnimationFrame.current);
         this.setState({ aiMessage: message })
     }
 
@@ -530,14 +535,15 @@ class Vidu extends Component {
                                 {this.state.subscribers.map((sub, i) => (
                                     ( JSON.parse(sub.stream.connection.data).clientType === '강사' ? (
                                         <div key={i} style={{ width: '50%' }} onClick={() => this.handleMainVideoStream(sub)}>
-                                            <UserVideoComponent teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} type={'강사'} streamManager={sub} />
+                                            <UserVideoComponent teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
+                                                teacherAnimationFrame={this.teacherAnimationFrame} type={'강사'} streamManager={sub} />
                                         </div>
                                     ) : null)
                                 ))}
                                 {this.state.publisher !== undefined ? (
                                     <div style={{ position: 'relative', width: '50%' }} onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} 
-                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
+                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} studentAnimationFrame={this.studentAnimationFrame}
+                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} teacherAnimationFrame={this.teacherAnimationFrame}
                                             type={this.state.myUserType} streamManager={this.state.publisher} />
                                     </div>
                                 ): null}
