@@ -179,7 +179,7 @@ public class LectureController {
                 }
             }
 
-            Long ret = lectureService.registLecture(files, lectureVO, lsrDtos);
+            Long ret = lectureService.updateLecture(lectureId, files, lectureVO, lsrDtos);
             return new ResponseEntity<>("강의 수정 성공\n강의 번호 : " + ret, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
