@@ -167,60 +167,6 @@ public class UserLectureService {
         userLecture.setReviewUpdateDate(LocalDateTime.now());
         userLecture.setScore(0);
     }
-    
-    private LectureReviewResponseDTO entityToReviewDTO(UserLecture userLecture) {
-    	User user = userLecture.getUser();
-    	Lecture lecture = userLecture.getLecture();
-    	
-    	return LectureReviewResponseDTO.builder()
-    			.reviewId(userLecture.getUserLectureId())
-    			.userId(user.getUserId())
-    			.userName(user.getNickname())
-    			.date(userLecture.getRegistDate())
-    			.rating(userLecture.getScore())
-    			.lectureName(lecture.getName())
-    			.review(userLecture.getReview())
-    			.profileImage(user.getProfileImagePath())
-    			.build();
-    	}
-
-        for (UserLecture userLecture : list) {
-            result.add(entityToReviewDTO(userLecture));
-        }
-        return result;
-    }
-
-    // 유저 수강 후기 등록
-    @Transactional
-    public void registReview(LectureReviewRequestDTO userRequestDto) {
-        User user = userRepository.findById(userRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
-
-        Lecture lecture = lectureRepository.findById(userRequestDto.getLectureId()).orElseThrow(CLectureNotFoundException::new);
-
-        UserLecture userLecture = UserLecture.builder()
-                .registDate(LocalDate.now())
-                .review(userRequestDto.getReview())
-                .reviewUpdateDate(LocalDateTime.now())
-                .score(userRequestDto.getScore())
-                .lecture(lecture)
-                .user(user)
-                .build();
-        userLectureRepository.save(userLecture);
-
-        // 후기에 따른 강사 댓글 개수, 점수 합계 update
-        User teacher = userRepository.findById(userRequestDto.getTeacherId()).orElseThrow(CUserNotFoundException::new);
-
-        teacher.setRatingCnt(teacher.getRatingCnt() + 1);
-        teacher.setRatingSum(teacher.getRatingSum() + userRequestDto.getScore());
-        userRepository.save(teacher);
-    }
-
-    // 유저 수강 후기 삭제
-    @Transactional
-    public void deleteReview(Long userLectureId) throws Exception {
-        UserLecture userLecture = userLectureRepository.findById(userLectureId).orElseThrow(Exception::new);
-        userLecture.setState(!userLecture.isState());
-    }
 
     private LectureReviewResponseDTO entityToReviewDTO(UserLecture userLecture) {
         User user = userLecture.getUser();
