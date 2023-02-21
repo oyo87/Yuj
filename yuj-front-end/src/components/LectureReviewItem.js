@@ -44,7 +44,7 @@ const LectureReviewItem = (props) => {
                         </HeaderDetail>
                         {/* {(loginUserInfo.userId*=1) === item.userId ? 
                         (<><EditIcon/><DeleteIcon/></>) : null} */}
-                        {(loginUserInfo.userId*=1) === item.userId ? 
+                        {parseInt(loginUserInfo.userId) === item.userId ? 
                             (<>
                                 <span className='rounded-full p-1 hover:bg-success hover:bg-opacity-40 flex ml-5 mr-3 items-center'><EditIcon sx={{ fontSize: 15 }} />
                                     <p className="text-xs ml-1">수정</p>

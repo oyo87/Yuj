@@ -1,6 +1,7 @@
 package com.yuj.mypage.service;
 
 import com.yuj.exception.CLectureNotFoundException;
+import com.yuj.exception.CLectureScheduleNotFoundException;
 import com.yuj.exception.CUserLectureNotFoundException;
 import com.yuj.exception.CUserNotFoundException;
 import com.yuj.lecture.domain.*;
@@ -23,6 +24,7 @@ import com.yuj.user.repository.UserRepository;
 import com.yuj.util.DayCounter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
@@ -104,7 +106,7 @@ public class MyPageService {
 
     //    lectureId를 사용하여 모든 강의 스케쥴 가져오기
     public List<MyPageLectureScheduleResponseDTO> getLectureScheduleByLectureId(long lectureId) {
-        List<LectureSchedule> allByLectureLectureId = lectureScheduleRepository.findAllByLecture_LectureId(lectureId);
+        List<LectureSchedule> allByLectureLectureId = lectureScheduleRepository.findAllByLecture_LectureId(lectureId).orElseThrow(CLectureScheduleNotFoundException::new);
 
         List<MyPageLectureScheduleResponseDTO> myPageLectureScheduleResponseDTOS = new ArrayList<>();
 
@@ -132,6 +134,7 @@ public class MyPageService {
 //    private MyPageUserLectureResponseDTO entityToUserLectureResponseDTO(UserLecture userLecture){
 //        User user = userLecture.getUser();
 //    유저 정보 수정
+    @Transactional
     public Optional<User> updateUser(Long userId, MyPageUserInfoRequestDTO myPageUserInfoRequestDTO) {
         Optional<User> user = this.myPageUserInfoRepository.findById(userId);
 
@@ -233,7 +236,7 @@ public class MyPageService {
         long totalCnt = 0;                              //  오늘까지 진행된 수업 수
         long attendance = 0;                            //  참석한 수업 수
 
-        List<LectureSchedule> lectureScheduleList = lectureScheduleRepository.findAllByLecture_LectureId(lectureId);
+        List<LectureSchedule> lectureScheduleList = lectureScheduleRepository.findAllByLecture_LectureId(lectureId).orElseThrow(CLectureScheduleNotFoundException::new);
 
         //  수업 열리는 요일 다 구함
         for(LectureSchedule lectureSchedule : lectureScheduleList) {
