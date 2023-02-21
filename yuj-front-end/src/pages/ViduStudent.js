@@ -19,7 +19,6 @@ const OPENVIDU_SERVER_URL = "https://i8a504.p.ssafy.io";
 // const APPLICATION_SERVER_URL = "https://i8a504.p.ssafy.io/api";
 // const OPENVIDU_SERVER_URL = 'http://localhost:4443';
 const OPENVIDU_SERVER_SECRET = '123123';
-const OPENVIDU_PRO_SPEECH_TO_TEXT = 'vosk';
 
 class Vidu extends Component {
     constructor(props) {
@@ -29,6 +28,9 @@ class Vidu extends Component {
         this.studentCanvasRef = React.createRef();
         this.teacherVideoRef = React.createRef();
         this.teacherCanvasRef = React.createRef();
+
+        this.studentAnimationFrame = React.createRef();
+        this.teacherAnimationFrame = React.createRef();
 
         this.state = {
             mySessionId: props.navigationState.mySessionId,
@@ -89,11 +91,11 @@ class Vidu extends Component {
 
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
-        console.log('did mount done');
+        // console.log('did mount done');
     }
 
     componentDidUpdate(prevProps, prevState){
-        console.log('update root Vidu Student!!!');
+        // console.log('update root Vidu Student!!!');
     }
 
     componentWillUnmount() {
@@ -199,24 +201,22 @@ class Vidu extends Component {
             });
         }
     }
-    async getSessions() {
-        let Sessions = await axios.get(
-            OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
-            {
-                headers: {
-                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-                },
-            }
-        );
-        Sessions.data.content.forEach((content) => { 
-            console.log(content);
-        })
-    }
-
-    // 세션 생성하는 과정
+    // async getSessions() {
+    //     let Sessions = await axios.get(
+    //         OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
+    //         {
+    //             headers: {
+    //                 'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+    //             },
+    //         }
+    //     );
+    //     Sessions.data.content.forEach((content) => { 
+    //         console.log(content);
+    //     })
+    // }
     async joinSession() {
         this.OV = new OpenVidu();
-        console.log('join session')
+        // console.log('join session')
         this.setState(
             {
                 session: this.OV.initSession(),
@@ -250,7 +250,6 @@ class Vidu extends Component {
                 //강사가 강의 나가면 수강생도 종료
                 mySession.on('streamDestroyed', (event) => {
                     this.deleteSubscriber(event.stream.streamManager);
-                    this.leaveSession();
                 });
                 // 강퇴 당할 시 session에 undefined 정의하고 dom 리랜더링 -> 스튜디오로 이동
                 mySession.on('sessionDisconnected', (event) => {
@@ -295,7 +294,7 @@ class Vidu extends Component {
                             console.log('There was an error connecting to the session:', error.code, error.message);
                         });
                 });
-                console.log('mySession : ', mySession);
+                // console.log('mySession : ', mySession);
             },
         );
     }
@@ -318,6 +317,9 @@ class Vidu extends Component {
         console.log('학생 세션 : ', this.state.session);
         if (mySession) {
             mySession.disconnect();
+            // mySession.disconnect(this.state.session.connection.connectionId);
+            // const connection = mySession.getConnection(this.state.session.connection.connectionId);
+            // mySession.forceDisconnect(connection);
         }
 
         // Empty all properties...
@@ -407,19 +409,20 @@ class Vidu extends Component {
         if (this.state.liston === false) {
             this.setState({ listMessage: '참가자 끄기' });
             let Sessions = await axios.get(
-                // '/openvidu/api/sessions',
-                APPLICATION_SERVER_URL + '/openvidu/api/sessions',
+                OPENVIDU_SERVER_URL + '/openvidu/api/sessions',
                 {
                     headers: {
                         'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
                     },
                 }
             );
-
+            // console.log(Sessions);
+            
+            
             // 현재 세션에 참가하고 있는 사람들의 세션 아이디, 비디오, 오디오 상태 확인
             let listMembersDemo = [];
             Sessions.data.content.forEach((content) => {
-                if (this.state.mySessionId === content.id) {
+                if (this.state.mySessionId === parseInt(content.id)) {
                     content.connections.content.map((c) => {
                         // console.log(c.id); // 세션 아이디
                         // console.log(JSON.parse(c.clientData).clientType); // 커스텀 한 데이터 값 : 강사/수강생 여부
@@ -447,6 +450,8 @@ class Vidu extends Component {
         this.props.toggleInferenceMode();
         console.log('2. toggle inference event activate. value : ', beforeState,'-> ',this.props.model.userInferenceState.inferenceState);
         let message = !beforeState ? 'AI 피드백 끄기' : 'AI 피드백 켜기';
+        cancelAnimationFrame(this.studentAnimationFrame.current);
+        cancelAnimationFrame(this.teacherAnimationFrame.current);
         this.setState({ aiMessage: message })
     }
 
@@ -464,9 +469,7 @@ class Vidu extends Component {
         }
 
         const VideoContainer = styled.div`
-            background: white;
-            /* display: flex !important;
-            flex-wrap: wrap !important; */
+            background: #F8F6F3;
             justify-content: center;
             top:0px;
             width: 100vw;
@@ -477,15 +480,18 @@ class Vidu extends Component {
         const VideoGrid = styled.div`
             display: flex !important;
             flex-wrap: wrap !important;
+            align-items: center;
+            margin-top: 7%;
+
             width: 100%;
             height: 100%;
         `;
 
         const ButtonContainer = styled.div`
             width: 100%;
-            height: 5vh;
+            height: full;
             position: fixed;
-            bottom: 0px;
+            bottom: 1.3%;
 
             display: flex !important;
             clear: both;
@@ -529,14 +535,15 @@ class Vidu extends Component {
                                 {this.state.subscribers.map((sub, i) => (
                                     ( JSON.parse(sub.stream.connection.data).clientType === '강사' ? (
                                         <div key={i} style={{ width: '50%' }} onClick={() => this.handleMainVideoStream(sub)}>
-                                            <UserVideoComponent teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} type={'강사'} streamManager={sub} />
+                                            <UserVideoComponent teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
+                                                teacherAnimationFrame={this.teacherAnimationFrame} type={'강사'} streamManager={sub} />
                                         </div>
                                     ) : null)
                                 ))}
                                 {this.state.publisher !== undefined ? (
                                     <div style={{ position: 'relative', width: '50%' }} onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} 
-                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} 
+                                        <UserVideoComponent studentVideoRef={this.studentVideoRef} studentCanvasRef={this.studentCanvasRef} studentAnimationFrame={this.studentAnimationFrame}
+                                            teacherVideoRef={this.teacherVideoRef} teacherCanvasRef={this.teacherCanvasRef} teacherAnimationFrame={this.teacherAnimationFrame}
                                             type={this.state.myUserType} streamManager={this.state.publisher} />
                                     </div>
                                 ): null}
@@ -545,26 +552,26 @@ class Vidu extends Component {
 
                         {this.state.mainStreamManager !== undefined ? (
                             <ButtonContainer>
-                                <img className='yuj-logo' alt='No Image' src='/assets/YujMainLogo.svg' style={{ marginBottom: '10px' }}></img>
-                                <button className="clickControl " onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
-                                    <span className="material-symbols-outlined">videocam</span> : <span className="material-symbols-outlined">videocam_off</span>}    {this.state.videoMessage}</div>
+                                <img className='yuj-logo h-10' alt='No Image' src='/assets/YujMainLogo.svg' style={{  }}></img>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
+                                    <span className="material-symbols-outlined">videocam</span> : <span className="material-symbols-outlined">videocam_off</span>}  &nbsp;&nbsp;  {this.state.videoMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
-                                    <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>}    {this.state.voiceMessage}</div>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
+                                    <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>}  &nbsp;&nbsp;  {this.state.voiceMessage}</div>
                                 </button>
-                                <button className="clickControl " onClick={this.aiInferenceToggle}><div className="flex w-full justify-center">{this.props.model.userInferenceState.inferenceState === true ?
-                                    <span className="material-symbols-outlined">psychology_alt</span> : <span className="material-symbols-outlined">psychology</span>}    {this.state.aiMessage}</div>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.aiInferenceToggle}><div className="flex w-full justify-center">{this.props.model.userInferenceState.inferenceState === true ?
+                                    <span className="material-symbols-outlined">psychology_alt</span> : <span className="material-symbols-outlined">psychology</span>}  &nbsp;&nbsp;  {this.state.aiMessage}</div>
                                 </button>
-                                <button className="clickControl " onClick={this.teacherSkeletonToggle}><div className="flex w-full justify-center">{this.props.model.teacherSkeletonState.skeletonState === true ?
-                                    <span className="material-symbols-outlined">auto_fix_off</span> : <span className="material-symbols-outlined">auto_fix</span>}    {this.state.teacherSkeletonMessage}</div>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.teacherSkeletonToggle}><div className="flex w-full justify-center">{this.props.model.teacherSkeletonState.skeletonState === true ?
+                                    <span className="material-symbols-outlined">auto_fix_off</span> : <span className="material-symbols-outlined">auto_fix</span>}  &nbsp;&nbsp;  {this.state.teacherSkeletonMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
-                                    <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>} {this.state.listMessage}</div>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
+                                    <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>}  &nbsp;&nbsp;  {this.state.listMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
-                                    <span className="material-symbols-outlined">chat</span> : <span className="material-symbols-outlined">speaker_notes_off</span>} {this.state.chatMessage}</div>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
+                                    <span className="material-symbols-outlined">chat</span> : <span className="material-symbols-outlined">speaker_notes_off</span>}  &nbsp;&nbsp;  {this.state.chatMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span> 종료</div></button>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span>  &nbsp;&nbsp;  종료</div></button>
                             </ButtonContainer>
                         ) : null}
                     </div>
