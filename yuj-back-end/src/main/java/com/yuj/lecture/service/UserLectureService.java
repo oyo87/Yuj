@@ -145,8 +145,9 @@ public class UserLectureService {
         // 수강신청 내역에 리뷰관련 내용 추가하기
         selectedUserLecture.setReview(userRequestDto.getReview());
         selectedUserLecture.setReviewUpdateDate(LocalDateTime.now());
-		
-		// 후기에 따른 강사 댓글 개수, 점수 합계 update
+        selectedUserLecture.setScore(userRequestDto.getScore());
+
+        // 후기에 따른 강사 댓글 개수, 점수 합계 update
 		User teacher = userRepository.findById(userRequestDto.getTeacherId()).orElseThrow(CUserNotFoundException::new);
 		
 		teacher.setRatingCnt(teacher.getRatingCnt() + 1);
