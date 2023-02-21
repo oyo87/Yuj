@@ -29,8 +29,8 @@ export default class UserVideoComponent extends Component {
                 {this.props.streamManager !== undefined ? (
                     <div className="streamcomponent">
                         <OpenViduVideoComponent type={this.props.type} isActive={ this.props.isActive} streamManager={this.props.streamManager}
-                        studentVideoRef={this.props.studentVideoRef} studentCanvasRef={this.props.studentCanvasRef} 
-                        teacherVideoRef={this.props.teacherVideoRef} teacherCanvasRef={this.props.teacherCanvasRef}/>
+                        studentVideoRef={this.props.studentVideoRef} studentCanvasRef={this.props.studentCanvasRef} studentAnimationFrame={this.props.studentAnimationFrame}
+                        teacherVideoRef={this.props.teacherVideoRef} teacherCanvasRef={this.props.teacherCanvasRef} teacherAnimationFrame={this.props.teacherAnimationFrame} />
                         <div><NameTag>{this.getNicknameTag() + (this.props.type??'')} 님</NameTag></div>
                     </div>
                 ) : null}
