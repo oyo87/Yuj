@@ -140,31 +140,32 @@ public class UserLectureService {
     
     // 유저 수강 후기 등록
     public void registReview(LectureReviewRequestDTO userRequestDto) {
-//		User user = userRepository.findById(userRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
-//		Lecture lecture = lectureRepository.findById(userRequestDto.getLectureId()).orElseThrow(CLectureNotFoundException::new);
-
         UserLecture selectedUserLecture = userLectureRepository.findByUser_UserIdAndLecture_LectureId(userRequestDto.getUserId(), userRequestDto.getLectureId()).orElseThrow(CUserLectureNotFoundException::new);
 
+        // 수강신청 내역에 리뷰관련 내용 추가하기
         selectedUserLecture.setReview(userRequestDto.getReview());
         selectedUserLecture.setReviewUpdateDate(LocalDateTime.now());
-        selectedUserLecture.setState(true);
-
-//		userLectureRepository.save(selectedUserLecture);
 		
 		// 후기에 따른 강사 댓글 개수, 점수 합계 update
 		User teacher = userRepository.findById(userRequestDto.getTeacherId()).orElseThrow(CUserNotFoundException::new);
 		
 		teacher.setRatingCnt(teacher.getRatingCnt() + 1);
 		teacher.setRatingSum(teacher.getRatingSum() + userRequestDto.getScore());
-		userRepository.save(teacher);
 	}
 	
     // 유저 수강 후기 삭제
     public void deleteReview(Long userLectureId) throws Exception {
     	UserLecture userLecture = userLectureRepository.findById(userLectureId).orElseThrow(CUserLectureNotFoundException::new);
-    	userLecture.setState(!userLecture.isState());
+        User teacher = userRepository.findById(userLecture.getLecture().getUser().getId()).orElseThrow(CUserNotFoundException::new);
 
-//        userLectureRepository.save(userLecture);
+        //강사의 평점의 총점, 카운트 감소시키기
+        teacher.setRatingCnt(teacher.getRatingCnt()-1);
+        teacher.setRatingSum(teacher.getRatingSum()-userLecture.getScore());
+
+        //수강신청 내역에서 리뷰관련 내용 지우기
+        userLecture.setReview(null);
+        userLecture.setReviewUpdateDate(LocalDateTime.now());
+        userLecture.setScore(0);
     }
     
     private LectureReviewResponseDTO entityToReviewDTO(UserLecture userLecture) {
