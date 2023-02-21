@@ -62,12 +62,12 @@ public class StudioController {
 
 
     @PutMapping("/{userId}")
-    public ResponseEntity<?> updateStudio(
+    public ResponseEntity<String> updateStudio(
               @RequestPart(value="files", required = false) List<MultipartFile> files
             , @RequestParam(value = "description") String description
             , @PathVariable("userId")Long userId
     ) {
         String ret = studioService.updateStudio(userId, files, description);
-        return new ResponseEntity<>(ret, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(ret);
     }
 }
