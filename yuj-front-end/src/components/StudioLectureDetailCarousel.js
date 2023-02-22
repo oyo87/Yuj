@@ -28,7 +28,7 @@ const StudioLectureDetailCarousel = (props) => {
 
     return (
     <div key={index} id={`${img.origFileName}`} className="carousel-item relative justify-center w-full">
-      <div className="self-center px-28">
+      <div style={{height:'500px'}} className="self-center px-28 overflow-hidden flex items-center justify-center">
         <img
           src={`${process.env.REACT_APP_IMAGE_URL}/${img.filePath}`}
           alt={img.origFileName}
