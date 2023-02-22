@@ -93,14 +93,14 @@ const lectureSlice = createSlice({
         lectures: [],
         lecturesSearched: [],
         userLecture: {
-            // "userLectureId": '',
-            // "registDate": '',
-            // "score": '',
-            // "review": '',
-            // "reviewUpdateDate": '',
-            // "userId": '',
-            // "lectureId": '',
-            // "state": ''
+            "userLectureId": '',
+            "registDate": '',
+            "score": '',
+            "review": '',
+            "reviewUpdateDate": '',
+            "userId": '',
+            "lectureId": '',
+            "state": ''
         },
     },
 

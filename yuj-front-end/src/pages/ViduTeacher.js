@@ -134,7 +134,7 @@ class Vidu extends Component {
     }
 
     sendmessageByClick() {
-        console.log('문자 보내기', this.state.subscribers);
+        // console.log('문자 보내기', this.state.subscribers);
         this.setState({
             messages: [
                 ...this.state.messages,
@@ -182,21 +182,6 @@ class Vidu extends Component {
                 message: '',
             });
         }
-    }
-
-    async getSessions() {
-        let Sessions = await axios.get(
-            '/openvidu/api/sessions',
-            {
-                headers: {
-                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-                },
-            }
-        );
-        console.log('회의 전체 세션 목록 : ', Sessions);
-        Sessions.data.content.forEach((content) => { 
-            console.log(content);
-        })
     }
 
     // 세션 생성하는 과정
@@ -274,7 +259,7 @@ class Vidu extends Component {
                             console.log('There was an error connecting to the session:', error.code, error.message);
                         });
                 });
-                console.log('mySession : ', mySession);
+                // console.log('mySession : ', mySession);
             },
         );
     }
@@ -291,7 +276,6 @@ class Vidu extends Component {
 
     async leaveSession() {
         // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-        this.getSessions();
         const mySession = this.state.session;
 
         if (mySession) {
@@ -299,31 +283,27 @@ class Vidu extends Component {
         }
 
         //수업중인 강의 active false로 바꾸기
-        this.props.dispatch(updateLectureActive(
+        this.props.updateLectureInActive(
             {
                 lectureId: this.state.mySessionId,
                 active: false,
-                userId: this.props.userInfo.userId
+                userId: this.props.userId
             }
-        ))
+        )
 
         // Empty all properties...
         this.OV = null;
         this.setState({
-            session: '',
+            session: undefined,
             subscribers: [],
-            mySessionId: 'SessionA',
-            myUserName: 'Participant' + Math.floor(Math.random() * 100),
+            mySessionId: undefined,
+            myUserName: undefined,
             mainStreamManager: undefined,
             publisher: undefined
         });
 
-        this.setState({
-            session: undefined
-        })
-
         await axios.delete(
-            '/openvidu/api/sessions/' + this.state.mySessionId,
+            OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + this.state.mySessionId,
             {
                 headers: {
                     'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
@@ -414,7 +394,7 @@ class Vidu extends Component {
                     },
                 }
             );
-            console.log(Sessions);
+            // console.log(Sessions);
             // 현재 세션에 참가하고 있는 사람들의 세션 아이디, 비디오, 오디오 상태 확인
             let listMembersDemo = [];
             Sessions.data.content.forEach((content) => {
@@ -424,8 +404,6 @@ class Vidu extends Component {
                         // console.log(JSON.parse(c.clientData).clientType); // 커스텀 한 데이터 값 : 강사/수강생 여부
                         // console.log(c.publishers[0].mediaOptions.videoActive); // 해당 세션 아이디의 비디오 사용 여부
                         // console.log(c.publishers[0].mediaOptions.audioActive); // 해당 세션 아이디의 오디오 사용 여부
-                        console.log('목록  : ', c);
-                        console.log(c.publishers[0]);
                         let member = {};
                         member[0] = JSON.parse(c.clientData).clientData;
                         member[1] = JSON.parse(c.clientData).clientType;
@@ -437,7 +415,6 @@ class Vidu extends Component {
                         listMembersDemo.push(member);
                     });
                 }
-                console.log('리스트 데모 : ', listMembersDemo);
                 this.setState(() => ({
                     listMembers: listMembersDemo
                 }));
@@ -449,14 +426,14 @@ class Vidu extends Component {
     }
 
     async exitMember(connectionId) { 
-        // await axios.delete(
-        //     OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
-        //     {
-        //         headers: {
-        //             'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-        //         },
-        //     }
-        // )
+        await axios.delete(
+            OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + this.state.mySessionId + '/connection/' + connectionId,
+            {
+                headers: {
+                    'Authorization': 'Basic ' + Base64.encode('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+                },
+            }
+        )
     }
 
     render() {
@@ -466,9 +443,8 @@ class Vidu extends Component {
         }
 
         const VideoContainer = styled.div`
-            background: white;
-            /* display: flex !important; */
-            /* flex-wrap: wrap !important; */
+           
+            background: #F8F6F3;
             justify-content: center;
             top:0px;
             width: 100vw;
@@ -479,15 +455,18 @@ class Vidu extends Component {
         const VideoGrid = styled.div`
             display: flex !important;
             flex-wrap: wrap !important;
+            align-items: center;
+            margin-top: 10%;
+
             width: 100%;
             height: 100%;
         `;
 
         const ButtonContainer = styled.div`
             width: 100%;
-            height: 5vh;
+            height: full;
             position: fixed;
-            bottom: 0px;
+            bottom: 1.3%;
 
             display: flex !important;
             clear: both;
@@ -542,20 +521,20 @@ class Vidu extends Component {
                         </VideoContainer>
                         {this.state.mainStreamManager !== undefined ? (
                             <ButtonContainer>
-                                <img className='yuj-logo' alt='No Image' src='/assets/YujMainLogo.svg' style={{ marginBottom: '10px' }}></img>
-                                <button className="clickControl " onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
-                                    <span className="material-symbols-outlined">videocam</span> : <span className="material-symbols-outlined">videocam_off</span>}    {this.state.videoMessage}</div>
+                                <img className='yuj-logo h-10' alt='No Image' src='/assets/YujMainLogo.svg' style={{  }}></img>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.videoControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishVideo === true ?
+                                    <span className="material-symbols-outlined">videocam</span> : <span className="material-symbols-outlined">videocam_off</span>}  &nbsp;&nbsp;  {this.state.videoMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
-                                    <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>}    {this.state.voiceMessage}</div>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.voiceControl}><div className="flex w-full justify-center">{this.state.publisher.properties.publishAudio === true ?
+                                    <span className="material-symbols-outlined">mic</span> : <span className="material-symbols-outlined">mic_off</span>} &nbsp;&nbsp; {this.state.voiceMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
-                                    <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>} {this.state.listMessage}</div>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.listControl}><div className="flex w-full justify-center">{this.state.liston === true ?
+                                    <span className="material-symbols-outlined">person</span> : <span className="material-symbols-outlined">person_off</span>} &nbsp;&nbsp; {this.state.listMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
-                                    <span className="material-symbols-outlined">chat</span> : <span className="material-symbols-outlined">speaker_notes_off</span>} {this.state.chatMessage}</div>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.chattoggle}><div className="flex w-full justify-center">{this.state.chaton === true ?
+                                    <span className="material-symbols-outlined">chat</span> : <span className="material-symbols-outlined">speaker_notes_off</span>} &nbsp;&nbsp; {this.state.chatMessage}</div>
                                 </button>
-                                <button className="clickControl" onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span> 종료</div></button>
+                                <button className="clickControl" style={{margin: '0', height: '2.5rem'}} onClick={this.leaveSession}><div className="flex w-full justify-center"><span className="material-symbols-outlined">exit_to_app</span> &nbsp;&nbsp; 종료</div></button>
                             </ButtonContainer>
                         ) : null}
                     </div>
@@ -573,7 +552,7 @@ class Vidu extends Component {
         const response = await axios.post(OPENVIDU_SERVER_URL + '/api/openvidu/sessions', { customSessionId: sessionId }, {
             headers: { 'Content-Type': 'application/json', },
         });
-        console.log("createSession 함수 호출", response.data);
+        // console.log("createSession 함수 호출", response.data);
         return response.data; // The sessionId
     }
     
@@ -587,7 +566,11 @@ class Vidu extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    userInfo: state.user.userInfo
+    userId: state.user.userId
 });
-  
-export default connect(mapStateToProps)(Vidu);
+
+const mapDispatchToProps = (dispatch) => ({
+    updateLectureInActive: (object) => dispatch(updateLectureActive(object)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Vidu);
