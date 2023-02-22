@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import StudioSidebar from "../components/StudioSidebar";
 import StudioLectureDetailCarousel from "../components/StudioLectureDetailCarousel";
@@ -114,12 +115,18 @@ const StudioLectureDetailPage = () => {
   }, []);
   let lectureSchedule = useSelector((state) => state.lecture.lectureSchedule);
 
+
   //사이드바
   useEffect(() => {
+    getStudioInfo();
+  }, []);
+
+
+  const getStudioInfo = () => {
     dispatch(getStudioDetail(lecture.userId));
     dispatch(getStudioLectureList(lecture.userId));
     dispatch(getStudioLiveLecture(lecture.userId));
-  }, []);
+  }
 
   //수강신청
   const registUL = () => {
@@ -132,6 +139,18 @@ const StudioLectureDetailPage = () => {
     console.log(user.userId, lecture.lectureId);
     dispatch(deleteUserLecture({userId: user.userId, lectureId: lecture.lectureId}));
     window.location.reload();
+  }
+
+  //수업 폐강
+  const deleteLecture = async() => {
+    await deleteLectureAPI(lecture.lectureId)
+      .then(() => {
+        navigate('/studio', {state:{teacherId: user.userId}, replace: true});
+      })
+  }
+
+  const deleteLectureAPI = (lectureId) => {
+    return axios.delete(`${process.env.REACT_APP_API_URL}/lectures/${lectureId}`);
   }
 
   return (
@@ -170,6 +189,7 @@ const StudioLectureDetailPage = () => {
           {
             text: "확인",
             className: "btn-accent text-white",
+            onClickEvent: () => deleteLecture()
           },
           {
             text: "취소",
