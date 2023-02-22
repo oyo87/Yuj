@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Link } from "react-router-dom";
@@ -19,7 +19,20 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [profileImg, setProfileImg] = useState(null);
+  const [thumbnail, setThumbnail] = useState('');
+
   const [roleName, setRoleName] = useState("ROLE_USER");
+
+  useEffect(() => {
+    if(profileImg) {
+      let reader = new FileReader();
+      reader.onload = () => {
+        setThumbnail(reader.result);
+      };
+      reader.readAsDataURL(profileImg);
+    }
+  },[profileImg])
+
 
   const getDaysInMonth = (year, month) => {
     if (month === 2) {
@@ -414,9 +427,10 @@ const SignUp = () => {
 
               <div className="flex flex-wrap justify-center items-center gap-3 mt-8">
                 <label htmlFor="file" className="hover:cursor-pointer">
-                  <div className={Styles.btnUpload}>
+                  <div className={Styles.btnUpload+' flex flex-col items-center'}>
+                    <img className={'w-24 h-24 rounded-xl'} src={thumbnail? thumbnail:`${process.env.REACT_APP_IMAGE_URL}/defaultProfile.jpg`}/>
                     <AddCircleOutlineIcon
-                      className="text-success hover:text-accent"
+                      className="text-success hover:text-accent absolute mt-8 text-accent text-center"
                       style={{ fontSize: "xx-large" }}
                     />
                   </div>
