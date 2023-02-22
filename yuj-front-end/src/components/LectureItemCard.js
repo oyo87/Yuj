@@ -70,7 +70,7 @@ const LectureItemCard = (props) => {
               {complete()}
             </div>
             <div className="h-48">
-            <img className={'min-h-full w-72'} src={`${process.env.REACT_APP_IMAGE_URL}/${lecture.images.length != 0 ? lecture.images[0].filePath : 'YujHomeImage.png'}`} alt="Card Image" />
+            <img className={'min-h-full w-72'} src={`${process.env.REACT_APP_IMAGE_URL}/${lecture.images.length !== 0 ? lecture.images[0].filePath : 'YujHomeImage.png'}`} alt="Card Image" />
             </div>
           </Link>
         </figure>
