@@ -44,7 +44,7 @@ const StudioReview = (props) => {
       <div className="flex w-full">
         <StudioSidebar
           studioDetail={studio.studioDetail}
-          userId={studio.userId}
+          userId={user.userId}
           studioLiveLecture={studio.studioLiveLecture}
         />
         <div className="flex-auto px-40 pt-20">
