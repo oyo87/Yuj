@@ -15,6 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
@@ -33,7 +36,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()); //  CORS 해결을 위해 추가
+        http.cors().configurationSource(request -> {
+            CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+            configuration.setAllowedMethods(List.of("OPTIONS", "GET", "POST", "PUT", "DELETE"));
+            configuration.setAllowedHeaders(List.of("*"));
+            configuration.setAllowedOrigins(List.of("*"));
+
+            return configuration;
+        }); //  CORS 해결을 위해 추가
 
         http.httpBasic().disable()
                 .csrf().disable()
@@ -74,5 +84,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**");
 
     }
+
 
 }
