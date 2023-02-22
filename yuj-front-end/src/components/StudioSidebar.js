@@ -7,6 +7,7 @@ import { Link, Route } from 'react-router-dom';
 import { CommonModal, CommonModalBtn } from '../components/CommonModal';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { changeStudioLectureDetailItem } from '../stores/studioSlice';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const StudioSidebar = (props) => {
 
@@ -132,7 +133,12 @@ const StudioSidebar = (props) => {
             <div className={'cursor-pointer'} onClick={() => navigate('/studio')}>
               <img className={Styles.profileImg} src={`${process.env.REACT_APP_IMAGE_URL}/${studioDetail.profileImagePath}`}/>
             </div>
-            <p className={Styles.teacherNickname+' mt-6'}>{studioDetail.nickname}</p>
+            <div className={'flex items-center mt-6'}>
+              <p className={Styles.teacherNickname+' mr-0.5'}>{studioDetail.nickname}</p>
+              <button className={'btn-ghost rounded-full '+(studioDetail.userId != userId ? 'hidden':'')} onClick={() => navigate('/studioModify')}>
+                <SettingsIcon className="text-accent" style={{ fontSize: "x-large" }}/>
+              </button>
+            </div>
             <p className={Styles.teacherEmail+' mt-3'}>{studioDetail.email}</p>
             <div className="rating mt-6 rating-sm flex justify-evenly w-24">
               <input type="radio" name="rating-2" className="mask mask-star-2 bg-accent" readOnly checked={rating == 1}/>

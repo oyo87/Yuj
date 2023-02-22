@@ -66,7 +66,7 @@ const StudioModifyPage = () => {
                 console.log("OK!!!!");
                 console.log(response);
                 alert("수정이 완료되었습니다.");
-                navigate("/studio");
+                navigate("/studio",{state:{teacherId:user.userId}, replace:true});
             })
             .catch((error) => {
                 console.log("Error!!!!!!!!!!!!!");
