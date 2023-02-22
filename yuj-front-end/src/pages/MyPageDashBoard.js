@@ -356,7 +356,7 @@ const MyPageDashBoard = () => {
                                                 <h1 className="text-3xl font-bold mb-4">강의가 없습니다</h1>
                                                 <Link to="/searchLecture" className="btn btn-primary">강의 둘러보기</Link>
                                             </div>
-                                            : <div>{currentLectures.slice(0, 3).sort((a, b) => a.timeDiff - b.timeDiff).map((post, idx) => (
+                                            : <div>{currentLectures.sort((a, b) => a.timeDiff - b.timeDiff).slice(0, 3).map((post, idx) => (
                                                 <div key={idx}>
                                                     <Link to="/studioLectureDetailPage" onClick={() => dashboardItemClicked(post.lectureId)} className="h-20 my-2 flex">
                                                         <div className="flex-none ml-5 mr-3 mt-2">
