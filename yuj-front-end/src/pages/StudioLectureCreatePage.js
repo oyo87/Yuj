@@ -225,7 +225,7 @@ const StudioLectureCreatePage = () => {
             confirmButtonText: "확인",
           });
         } else {
-          navigate("/studio");
+          navigate("/studio",{state:{teacherId:studio.studioDetail.userId}});
         }
       })
       .catch((error) => {
