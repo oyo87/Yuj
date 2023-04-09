@@ -16,8 +16,8 @@
     - 코로나로 인한 비대면 교육 플랫폼의 증가와 국내에서 웰니스(well-being + happiness) 열풍으로 인해 요가에 대한 수요가 높아졌습니다. 그러나 요가를 하기 위한 비대면 플랫폼의 한계(예약과 실시간 수업이 동시에 진행되는 플랫폼의 부재, 피드백을 받기 어려움)가 존재하여 이를 위한 플랫폼을 개발하게 되었습니다.
 - 프로젝트 목표
     ![](./image/yuj-target.png)
-- 멤버
-    - <img src="./image/members.jpg" width="500" height="500">  
+- 프로젝트 역할
+### 전 인원 모두 풀스택으로 개발, 페이지별로 기능을 담당하여 모두가 API제작, 프론트 코드 제작을 진행
     - :technologist: 허재성 : 팀장, BE 리더
     - :technologist: 김인중 : PM, CI/CD 구축
     - :technologist: 오현규 : FE 리더, 디자인 총괄
@@ -34,9 +34,10 @@
 ![강사 목록](./image/%EA%B0%95%EC%82%AC%20%EB%AA%A9%EB%A1%9D.png)
 #### 강의 목록
 > 전체 강의 목록을 조회할 수 있습니다. 강의에 관련된 간략한 정보를 확인할 수 있습니다.
-![강의 목록](./image/lecture_introduce.png)
+![강의 목록](./image/lecture_introduce.PNG)
 
 #### 강의 수강(수강생 시점)
+> 강사와 수강생의 자세를 실시간으로 분석하여 일치할경우 초록색 라인 표시를, 일치하지 않을경우 하얀색으로 라인 표시를 해줍니다.
 <!-- ![yuj-pose-detection-success](https://user-images.githubusercontent.com/49228132/219531818-207fd822-2ae2-4fa0-9790-d8f2c79b5bb0.gif) -->
 <img src="https://user-images.githubusercontent.com/49228132/219531818-207fd822-2ae2-4fa0-9790-d8f2c79b5bb0.gif" width="65%" height="65%"/>
 
@@ -87,3 +88,4 @@
 <img src="./image/%EB%B8%8C%EB%9E%9C%EC%B9%98%EC%A0%84%EB%9E%B5.png" width="65%" height="65%"/>
 
 ####
+
